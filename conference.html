@@ -1,0 +1,168 @@
+﻿<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HEFC 2026 Conference</title>
+  <style>
+    :root { --text:#1f2c2f; --muted:#6a777b; --line:rgba(31,44,47,0.08); --primary-deep:#365959; --shadow:0 18px 42px rgba(37,48,50,0.06); --radius-xl:34px; --radius-lg:26px; --max-width:1180px; }
+    *{box-sizing:border-box;} body{margin:0;font-family:"SF Pro Display","SF Pro Text","Segoe UI","PingFang TC","Noto Sans TC",sans-serif;color:var(--text);background:radial-gradient(circle at top left, rgba(77,114,112,0.05), transparent 24%), linear-gradient(180deg,#f7f8f8 0%,#f3f6f5 52%,#f8f9f9 100%);letter-spacing:-0.01em;} .page{width:min(var(--max-width),calc(100% - 32px));margin:0 auto;padding:20px 0 40px;} .section{margin-top:22px;border:1px solid var(--line);border-radius:var(--radius-xl);background:linear-gradient(180deg,rgba(255,255,255,0.88),rgba(249,251,250,0.95));box-shadow:var(--shadow);overflow:hidden;} .hero{padding:40px 38px 36px;background:radial-gradient(circle at 85% 14%, rgba(77,114,112,0.12), transparent 20%), linear-gradient(135deg, rgba(250,252,251,0.98), rgba(241,246,245,0.95));} .eyebrow,.chip{display:inline-flex;align-items:center;min-height:30px;padding:0 12px;border-radius:999px;background:rgba(255,255,255,0.74);border:1px solid rgba(77,114,112,0.08);color:var(--primary-deep);font-size:.8rem;font-weight:600;} h1,h2,h3{margin:0;letter-spacing:-0.04em;} h1{margin-top:18px;font-size:clamp(2.8rem,7vw,5rem);line-height:.94;font-weight:700;} .hero-subtitle,.section-head p,.card p,.list li{color:var(--muted);line-height:1.74;} .hero-subtitle{margin:14px 0 0;max-width:760px;font-size:clamp(1.04rem,1.8vw,1.24rem);} .hero-meta,.grid-2,.grid-3{display:grid;gap:16px;} .hero-meta{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:28px;} .grid-2{grid-template-columns:repeat(2,minmax(0,1fr));} .grid-3{grid-template-columns:repeat(3,minmax(0,1fr));} .meta-card,.card{padding:22px;border:1px solid var(--line);border-radius:var(--radius-lg);background:rgba(255,255,255,0.72);box-shadow:0 10px 28px rgba(30,42,43,0.04);} .meta-title{color:var(--muted);font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;} .meta-value{margin-top:8px;font-size:1rem;line-height:1.6;font-weight:600;} .body-section{padding:30px 28px 32px;} .section-head{display:flex;justify-content:space-between;align-items:end;gap:18px;margin-bottom:22px;} .section-head h2{font-size:clamp(1.7rem,3vw,2.25rem);font-weight:650;} .card h3{margin-top:14px;font-size:1.08rem;font-weight:650;line-height:1.45;} .list{display:grid;gap:12px;margin:16px 0 0;padding:0;list-style:none;} .list li{padding-top:12px;border-top:1px solid rgba(31,44,47,0.06);} .list li:first-child{padding-top:0;border-top:0;} .list strong{display:block;margin-bottom:4px;color:var(--text);font-weight:600;} @media (max-width:900px){.hero-meta,.grid-2,.grid-3{grid-template-columns:1fr;}} @media (max-width:720px){.page{width:min(var(--max-width),calc(100% - 20px));}.hero,.body-section{padding-left:20px;padding-right:20px;}.section-head{flex-direction:column;align-items:start;}}
+    .site-frame {
+      position: sticky;
+      top: 10px;
+      z-index: 40;
+      margin-top: 6px;
+      margin-bottom: 18px;
+      border: 1px solid rgba(31,44,47,0.07);
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(238,244,243,0.92), rgba(252,253,253,0.84));
+      backdrop-filter: blur(24px) saturate(145%);
+      box-shadow: 0 12px 30px rgba(30,42,43,0.05);
+      overflow: hidden;
+    }
+
+    .site-frame__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+      padding: 0 12px 0 16px;
+      gap: 16px;
+    }
+
+    .site-brand {
+      display: inline-flex;
+      align-items: center;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+
+    .site-nav {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .site-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .site-nav a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 10px;
+      border-radius: 999px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      transition: background-color 0.18s ease, color 0.18s ease;
+    }
+
+    .site-nav a:hover {
+      background: rgba(77,114,112,0.08);
+      color: var(--text);
+    }
+
+    .site-nav a.is-current {
+      background: rgba(77,114,112,0.14);
+      color: var(--text);
+      box-shadow: inset 0 0 0 1px rgba(77,114,112,0.08);
+    }
+
+    .committee-note {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .committee-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px 28px;
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(31,44,47,0.08);
+    }
+
+    .committee-row {
+      margin: 0;
+      color: var(--text);
+      line-height: 1.9;
+      font-size: 1rem;
+    }
+    @media (max-width: 900px) {
+      .committee-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .site-frame {
+        top: 8px;
+        border-radius: 28px;
+      }
+
+      .site-frame__inner {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px 12px;
+      }
+
+      .committee-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .committee-row {
+        font-size: 0.96rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class='page'>
+    <section class='site-frame'>
+      <div class='site-frame__inner'>
+        <a class='site-brand' href='home.html'>HEFC 2026</a>
+        <nav class='site-nav' aria-label='頁面導覽'>
+          <a href='home.html'>首頁</a>
+          <a href='info.html'>會議資訊</a>
+          <a href='conference.html' class='is-current' aria-current='page'>學術研討會</a>
+          <a href='forum.html'>技術論壇</a>
+          <a href='call_for_papers.html'>徵稿資訊</a>
+          <a href='registration.html'>註冊報名</a>
+          <a href='agenda.html'>議程資訊</a>
+          <a href='competition.html'>氫能車競賽</a>
+          <a href='traffic_venue.html'>交通與會場</a>
+          <a href='contact_sponsor.html'>聯絡與贊助</a>
+          <a href='english.html'>ENGLISH</a>
+        </nav>
+      </div>
+    </section>
+    <section class="section hero">
+      <div class="eyebrow">Conference</div>
+      <h1>學術研討會</h1>
+      <p class="hero-subtitle">全國氫能與燃料電池研討會將於 2026/10/03 舉行，提供口頭發表、海報展示與學生論文競賽交流場域。</p>
+      <div class="hero-meta"><div class="meta-card"><div class="meta-title">Date</div><div class="meta-value">2026/10/03（六）</div></div><div class="meta-card"><div class="meta-title">Venue</div><div class="meta-value">國立臺灣科技大學 國際大樓（IB）</div></div><div class="meta-card"><div class="meta-title">Format</div><div class="meta-value">口頭發表、海報展示、學生論文競賽</div></div></div>
+    </section>
+    <section class="section body-section"><div class="section-head"><div><h2>研討會定位</h2><p>歡迎研究人員、學生與相關領域專家參與發表與交流。</p></div></div><div class="grid-3"><article class="card"><div class="chip">學術發表</div><h3>聚焦氫能與燃料電池研究議題</h3><p>涵蓋氫能生產、燃料電池材料與系統、P2G、CCUS 與綠色能源技術等主題。</p></article><article class="card"><div class="chip">發表形式</div><h3>口頭、海報與競賽並行</h3><p>安排學生論文競賽、學術口頭報告、海報展示與現場評選活動。</p></article><article class="card"><div class="chip">交流平台</div><h3>促進學術與產業互動</h3><p>提供研究成果發表、跨校交流與產學合作契機。</p></article></div></section>
+    <section class="section body-section"><div class="section-head"><div><h2>主要安排</h2><p>10 月 3 日研討會主要時程如下。</p></div></div><div class="grid-2"><article class="card"><div class="chip">上午</div><ul class="list"><li><strong>09:00 - 09:30</strong>開幕典禮與致詞｜IB-101</li><li><strong>09:30 - 11:00</strong>國際大會特邀專題演講｜IB-101</li><li><strong>11:00 - 12:00</strong>學生論文競賽與學術口頭報告｜IB 各分會場</li></ul></article><article class="card"><div class="chip">下午</div><ul class="list"><li><strong>13:30 - 15:00</strong>海報論文發表與現場評選｜IB 2F 走廊</li><li><strong>15:20 - 17:00</strong>全國氫能與燃料電池學術發表｜IB 各分會場</li><li><strong>17:00 - 17:30</strong>優秀論文頒獎與閉幕｜IB-101</li></ul></article></div></section>
+    <section class="section body-section"><div class="section-head"><div><h2>與會說明</h2><p>更多投稿、議程與報名資訊請參閱相關頁面。</p></div></div><div class="grid-2"><article class="card"><div class="chip">對象</div><ul class="list"><li><strong>投稿作者</strong>請依徵稿辦法完成投稿與資料繳交。</li><li><strong>一般與會者</strong>請於註冊報名頁完成與會註冊。</li><li><strong>學生參與者</strong>學生可參與一般發表或學生論文競賽。</li></ul></article><article class="card"><div class="chip">相關資訊</div><ul class="list"><li><strong>徵稿頁</strong>請參閱投稿主題、重要時程與格式說明。</li><li><strong>議程頁</strong>完整時段與分場安排請參閱議程資訊。</li><li><strong>晚宴</strong>大會晚宴（HEFC Banquet）將於曉鹿鳴樓舉行。</li></ul></article></div></section>
+  </div>
+</body>
+</html>
+
+
+

@@ -1,0 +1,301 @@
+﻿<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HEFC 2026 Traffic and Venue</title>
+  <style>
+    :root {
+      --text: #1f2c2f;
+      --muted: #6a777b;
+      --line: rgba(31,44,47,0.08);
+      --primary-deep: #365959;
+      --shadow: 0 18px 42px rgba(37,48,50,0.06);
+      --radius-xl: 34px;
+      --radius-lg: 26px;
+      --max-width: 1180px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "SF Pro Display", "SF Pro Text", "Segoe UI", "PingFang TC", "Noto Sans TC", sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at top left, rgba(77,114,112,0.05), transparent 24%), linear-gradient(180deg,#f7f8f8 0%,#f3f6f5 52%,#f8f9f9 100%);
+      letter-spacing: -0.01em;
+    }
+    .page { width: min(var(--max-width), calc(100% - 32px)); margin: 0 auto; padding: 20px 0 40px; }
+    .section {
+      margin-top: 22px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(180deg, rgba(255,255,255,0.88), rgba(249,251,250,0.95));
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .hero {
+      padding: 40px 38px 36px;
+      background: radial-gradient(circle at 85% 14%, rgba(77,114,112,0.12), transparent 20%), linear-gradient(135deg, rgba(250,252,251,0.98), rgba(241,246,245,0.95));
+    }
+    .eyebrow, .chip, .link-chip, .map-button {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.74);
+      border: 1px solid rgba(77,114,112,0.08);
+      color: var(--primary-deep);
+      font-size: .8rem;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .map-button {
+      min-height: 46px;
+      padding: 0 20px;
+      background: #314647;
+      color: #ffffff;
+      border: 0;
+      font-size: .95rem;
+      box-shadow: 0 10px 24px rgba(49,70,71,0.12);
+    }
+    h1, h2, h3 { margin: 0; letter-spacing: -0.04em; }
+    h1 { margin-top: 18px; font-size: clamp(2.8rem, 7vw, 5rem); line-height: .94; font-weight: 700; }
+    .hero-subtitle, .section-head p, .card p, .list li, .source-note, .map-caption {
+      color: var(--muted);
+      line-height: 1.74;
+    }
+    .hero-subtitle { margin: 14px 0 0; max-width: 760px; font-size: clamp(1.04rem, 1.8vw, 1.24rem); }
+    .hero-meta, .grid-2, .grid-3 { display: grid; gap: 16px; }
+    .hero-meta { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 28px; }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .meta-card, .card {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,0.72);
+      box-shadow: 0 10px 28px rgba(30,42,43,0.04);
+    }
+    .meta-title {
+      color: var(--muted);
+      font-size: .78rem;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .meta-value { margin-top: 8px; font-size: 1rem; line-height: 1.6; font-weight: 600; }
+    .body-section { padding: 30px 28px 32px; }
+    .section-head { display: flex; justify-content: space-between; align-items: end; gap: 18px; margin-bottom: 22px; }
+    .section-head h2 { font-size: clamp(1.7rem, 3vw, 2.25rem); font-weight: 650; }
+    .card h3 { margin-top: 14px; font-size: 1.08rem; font-weight: 650; line-height: 1.45; }
+    .list { display: grid; gap: 12px; margin: 16px 0 0; padding: 0; list-style: none; }
+    .list li { padding-top: 12px; border-top: 1px solid rgba(31,44,47,0.06); }
+    .list li:first-child { padding-top: 0; border-top: 0; }
+    .list strong { display: block; margin-bottom: 4px; color: var(--text); font-weight: 600; }
+    .link-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .action-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
+    .map-wrap {
+      margin-top: 18px;
+      overflow: hidden;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.72);
+    }
+    .map-image {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .map-caption {
+      padding: 14px 16px 16px;
+      font-size: .95rem;
+    }
+    .source-note { margin-top: 18px; font-size: .95rem; }
+    @media (max-width: 900px) { .hero-meta, .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+    @media (max-width: 720px) {
+      .page { width: min(var(--max-width), calc(100% - 20px)); }
+      .hero, .body-section { padding-left: 20px; padding-right: 20px; }
+      .section-head { flex-direction: column; align-items: start; }
+    }
+    .site-frame {
+      position: sticky;
+      top: 10px;
+      z-index: 40;
+      margin-top: 6px;
+      margin-bottom: 18px;
+      border: 1px solid rgba(31,44,47,0.07);
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(238,244,243,0.92), rgba(252,253,253,0.84));
+      backdrop-filter: blur(24px) saturate(145%);
+      box-shadow: 0 12px 30px rgba(30,42,43,0.05);
+      overflow: hidden;
+    }
+
+    .site-frame__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+      padding: 0 12px 0 16px;
+      gap: 16px;
+    }
+
+    .site-brand {
+      display: inline-flex;
+      align-items: center;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+
+    .site-nav {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .site-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .site-nav a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 10px;
+      border-radius: 999px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      transition: background-color 0.18s ease, color 0.18s ease;
+    }
+
+    .site-nav a:hover {
+      background: rgba(77,114,112,0.08);
+      color: var(--text);
+    }
+
+    .site-nav a.is-current {
+      background: rgba(77,114,112,0.14);
+      color: var(--text);
+      box-shadow: inset 0 0 0 1px rgba(77,114,112,0.08);
+    }
+
+    .committee-note {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .committee-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px 28px;
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(31,44,47,0.08);
+    }
+
+    .committee-row {
+      margin: 0;
+      color: var(--text);
+      line-height: 1.9;
+      font-size: 1rem;
+    }
+    @media (max-width: 900px) {
+      .committee-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .site-frame {
+        top: 8px;
+        border-radius: 28px;
+      }
+
+      .site-frame__inner {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px 12px;
+      }
+
+      .committee-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .committee-row {
+        font-size: 0.96rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class='page'>
+    <section class='site-frame'>
+      <div class='site-frame__inner'>
+        <a class='site-brand' href='home.html'>HEFC 2026</a>
+        <nav class='site-nav' aria-label='頁面導覽'>
+          <a href='home.html'>首頁</a>
+          <a href='info.html'>會議資訊</a>
+          <a href='conference.html'>學術研討會</a>
+          <a href='forum.html'>技術論壇</a>
+          <a href='call_for_papers.html'>徵稿資訊</a>
+          <a href='registration.html'>註冊報名</a>
+          <a href='agenda.html'>議程資訊</a>
+          <a href='competition.html'>氫能車競賽</a>
+          <a href='traffic_venue.html' class='is-current' aria-current='page'>交通與會場</a>
+          <a href='contact_sponsor.html'>聯絡與贊助</a>
+          <a href='english.html'>ENGLISH</a>
+        </nav>
+      </div>
+    </section>
+    <section class="section hero">
+      <div class="eyebrow">Traffic and Venue</div>
+      <h1>交通與會場</h1>
+      <p class="hero-subtitle">本頁整理會場位置、到場方式、校園地圖與住宿建議，讓與會者可依交通方式快速查找所需資訊。</p>
+      <div class="hero-meta">
+        <div class="meta-card"><div class="meta-title">Venue</div><div class="meta-value">國立臺灣科技大學 國際大樓（IB）</div></div>
+        <div class="meta-card"><div class="meta-title">Address</div><div class="meta-value">106335 臺北市大安區基隆路四段 43 號</div></div>
+        <div class="meta-card"><div class="meta-title">Main Tel</div><div class="meta-value">02-2733-3141</div></div>
+      </div>
+      <div class="link-row"><a class="link-chip" href="https://www.ntust.edu.tw/p/412-1000-101.php?Lang=en" target="_blank" rel="noopener noreferrer">官方交通頁</a><a class="link-chip" href="#campus-map">校園配置圖</a></div>
+      <div class="action-row"><a class="map-button" href="https://www.google.com/maps/search/?api=1&query=%E5%9C%8B%E7%AB%8B%E8%87%BA%E7%81%A3%E7%A7%91%E6%8A%80%E5%A4%A7%E5%AD%B8" target="_blank" rel="noopener noreferrer">開啟 Google Maps</a></div>
+    </section>
+
+    <section class="section body-section"><div class="section-head"><div><h2>基本場地資訊</h2><p>以下為會場與校園基本資訊。</p></div></div><div class="grid-2"><article class="card"><div class="chip">校址與聯絡</div><ul class="list"><li><strong>學校名稱</strong>國立臺灣科技大學</li><li><strong>會場建築</strong>國際大樓（International Building, IB）</li><li><strong>地址</strong>106335 臺北市大安區基隆路四段 43 號</li><li><strong>總機</strong>02-2733-3141</li><li><strong>24 小時緊急校安專線</strong>0800-695995</li></ul></article><article class="card"><div class="chip">活動資訊</div><ul class="list"><li><strong>技術論壇</strong>2026/10/02（五）</li><li><strong>研討會</strong>2026/10/03（六）</li><li><strong>主要會場</strong>IB-101 與 IB 各分會場</li><li><strong>步行提醒</strong>自基隆路校門步行進入約 5 至 8 分鐘可達國際大樓。</li></ul></article></div></section>
+
+    <section class="section body-section"><div class="section-head"><div><h2>捷運與公車</h2><p>若是第一次到台科大，建議優先搭乘大眾運輸工具，可減少停車與校內動線的不確定性。</p></div></div><div class="grid-2"><article class="card"><div class="chip">捷運</div><ul class="list"><li><strong>公館站 G07</strong>由松山新店線公館站 2 號出口步行前往，約 10 分鐘可到校園入口。</li><li><strong>公館站轉公車</strong>可由 1 號出口轉乘 1、673、907、綠 11、棕 12 前往台科大方向。</li><li><strong>六張犁站 BR07</strong>可轉乘 1、207、672、650 前往台科大方向。</li></ul></article><article class="card"><div class="chip">公車</div><ul class="list"><li><strong>主要路線</strong>1、207、275、275 副、275 區間、650、672、673、907、綠 11、棕 12、敦化幹線。</li><li><strong>鄰近站點</strong>可於台科大周邊或臺大公館醫院一帶站位下車後步行前往。</li><li><strong>到場建議</strong>校內停車位有限，建議優先搭乘大眾運輸工具。</li></ul></article></div></section>
+
+    <section class="section body-section">
+      <div class="section-head"><div><h2>到場與停車提醒</h2><p>整理開車與現場移動相關提醒，方便提前安排行程。</p></div></div>
+      <div class="grid-2">
+        <article class="card"><div class="chip">自行開車</div><ul class="list"><li><strong>國道 1 號</strong>由圓山交流道接建國高架，再走辛亥路往木柵方向，於辛亥路與基隆路口右轉，經長興街後可達台科大。</li><li><strong>國道 3 號</strong>由國道 3 甲下辛亥路三段，於辛亥路與基隆路口左轉，經長興街後可達台科大。</li><li><strong>停車資訊</strong>國際大樓地下室設有付費停車場，惟校內停車位有限，請預留等候與步行時間。</li></ul></article>
+        <article class="card"><div class="chip">現場動線</div><ul class="list"><li><strong>步行時間</strong>自基隆路校門進入後，步行約 5 至 8 分鐘可抵達國際大樓。</li><li><strong>主要活動區域</strong>論壇與大會主場位於 IB-101，分組發表與海報活動分布於 IB 各分會場與 2F 空間。</li><li><strong>建議做法</strong>若需趕上午場報到，建議優先選擇捷運或公車，能讓到場時間更穩定。</li></ul></article>
+      </div>
+    </section>
+
+    
+
+    <section class="section body-section"><div class="section-head"><div><h2>校園地圖</h2><p>以下提供校園地圖，方便查找國際大樓位置與動線。</p></div></div><div id="campus-map" class="map-wrap"><img class="map-image" src="https://raw.githubusercontent.com/ntusttjlab-design/2026-HEFC/ntusttjlab-design-patch-1/traffic_venue_map.jpg" alt="國立臺灣科技大學校園地圖"><div class="map-caption">可由本圖確認國際大樓位置與校內動線。</div></div></section>
+  </div>
+</body>
+</html>
+
+
+
+
+
+
+

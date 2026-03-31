@@ -1,0 +1,495 @@
+﻿<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HEFC 2026 Info</title>
+  <style>
+    :root {
+      --bg: #f5f7f6;
+      --surface: rgba(255, 255, 255, 0.86);
+      --surface-strong: rgba(255, 255, 255, 0.94);
+      --text: #1f2c2f;
+      --muted: #6a777b;
+      --line: rgba(31, 44, 47, 0.08);
+      --primary: #4d7270;
+      --primary-deep: #365959;
+      --chip: rgba(77, 114, 112, 0.08);
+      --shadow: 0 18px 42px rgba(37, 48, 50, 0.06);
+      --radius-xl: 34px;
+      --radius-lg: 26px;
+      --radius-md: 18px;
+      --max-width: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "SF Pro Display", "SF Pro Text", "Segoe UI", "PingFang TC", "Noto Sans TC", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(77, 114, 112, 0.05), transparent 24%),
+        linear-gradient(180deg, #f7f8f8 0%, #f3f6f5 52%, #f8f9f9 100%);
+      letter-spacing: -0.01em;
+    }
+
+    .page {
+      width: min(var(--max-width), calc(100% - 32px));
+      margin: 0 auto;
+      padding: 20px 0 40px;
+    }
+
+    .section {
+      margin-top: 22px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(180deg, rgba(255,255,255,0.88), rgba(249,251,250,0.95));
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero {
+      padding: 40px 38px 36px;
+      background:
+        radial-gradient(circle at 85% 14%, rgba(77,114,112,0.12), transparent 20%),
+        linear-gradient(135deg, rgba(250,252,251,0.98), rgba(241,246,245,0.95));
+    }
+
+    .eyebrow,
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.74);
+      border: 1px solid rgba(77,114,112,0.08);
+      color: var(--primary-deep);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      letter-spacing: -0.04em;
+    }
+
+    h1 {
+      margin-top: 18px;
+      font-size: clamp(2.8rem, 7vw, 5rem);
+      line-height: 0.94;
+      font-weight: 700;
+    }
+
+    .hero-subtitle,
+    .section-head p,
+    .card p,
+    .detail-list li,
+    .info-list li,
+    .name-list li {
+      color: var(--muted);
+      line-height: 1.74;
+    }
+
+    .hero-subtitle {
+      margin: 14px 0 0;
+      max-width: 780px;
+      font-size: clamp(1.04rem, 1.8vw, 1.24rem);
+    }
+
+    .hero-meta {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .meta-card,
+    .card {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,0.72);
+      box-shadow: 0 10px 28px rgba(30,42,43,0.04);
+    }
+
+    .meta-title {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .meta-value {
+      margin-top: 8px;
+      font-size: 1rem;
+      line-height: 1.6;
+      font-weight: 600;
+    }
+
+    .body-section {
+      padding: 30px 28px 32px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(1.7rem, 3vw, 2.25rem);
+      font-weight: 650;
+    }
+
+    .grid-2,
+    .grid-3 {
+      display: grid;
+      gap: 16px;
+    }
+
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    .card h3 {
+      margin-top: 14px;
+      font-size: 1.08rem;
+      font-weight: 650;
+      line-height: 1.45;
+    }
+
+    .detail-list,
+    .info-list,
+    .name-list {
+      display: grid;
+      gap: 12px;
+      margin: 16px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .detail-list li,
+    .info-list li,
+    .name-list li {
+      padding-top: 12px;
+      border-top: 1px solid rgba(31,44,47,0.06);
+    }
+
+    .detail-list li:first-child,
+    .info-list li:first-child,
+    .name-list li:first-child {
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    .detail-list strong,
+    .info-list strong,
+    .name-list strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .committee-card {
+      margin-top: 16px;
+    }
+
+    .committee-columns {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .committee-column {
+      padding: 18px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(31,44,47,0.06);
+      background: rgba(255,255,255,0.5);
+    }
+
+    .committee-column h3 {
+      margin-top: 0;
+      font-size: 0.98rem;
+    }
+
+    @media (max-width: 1080px) {
+      .committee-columns {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 900px) {
+      .hero-meta,
+      .grid-2,
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        width: min(var(--max-width), calc(100% - 20px));
+      }
+
+      .hero,
+      .body-section {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .section-head {
+        flex-direction: column;
+        align-items: start;
+      }
+
+      .committee-columns {
+        grid-template-columns: 1fr;
+      }
+    }
+    .site-frame {
+      position: sticky;
+      top: 10px;
+      z-index: 40;
+      margin-top: 6px;
+      margin-bottom: 18px;
+      border: 1px solid rgba(31,44,47,0.07);
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(238,244,243,0.92), rgba(252,253,253,0.84));
+      backdrop-filter: blur(24px) saturate(145%);
+      box-shadow: 0 12px 30px rgba(30,42,43,0.05);
+      overflow: hidden;
+    }
+
+    .site-frame__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+      padding: 0 12px 0 16px;
+      gap: 16px;
+    }
+
+    .site-brand {
+      display: inline-flex;
+      align-items: center;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+
+    .site-nav {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .site-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .site-nav a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 10px;
+      border-radius: 999px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      transition: background-color 0.18s ease, color 0.18s ease;
+    }
+
+    .site-nav a:hover {
+      background: rgba(77,114,112,0.08);
+      color: var(--text);
+    }
+
+    .site-nav a.is-current {
+      background: rgba(77,114,112,0.14);
+      color: var(--text);
+      box-shadow: inset 0 0 0 1px rgba(77,114,112,0.08);
+    }
+
+    .committee-note {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .committee-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px 28px;
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(31,44,47,0.08);
+    }
+
+    .committee-row {
+      margin: 0;
+      color: var(--text);
+      line-height: 1.9;
+      font-size: 1rem;
+    }
+    @media (max-width: 900px) {
+      .committee-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .site-frame {
+        top: 8px;
+        border-radius: 28px;
+      }
+
+      .site-frame__inner {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px 12px;
+      }
+
+      .committee-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .committee-row {
+        font-size: 0.96rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class='page'>
+    <section class='site-frame'>
+      <div class='site-frame__inner'>
+        <a class='site-brand' href='home.html'>HEFC 2026</a>
+        <nav class='site-nav' aria-label='頁面導覽'>
+          <a href='home.html'>首頁</a>
+          <a href='info.html' class='is-current' aria-current='page'>會議資訊</a>
+          <a href='conference.html'>學術研討會</a>
+          <a href='forum.html'>技術論壇</a>
+          <a href='call_for_papers.html'>徵稿資訊</a>
+          <a href='registration.html'>註冊報名</a>
+          <a href='agenda.html'>議程資訊</a>
+          <a href='competition.html'>氫能車競賽</a>
+          <a href='traffic_venue.html'>交通與會場</a>
+          <a href='contact_sponsor.html'>聯絡與贊助</a>
+          <a href='english.html'>ENGLISH</a>
+        </nav>
+      </div>
+    </section>
+    <section class="section hero">
+      <div class="eyebrow">About HEFC 2026</div>
+      <h1>會議資訊</h1>
+      <p class="hero-subtitle">HEFC 2026 以氫能與燃料電池技術為核心，結合學術研究、產業應用、人才培育與政策對話，作為 2026 年度氫能領域的重要交流平台。</p>
+      <div class="hero-meta">
+        <div class="meta-card"><div class="meta-title">Conference</div><div class="meta-value">2026 全國氫能與燃料電池研討會<br>Hydrogen Energy &amp; Fuel Cell Conference 2026</div></div>
+        <div class="meta-card"><div class="meta-title">Date</div><div class="meta-value">2026/10/02（五）— 10/03（六）</div></div>
+        <div class="meta-card"><div class="meta-title">Venue</div><div class="meta-value">國立臺灣科技大學 國際大樓（IB）</div></div>
+      </div>
+    </section>
+
+    <section class="section body-section">
+      <div class="section-head"><div><h2>大會宗旨與願景</h2><p>本屆研討會特別強調技術落地與國際接軌，廣邀海內外學者、產業領袖與研究團隊，共同探討氫能供應鏈的未來格局。</p></div></div>
+      <div class="grid-3">
+        <article class="card"><div class="chip">技術交流</div><h3>促進學術與應用對話</h3><p>提供氫能與燃料電池技術之學術研究與實務應用交流平台，回應淨零轉型與能源創新的需求。</p></article>
+        <article class="card"><div class="chip">產學媒合</div><h3>鏈結研發與產業需求</h3><p>整合學界前瞻研發能量與產業落地經驗，強化技術合作、示範場域與產業交流機會。</p></article>
+        <article class="card"><div class="chip">國際接軌</div><h3>讓研究成果進入更大的對話場域</h3><p>透過論壇、研討會、展覽與英語資訊整理，提升跨國交流與國際參與的可近性。</p></article>
+      </div>
+    </section>
+
+    <section class="section body-section">
+      <div class="section-head"><div><h2>大會目標</h2><p>本頁整理 HEFC 2026 的核心定位、研究主軸與組織資訊。</p></div></div>
+      <div class="grid-2">
+        <article class="card"><div class="chip">目標一</div><h3>技術交流</h3><p>促進氫能生產、儲存、燃料電池材料與系統等研究議題之學術與應用交流。</p></article>
+        <article class="card"><div class="chip">目標二</div><h3>產學媒合</h3><p>媒合學界研發能量與產業技術需求，讓研究成果更容易對接產業現場。</p></article>
+        <article class="card"><div class="chip">目標三</div><h3>人才培育</h3><p>鼓勵年輕學者與學生投入綠色能源議題，透過發表、競賽與展示累積經驗。</p></article>
+        <article class="card"><div class="chip">目標四</div><h3>政策對話</h3><p>提供政府、學界與產業的對話平台，延伸技術路徑、法規治理與能源轉型議題。</p></article>
+      </div>
+    </section>
+
+    <section class="section body-section">
+      <div class="section-head"><div><h2>核心主題</h2><p>大會聚焦氫能與燃料電池領域的重要研究與應用方向。</p></div></div>
+      <div class="grid-2">
+        <article class="card"><div class="chip">研究方向</div><ul class="detail-list"><li><strong>氫能生產、純化與儲存技術</strong>涵蓋氫氣製備、儲運與供應鏈關鍵技術。</li><li><strong>低溫與高溫燃料電池材料與系統</strong>包含組件材料、性能評估與系統整合。</li><li><strong>水電解產氫與轉能（P2G）技術</strong>聚焦電解系統、能源轉換與整合應用。</li></ul></article>
+        <article class="card"><div class="chip">延伸應用</div><ul class="detail-list"><li><strong>氫能載具、無人機與定置型動力系統</strong>關注交通載具與多元應用場景。</li><li><strong>碳捕獲、利用與封存（CCUS）技術</strong>討論淨零路徑下的技術發展與整合。</li><li><strong>能源智慧轉型</strong>強調跨域整合、系統觀點與國際合作。</li></ul></article>
+      </div>
+    </section>
+
+    <section class="section body-section">
+      <div class="section-head"><div><h2>大會組織架構</h2><p>以下整理本屆大會目前公開的組織資訊。</p></div></div>
+      <div class="grid-2">
+        <article class="card">
+          <div class="chip">榮譽職</div>
+          <ul class="info-list">
+            <li><strong>榮譽主任委員</strong>顏家鈺｜國立臺灣科技大學 校長</li>
+            <li><strong>榮譽副主任委員</strong>陳明志｜國立臺灣科技大學 工學院院長</li>
+            <li><strong>榮譽副主任委員</strong>曾重仁｜能源學門召集人</li>
+            <li><strong>榮譽副主任委員</strong>郭振坤｜台灣氫能與燃料電池學會 理事長</li>
+          </ul>
+        </article>
+        <article class="card">
+          <div class="chip">大會主席</div>
+          <ul class="info-list">
+            <li><strong>主席</strong>王丞浩 教授</li>
+            <li><strong>職稱</strong>國立臺灣科技大學 材料科學與工程系 教授兼系主任</li>
+            <li><strong>角色</strong>大會主席兼籌備委員會召集人</li>
+            <li><strong>窗口</strong>負責會議執行、展覽與整體籌備協調</li>
+          </ul>
+        </article>
+      </div>
+            <article class="card committee-card">
+        <div class="chip">籌備委員會委員</div>
+        <h3>委員名單</h3>
+        <p class="committee-note">（依姓氏筆畫順序排列）</p>
+        <div class="committee-grid">
+          <p class="committee-row">王偉成、王金燦、王錫福</p>
+          <p class="committee-row">張孫堂、張烔堡、張崴縉</p>
+          <p class="committee-row">陳永松、陳致源、陳維新</p>
+          <p class="committee-row">白益豪、江姿萱、池易楷</p>
+          <p class="committee-row">黃文堯、黃欣萍、黃信智</p>
+          <p class="committee-row">陳震宇、潘詠庭、賴慶明</p>
+          <p class="committee-row">李其源、李勝偉、杜鶴芸</p>
+          <p class="committee-row">楊永欽、楊添福、楊昌中</p>
+          <p class="committee-row">蔡文蔭、蔡麗端、顏維謀</p>
+          <p class="committee-row">周哲平、翁芳柏、張又中</p>
+          <p class="committee-row">楊錫杭、管衍德、趙 裕</p>
+          <p class="committee-row">郭俊賢、葉旻鑫、劉奕宏</p>
+          <p class="committee-row">張仍奎、張宏宜、張文昇</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="section body-section">
+      <div class="section-head"><div><h2>主辦與會場資訊</h2><p>以下為目前已確認的基本資訊。</p></div></div>
+      <div class="grid-2">
+        <article class="card"><div class="chip">主辦單位</div><ul class="info-list"><li><strong>主辦單位</strong>國立臺灣科技大學 材料科學與工程系</li><li><strong>執行單位</strong>能源材料實驗室（王丞浩 教授）</li><li><strong>協辦單位</strong>台灣氫能與燃料電池學會、國立臺灣科技大學工學院</li></ul></article>
+        <article class="card"><div class="chip">會場資訊</div><ul class="info-list"><li><strong>會議地點</strong>國立臺灣科技大學 國際大樓（IB）</li><li><strong>會期</strong>2026/10/02（五）— 10/03（六）</li><li><strong>聯絡窗口</strong>王丞浩 教授｜chwang@mail.ntust.edu.tw</li></ul></article>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
+
+
+
+
+

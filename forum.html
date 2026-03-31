@@ -1,0 +1,168 @@
+﻿<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HEFC 2026 Forum</title>
+  <style>
+    :root { --text:#1f2c2f; --muted:#6a777b; --line:rgba(31,44,47,0.08); --primary-deep:#365959; --shadow:0 18px 42px rgba(37,48,50,0.06); --radius-xl:34px; --radius-lg:26px; --max-width:1180px; }
+    *{box-sizing:border-box;} body{margin:0;font-family:"SF Pro Display","SF Pro Text","Segoe UI","PingFang TC","Noto Sans TC",sans-serif;color:var(--text);background:radial-gradient(circle at top left, rgba(77,114,112,0.05), transparent 24%), linear-gradient(180deg,#f7f8f8 0%,#f3f6f5 52%,#f8f9f9 100%);letter-spacing:-0.01em;} .page{width:min(var(--max-width),calc(100% - 32px));margin:0 auto;padding:20px 0 40px;} .section{margin-top:22px;border:1px solid var(--line);border-radius:var(--radius-xl);background:linear-gradient(180deg,rgba(255,255,255,0.88),rgba(249,251,250,0.95));box-shadow:var(--shadow);overflow:hidden;} .hero{padding:40px 38px 36px;background:radial-gradient(circle at 85% 14%, rgba(77,114,112,0.12), transparent 20%), linear-gradient(135deg, rgba(250,252,251,0.98), rgba(241,246,245,0.95));} .eyebrow,.chip{display:inline-flex;align-items:center;min-height:30px;padding:0 12px;border-radius:999px;background:rgba(255,255,255,0.74);border:1px solid rgba(77,114,112,0.08);color:var(--primary-deep);font-size:.8rem;font-weight:600;} h1,h2,h3{margin:0;letter-spacing:-0.04em;} h1{margin-top:18px;font-size:clamp(2.8rem,7vw,5rem);line-height:.94;font-weight:700;} .hero-subtitle,.section-head p,.card p,.list li{color:var(--muted);line-height:1.74;} .hero-subtitle{margin:14px 0 0;max-width:760px;font-size:clamp(1.04rem,1.8vw,1.24rem);} .hero-meta,.grid-2,.grid-3{display:grid;gap:16px;} .hero-meta{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:28px;} .grid-2{grid-template-columns:repeat(2,minmax(0,1fr));} .grid-3{grid-template-columns:repeat(3,minmax(0,1fr));} .meta-card,.card{padding:22px;border:1px solid var(--line);border-radius:var(--radius-lg);background:rgba(255,255,255,0.72);box-shadow:0 10px 28px rgba(30,42,43,0.04);} .meta-title{color:var(--muted);font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;} .meta-value{margin-top:8px;font-size:1rem;line-height:1.6;font-weight:600;} .body-section{padding:30px 28px 32px;} .section-head{display:flex;justify-content:space-between;align-items:end;gap:18px;margin-bottom:22px;} .section-head h2{font-size:clamp(1.7rem,3vw,2.25rem);font-weight:650;} .card h3{margin-top:14px;font-size:1.08rem;font-weight:650;line-height:1.45;} .list{display:grid;gap:12px;margin:16px 0 0;padding:0;list-style:none;} .list li{padding-top:12px;border-top:1px solid rgba(31,44,47,0.06);} .list li:first-child{padding-top:0;border-top:0;} .list strong{display:block;margin-bottom:4px;color:var(--text);font-weight:600;} @media (max-width:900px){.hero-meta,.grid-2,.grid-3{grid-template-columns:1fr;}} @media (max-width:720px){.page{width:min(var(--max-width),calc(100% - 20px));}.hero,.body-section{padding-left:20px;padding-right:20px;}.section-head{flex-direction:column;align-items:start;}}
+    .site-frame {
+      position: sticky;
+      top: 10px;
+      z-index: 40;
+      margin-top: 6px;
+      margin-bottom: 18px;
+      border: 1px solid rgba(31,44,47,0.07);
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(238,244,243,0.92), rgba(252,253,253,0.84));
+      backdrop-filter: blur(24px) saturate(145%);
+      box-shadow: 0 12px 30px rgba(30,42,43,0.05);
+      overflow: hidden;
+    }
+
+    .site-frame__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+      padding: 0 12px 0 16px;
+      gap: 16px;
+    }
+
+    .site-brand {
+      display: inline-flex;
+      align-items: center;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+
+    .site-nav {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .site-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .site-nav a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 10px;
+      border-radius: 999px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      transition: background-color 0.18s ease, color 0.18s ease;
+    }
+
+    .site-nav a:hover {
+      background: rgba(77,114,112,0.08);
+      color: var(--text);
+    }
+
+    .site-nav a.is-current {
+      background: rgba(77,114,112,0.14);
+      color: var(--text);
+      box-shadow: inset 0 0 0 1px rgba(77,114,112,0.08);
+    }
+
+    .committee-note {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .committee-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px 28px;
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(31,44,47,0.08);
+    }
+
+    .committee-row {
+      margin: 0;
+      color: var(--text);
+      line-height: 1.9;
+      font-size: 1rem;
+    }
+    @media (max-width: 900px) {
+      .committee-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .site-frame {
+        top: 8px;
+        border-radius: 28px;
+      }
+
+      .site-frame__inner {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px 12px;
+      }
+
+      .committee-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .committee-row {
+        font-size: 0.96rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class='page'>
+    <section class='site-frame'>
+      <div class='site-frame__inner'>
+        <a class='site-brand' href='home.html'>HEFC 2026</a>
+        <nav class='site-nav' aria-label='頁面導覽'>
+          <a href='home.html'>首頁</a>
+          <a href='info.html'>會議資訊</a>
+          <a href='conference.html'>學術研討會</a>
+          <a href='forum.html' class='is-current' aria-current='page'>技術論壇</a>
+          <a href='call_for_papers.html'>徵稿資訊</a>
+          <a href='registration.html'>註冊報名</a>
+          <a href='agenda.html'>議程資訊</a>
+          <a href='competition.html'>氫能車競賽</a>
+          <a href='traffic_venue.html'>交通與會場</a>
+          <a href='contact_sponsor.html'>聯絡與贊助</a>
+          <a href='english.html'>ENGLISH</a>
+        </nav>
+      </div>
+    </section>
+    <section class="section hero">
+      <div class="eyebrow">Forum</div>
+      <h1>技術論壇</h1>
+      <p class="hero-subtitle">氫能與燃料電池技術論壇將於 2026/10/02 舉行，聚焦技術發展、產學交流與政策產業展望。</p>
+      <div class="hero-meta"><div class="meta-card"><div class="meta-title">Date</div><div class="meta-value">2026/10/02（五）</div></div><div class="meta-card"><div class="meta-title">Venue</div><div class="meta-value">國立臺灣科技大學 國際大樓（IB）｜IB-101</div></div><div class="meta-card"><div class="meta-title">Focus</div><div class="meta-value">技術交流、產學對談、政策與產業展望</div></div></div>
+    </section>
+    <section class="section body-section"><div class="section-head"><div><h2>論壇定位</h2><p>論壇以專題演講與交流對談形式，串聯學術研究與產業實務。</p></div></div><div class="grid-3"><article class="card"><div class="chip">主題一</div><h3>氫能基礎設施與關鍵技術</h3><p>聚焦氫能供應鏈、基礎建設與技術瓶頸突破。</p></article><article class="card"><div class="chip">主題二</div><h3>燃料電池與綠能應用趨勢</h3><p>討論燃料電池應用、系統整合與產業前景。</p></article><article class="card"><div class="chip">主題三</div><h3>政策與產業展望</h3><p>從產學對談延伸至淨零排放路徑下的政策與產業發展。</p></article></div></section>
+    <section class="section body-section"><div class="section-head"><div><h2>論壇主要時程</h2><p>以下為 10 月 2 日技術論壇重點安排。</p></div></div><div class="grid-2"><article class="card"><div class="chip">上午</div><ul class="list"><li><strong>09:00 - 09:30</strong>報到｜IB-101 大廳</li><li><strong>09:30 - 10:20</strong>論壇專題 I｜氫能基礎設施與關鍵技術｜IB-101</li><li><strong>10:40 - 12:00</strong>論壇專題 II｜燃料電池與綠能應用趨勢｜IB-101</li></ul></article><article class="card"><div class="chip">下午</div><ul class="list"><li><strong>13:30 - 15:00</strong>論壇專題 III｜產學對談：氫能供應鏈挑戰｜IB-101</li><li><strong>15:20 - 17:00</strong>論壇專題 IV｜淨零排放路徑下的政策與產業展望｜IB-101</li><li><strong>18:00 - 20:00</strong>技術論壇廠商聯誼晚宴｜新店彭園</li></ul></article></div></section>
+    <section class="section body-section"><div class="section-head"><div><h2>相關資訊</h2><p>更多報名與完整議程資訊請參閱相關頁面。</p></div></div><div class="grid-2"><article class="card"><div class="chip">相關頁面</div><ul class="list"><li><strong>報名頁</strong>論壇報名費與參與方式請參閱註冊報名頁。</li><li><strong>議程頁</strong>完整論壇時程與茶敘安排請參閱議程資訊。</li><li><strong>英文頁</strong>英文資訊請參閱 ENGLISH 頁面。</li></ul></article><article class="card"><div class="chip">補充說明</div><ul class="list"><li><strong>午餐</strong>12:00 - 13:30 安排會員交流午餐。</li><li><strong>茶敘</strong>上午與下午茶敘皆安排於 IB 2F。</li><li><strong>交流晚宴</strong>論壇晚宴將作為產學與廠商交流場合。</li></ul></article></div></section>
+  </div>
+</body>
+</html>
+
+
+

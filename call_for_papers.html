@@ -1,0 +1,463 @@
+﻿<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HEFC 2026 Call For Papers</title>
+  <style>
+    :root {
+      --bg: #f5f7f6;
+      --surface: rgba(255, 255, 255, 0.86);
+      --surface-strong: rgba(255, 255, 255, 0.94);
+      --text: #1f2c2f;
+      --muted: #6a777b;
+      --line: rgba(31, 44, 47, 0.08);
+      --primary: #4d7270;
+      --primary-deep: #365959;
+      --chip: rgba(77, 114, 112, 0.08);
+      --shadow: 0 18px 42px rgba(37, 48, 50, 0.06);
+      --radius-xl: 34px;
+      --radius-lg: 26px;
+      --radius-md: 18px;
+      --max-width: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "SF Pro Display", "SF Pro Text", "Segoe UI", "PingFang TC", "Noto Sans TC", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(77, 114, 112, 0.05), transparent 24%),
+        linear-gradient(180deg, #f7f8f8 0%, #f3f6f5 52%, #f8f9f9 100%);
+      letter-spacing: -0.01em;
+    }
+
+    .page {
+      width: min(var(--max-width), calc(100% - 32px));
+      margin: 0 auto;
+      padding: 20px 0 40px;
+    }
+
+    .section {
+      margin-top: 22px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(180deg, rgba(255,255,255,0.88), rgba(249,251,250,0.95));
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero {
+      padding: 40px 38px 36px;
+      background:
+        radial-gradient(circle at 85% 14%, rgba(77,114,112,0.12), transparent 20%),
+        linear-gradient(135deg, rgba(250,252,251,0.98), rgba(241,246,245,0.95));
+    }
+
+    .eyebrow,
+    .chip,
+    .label {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.74);
+      border: 1px solid rgba(77,114,112,0.08);
+      color: var(--primary-deep);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      letter-spacing: -0.04em;
+    }
+
+    h1 {
+      margin-top: 18px;
+      font-size: clamp(2.8rem, 7vw, 5rem);
+      line-height: 0.94;
+      font-weight: 700;
+    }
+
+    .hero-subtitle,
+    .section-head p,
+    .card p,
+    .detail-list li,
+    .timeline-list li,
+    .topic-list li,
+    .faq-list li {
+      color: var(--muted);
+      line-height: 1.74;
+    }
+
+    .hero-subtitle {
+      margin: 14px 0 0;
+      max-width: 760px;
+      font-size: clamp(1.04rem, 1.8vw, 1.24rem);
+    }
+
+    .hero-meta {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .meta-card,
+    .card {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,0.72);
+      box-shadow: 0 10px 28px rgba(30,42,43,0.04);
+    }
+
+    .meta-title {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .meta-value {
+      margin-top: 8px;
+      font-size: 1rem;
+      line-height: 1.6;
+      font-weight: 600;
+    }
+
+    .body-section {
+      padding: 30px 28px 32px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(1.7rem, 3vw, 2.25rem);
+      font-weight: 650;
+    }
+
+    .grid-2,
+    .grid-3 {
+      display: grid;
+      gap: 16px;
+    }
+
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    .card h3 {
+      margin-top: 14px;
+      font-size: 1.08rem;
+      font-weight: 650;
+      line-height: 1.45;
+    }
+
+    .detail-list,
+    .timeline-list,
+    .topic-list,
+    .faq-list {
+      display: grid;
+      gap: 12px;
+      margin: 16px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .detail-list li,
+    .timeline-list li,
+    .topic-list li,
+    .faq-list li {
+      padding-top: 12px;
+      border-top: 1px solid rgba(31,44,47,0.06);
+    }
+
+    .detail-list li:first-child,
+    .timeline-list li:first-child,
+    .topic-list li:first-child,
+    .faq-list li:first-child {
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    .detail-list strong,
+    .timeline-list strong,
+    .topic-list strong,
+    .faq-list strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+        .step-card {
+      min-height: 200px;
+    }
+
+    .topic-plain-card {
+      padding: 28px 26px;
+    }
+
+    .topic-plain {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 40px;
+      margin: 0;
+      padding-left: 24px;
+    }
+
+    .topic-plain li {
+      color: var(--text);
+      line-height: 1.9;
+      font-size: 1.02rem;
+    }
+
+        @media (max-width: 900px) {
+      .hero-meta,
+      .grid-2,
+      .grid-3,
+      .topic-plain {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        width: min(var(--max-width), calc(100% - 20px));
+      }
+
+      .hero,
+      .body-section {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .section-head {
+        flex-direction: column;
+        align-items: start;
+      }
+    }
+    .site-frame {
+      position: sticky;
+      top: 10px;
+      z-index: 40;
+      margin-top: 6px;
+      margin-bottom: 18px;
+      border: 1px solid rgba(31,44,47,0.07);
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(238,244,243,0.92), rgba(252,253,253,0.84));
+      backdrop-filter: blur(24px) saturate(145%);
+      box-shadow: 0 12px 30px rgba(30,42,43,0.05);
+      overflow: hidden;
+    }
+
+    .site-frame__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+      padding: 0 12px 0 16px;
+      gap: 16px;
+    }
+
+    .site-brand {
+      display: inline-flex;
+      align-items: center;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+
+    .site-nav {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .site-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .site-nav a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 10px;
+      border-radius: 999px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      transition: background-color 0.18s ease, color 0.18s ease;
+    }
+
+    .site-nav a:hover {
+      background: rgba(77,114,112,0.08);
+      color: var(--text);
+    }
+
+    .site-nav a.is-current {
+      background: rgba(77,114,112,0.14);
+      color: var(--text);
+      box-shadow: inset 0 0 0 1px rgba(77,114,112,0.08);
+    }
+
+    .committee-note {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .committee-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px 28px;
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(31,44,47,0.08);
+    }
+
+    .committee-row {
+      margin: 0;
+      color: var(--text);
+      line-height: 1.9;
+      font-size: 1rem;
+    }
+    @media (max-width: 900px) {
+      .committee-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .site-frame {
+        top: 8px;
+        border-radius: 28px;
+      }
+
+      .site-frame__inner {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px 12px;
+      }
+
+      .committee-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .committee-row {
+        font-size: 0.96rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class='page'>
+    <section class='site-frame'>
+      <div class='site-frame__inner'>
+        <a class='site-brand' href='home.html'>HEFC 2026</a>
+        <nav class='site-nav' aria-label='頁面導覽'>
+          <a href='home.html'>首頁</a>
+          <a href='info.html'>會議資訊</a>
+          <a href='conference.html'>學術研討會</a>
+          <a href='forum.html'>技術論壇</a>
+          <a href='call_for_papers.html' class='is-current' aria-current='page'>徵稿資訊</a>
+          <a href='registration.html'>註冊報名</a>
+          <a href='agenda.html'>議程資訊</a>
+          <a href='competition.html'>氫能車競賽</a>
+          <a href='traffic_venue.html'>交通與會場</a>
+          <a href='contact_sponsor.html'>聯絡與贊助</a>
+          <a href='english.html'>ENGLISH</a>
+        </nav>
+      </div>
+    </section>
+    <section class="section hero">
+      <div class="eyebrow">Call For Papers</div>
+      <h1>徵稿資訊</h1>
+      <p class="hero-subtitle">本頁整理投稿時程、格式規範與常見問題，方便投稿者快速準備送件資料。</p>
+      <div class="hero-meta">
+        <div class="meta-card"><div class="meta-title">Submission Deadline</div><div class="meta-value">2026/08/15</div></div>
+        <div class="meta-card"><div class="meta-title">Notification</div><div class="meta-value">2026/08/30</div></div>
+        <div class="meta-card"><div class="meta-title">Categories</div><div class="meta-value">一般論文、學生論文競賽、海報展示</div></div>
+      </div>
+    </section>
+
+    <section class="section body-section"><div class="section-head"><div><h2>投稿類別</h2><p>本次徵稿分為一般論文、學生論文競賽與海報展示三大類別。</p></div></div><div class="grid-3"><article class="card"><div class="chip">一般論文</div><h3>學術研討會論文投稿</h3><p>提供產學研界專家發表最新技術突破與研究成果。</p></article><article class="card"><div class="chip">學生競賽</div><h3>學生論文競賽</h3><p>鼓勵在校學生參與口頭或海報發表，展現研究能量。</p></article><article class="card"><div class="chip">海報展示</div><h3>海報論文投稿</h3><p>提供研究成果視覺化展示空間，並安排現場交流與評選。</p></article></div></section>
+
+    <section class="section body-section"><div class="section-head"><div><h2>重要時程</h2><p>請依下列時程完成投稿與註冊。</p></div></div><div class="grid-2"><article class="card"><div class="chip">時程摘要</div><ul class="timeline-list"><li><strong>摘要投稿截止日期</strong>2026/08/15</li><li><strong>論文審查結果通知</strong>2026/08/30</li><li><strong>早鳥註冊報名截止</strong>2026/08/31</li><li><strong>研討會召開日期</strong>2026/10/02 - 2026/10/03</li></ul></article><article class="card"><div class="chip">投稿提醒</div><ul class="timeline-list"><li><strong>摘要格式</strong>請依大會指定格式編撰摘要。</li><li><strong>摘要收錄</strong>經審查通過之論文將收錄於大會摘要集。</li><li><strong>議程安排</strong>通過審查之稿件將優先安排於分組發表議程中。</li></ul></article></div></section>
+
+        <section class="section body-section">
+      <div class="section-head"><div><h2>徵稿主題</h2><p>徵稿主題依序如下。</p></div></div>
+      <article class="card topic-plain-card">
+        <ul class="topic-plain">
+          <li>1. 氫能生產、純化與儲存</li>
+          <li>5. 能源材料分析與模擬</li>
+          <li>2. 燃料電池組件與系統</li>
+          <li>6. 氫能載具與動力系統</li>
+          <li>3. 水電解產氫與 P2G</li>
+          <li>7. 能源政策、環境與安全</li>
+          <li>4. 二氧化碳捕獲與轉能</li>
+          <li>8. 其他綠色能源技術</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="section body-section">
+      <div class="section-head"><div><h2>投稿格式與送件準備</h2><p>投稿前請先確認模板、欄位與檔案限制。</p></div></div>
+      <div class="grid-3">
+        <article class="card"><div class="chip">格式下載</div><h3>先下載模板再撰寫</h3><ul class="detail-list"><li><strong>摘要格式（Word）</strong>請依大會指定格式編撰摘要。</li><li><strong>摘要範例（PDF）</strong>請下載摘要範例，確認版型與內容安排。</li><li><strong>下載方式</strong>範本與範例下載將依大會公告開放。</li></ul></article>
+        <article class="card"><div class="chip">檔案規格</div><h3>送件前請確認檔案限制</h3><ul class="detail-list"><li><strong>上傳格式</strong>僅限 PDF。</li><li><strong>檔案大小上限</strong>10 MB。</li><li><strong>圖片解析度</strong>若摘要內含圖片，請確認版面清晰且可讀。</li></ul></article>
+        <article class="card"><div class="chip">表單內容</div><h3>投稿欄位一次看懂</h3><ul class="detail-list"><li><strong>基本欄位</strong>論文題目、作者、單位、通訊作者 Email。</li><li><strong>投稿設定</strong>發表形式、投稿領域、摘要簡述與 PDF 檔案。</li><li><strong>摘要簡述</strong>建議控制於 300-500 字，並以大會公告版本為準。</li></ul></article>
+      </div>
+    </section>
+
+    <section class="section body-section"><div class="section-head"><div><h2>投稿流程</h2><p>請依下列流程完成投稿準備。</p></div></div><div class="grid-3"><article class="card step-card"><div class="chip">Step 1</div><h3>確認投稿類型與主題</h3><p>請先選擇一般論文、學生競賽或海報展示，並確認適合的投稿領域。</p></article><article class="card step-card"><div class="chip">Step 2</div><h3>下載格式與準備摘要</h3><p>請先下載指定 Word 格式與摘要範例，再依規範完成摘要與 PDF 檔案整理。</p></article><article class="card step-card"><div class="chip">Step 3</div><h3>完成線上送件</h3><p>依指定入口完成投稿，並留意審查通知、報名截止與後續議程安排。</p></article></div></section>
+
+    <section class="section body-section">
+      <div class="section-head"><div><h2>學生論文競賽與海報展示</h2><p>投稿者可於此一併掌握學生競賽與海報展示安排。</p></div></div>
+      <div class="grid-2">
+        <article class="card"><div class="chip">學生論文競賽</div><ul class="detail-list"><li><strong>參與方式</strong>學生可選擇一般發表或學生論文競賽。</li><li><strong>發表形式</strong>以口頭發表為主，實際評選方式依公告版本為準。</li><li><strong>送件提醒</strong>若選擇競賽組，請確認投稿類型與資格證明資料是否完整。</li></ul></article>
+        <article class="card"><div class="chip">海報展示</div><ul class="detail-list"><li><strong>展示地點</strong>IB 2F 走廊與中庭。</li><li><strong>海報規格</strong>A1（59.4cm × 84.1cm）。</li><li><strong>展示日期</strong>2026/10/03 全天，並安排現場交流與評選。</li></ul></article>
+      </div>
+    </section>
+
+    <section class="section body-section">
+      <div class="section-head"><div><h2>投稿常見問題</h2><p>整理投稿者最常詢問的送件問題，方便快速確認格式、送件與發表安排。</p></div></div>
+      <div class="grid-2">
+        <article class="card"><div class="chip">格式與內容</div><ul class="faq-list"><li><strong>摘要字數怎麼抓？</strong>表單摘要簡述建議控制在 300-500 字；若依模板整理摘要內容，請以不超過 500 字為原則，並以大會最終公告版本為準。</li><li><strong>需要使用指定模板嗎？</strong>是，請使用大會指定 Word 範本撰寫摘要，再輸出為 PDF 上傳。</li><li><strong>可以只先看範例再決定格式嗎？</strong>可以，建議同頁提供 Word 與 PDF 範例下載，方便投稿者比對。</li></ul></article>
+        <article class="card"><div class="chip">送件與發表</div><ul class="faq-list"><li><strong>共同作者可以代為報告嗎？</strong>可以，但需事先通知大會，以利議程與發表安排。</li><li><strong>投稿後會如何安排？</strong>經審查通過之稿件將收錄於大會摘要集，並優先安排於分組發表議程中。</li><li><strong>送件後還要注意什麼？</strong>請同步留意 2026/08/31 的早鳥報名截止，避免投稿完成後漏掉註冊程序。</li></ul></article>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
