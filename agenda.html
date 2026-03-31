@@ -1,198 +1,110 @@
-﻿<!DOCTYPE html>
-<html lang="zh-Hant">
+<!DOCTYPE html>
+<html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HEFC 2026 Agenda</title>
-  <style>
-    :root { --text:#1f2c2f; --muted:#6a777b; --line:rgba(31,44,47,0.08); --primary-deep:#365959; --chip:rgba(77,114,112,0.08); --shadow:0 18px 42px rgba(37,48,50,0.06); --radius-xl:34px; --radius-lg:26px; --max-width:1180px; }
-    * { box-sizing:border-box; }
-    body { margin:0; font-family:"SF Pro Display","SF Pro Text","Segoe UI","PingFang TC","Noto Sans TC",sans-serif; color:var(--text); background:radial-gradient(circle at top left, rgba(77,114,112,0.05), transparent 24%), linear-gradient(180deg,#f7f8f8 0%,#f3f6f5 52%,#f8f9f9 100%); letter-spacing:-0.01em; }
-    .page { width:min(var(--max-width), calc(100% - 32px)); margin:0 auto; padding:20px 0 40px; }
-    .section { margin-top:22px; border:1px solid var(--line); border-radius:var(--radius-xl); background:linear-gradient(180deg,rgba(255,255,255,0.88),rgba(249,251,250,0.95)); box-shadow:var(--shadow); overflow:hidden; }
-    .hero { padding:40px 38px 36px; background:radial-gradient(circle at 85% 14%, rgba(77,114,112,0.12), transparent 20%), linear-gradient(135deg, rgba(250,252,251,0.98), rgba(241,246,245,0.95)); }
-    .eyebrow,.chip { display:inline-flex; align-items:center; min-height:30px; padding:0 12px; border-radius:999px; background:rgba(255,255,255,0.74); border:1px solid rgba(77,114,112,0.08); color:var(--primary-deep); font-size:.8rem; font-weight:600; }
-    h1,h2,h3 { margin:0; letter-spacing:-0.04em; }
-    h1 { margin-top:18px; font-size:clamp(2.8rem,7vw,5rem); line-height:.94; font-weight:700; }
-    .hero-subtitle,.section-head p,.card p,.list li { color:var(--muted); line-height:1.74; }
-    .hero-subtitle { margin:14px 0 0; max-width:760px; font-size:clamp(1.04rem,1.8vw,1.24rem); }
-    .hero-meta,.grid-2,.grid-3 { display:grid; gap:16px; }
-    .hero-meta { grid-template-columns:repeat(3,minmax(0,1fr)); margin-top:28px; }
-    .grid-2 { grid-template-columns:repeat(2,minmax(0,1fr)); }
-    .grid-3 { grid-template-columns:repeat(3,minmax(0,1fr)); }
-    .meta-card,.card { padding:22px; border:1px solid var(--line); border-radius:var(--radius-lg); background:rgba(255,255,255,0.72); box-shadow:0 10px 28px rgba(30,42,43,0.04); }
-    .meta-title { color:var(--muted); font-size:.78rem; font-weight:600; letter-spacing:.06em; text-transform:uppercase; }
-    .meta-value { margin-top:8px; font-size:1rem; line-height:1.6; font-weight:600; }
-    .body-section { padding:30px 28px 32px; }
-    .section-head { display:flex; justify-content:space-between; align-items:end; gap:18px; margin-bottom:22px; }
-    .section-head h2 { font-size:clamp(1.7rem,3vw,2.25rem); font-weight:650; }
-    .card h3 { margin-top:14px; font-size:1.08rem; font-weight:650; line-height:1.45; }
-    .list { display:grid; gap:12px; margin:16px 0 0; padding:0; list-style:none; }
-    .list li { padding-top:12px; border-top:1px solid rgba(31,44,47,0.06); }
-    .list li:first-child { padding-top:0; border-top:0; }
-    .list strong { display:block; margin-bottom:4px; color:var(--text); font-weight:600; }
-    @media (max-width:900px) { .hero-meta,.grid-2,.grid-3 { grid-template-columns:1fr; } }
-    @media (max-width:720px) { .page { width:min(var(--max-width), calc(100% - 20px)); } .hero,.body-section { padding-left:20px; padding-right:20px; } .section-head { flex-direction:column; align-items:start; } }
-    .site-frame {
-      position: sticky;
-      top: 10px;
-      z-index: 40;
-      margin-top: 6px;
-      margin-bottom: 18px;
-      border: 1px solid rgba(31,44,47,0.07);
-      border-radius: 999px;
-      background: linear-gradient(180deg, rgba(238,244,243,0.92), rgba(252,253,253,0.84));
-      backdrop-filter: blur(24px) saturate(145%);
-      box-shadow: 0 12px 30px rgba(30,42,43,0.05);
-      overflow: hidden;
-    }
-
-    .site-frame__inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      min-height: 44px;
-      padding: 0 12px 0 16px;
-      gap: 16px;
-    }
-
-    .site-brand {
-      display: inline-flex;
-      align-items: center;
-      color: var(--text);
-      text-decoration: none;
-      font-size: 0.92rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      white-space: nowrap;
-    }
-
-    .site-nav {
-      display: flex;
-      align-items: center;
-      gap: 2px;
-      overflow-x: auto;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-    }
-
-    .site-nav::-webkit-scrollbar {
-      display: none;
-    }
-
-    .site-nav a {
-      display: inline-flex;
-      align-items: center;
-      min-height: 34px;
-      padding: 0 10px;
-      border-radius: 999px;
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      white-space: nowrap;
-      transition: background-color 0.18s ease, color 0.18s ease;
-    }
-
-    .site-nav a:hover {
-      background: rgba(77,114,112,0.08);
-      color: var(--text);
-    }
-
-    .site-nav a.is-current {
-      background: rgba(77,114,112,0.14);
-      color: var(--text);
-      box-shadow: inset 0 0 0 1px rgba(77,114,112,0.08);
-    }
-
-    .committee-note {
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: 0.92rem;
-      line-height: 1.6;
-    }
-
-    .committee-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px 28px;
-      margin-top: 18px;
-      padding-top: 18px;
-      border-top: 1px solid rgba(31,44,47,0.08);
-    }
-
-    .committee-row {
-      margin: 0;
-      color: var(--text);
-      line-height: 1.9;
-      font-size: 1rem;
-    }
-    @media (max-width: 900px) {
-      .committee-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 720px) {
-      .site-frame {
-        top: 8px;
-        border-radius: 28px;
-      }
-
-      .site-frame__inner {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 10px 12px;
-      }
-
-      .committee-grid {
-        grid-template-columns: 1fr;
-        gap: 10px;
-      }
-
-      .committee-row {
-        font-size: 0.96rem;
-      }
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>議程表 | HEFC 2026</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class='page'>
-    <section class='site-frame'>
-      <div class='site-frame__inner'>
-        <a class='site-brand' href='home.html'>HEFC 2026</a>
-        <nav class='site-nav' aria-label='頁面導覽'>
-          <a href='home.html'>首頁</a>
-          <a href='info.html'>會議資訊</a>
-          <a href='conference.html'>學術研討會</a>
-          <a href='forum.html'>技術論壇</a>
-          <a href='call_for_papers.html'>徵稿資訊</a>
-          <a href='registration.html'>註冊報名</a>
-          <a href='agenda.html' class='is-current' aria-current='page'>議程資訊</a>
-          <a href='competition.html'>氫能車競賽</a>
-          <a href='traffic_venue.html'>交通與會場</a>
-          <a href='contact_sponsor.html'>聯絡與贊助</a>
-          <a href='english.html'>ENGLISH</a>
-        </nav>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="site-logo" href="index.html">2026 HEFC</a>
+      <p class="site-tagline">2026 全國氫能與燃料電池研討會</p>
+      <p class="site-sub">國立臺灣科技大學 國際大樓（IB）｜2026/10/02（五）— 10/03（六）</p>
+    </div>
+  </header>
+  <nav class="site-nav" aria-label="主要導覽">
+    <div class="site-nav__inner">
+      <a href="index.html">首頁</a>
+      <a href="about.html">關於</a>
+      <a href="agenda.html" class="is-active">議程</a>
+      <a href="papers.html">徵稿</a>
+      <a href="submit.html">投稿</a>
+      <a href="registration.html">報名</a>
+      <a href="faq.html">常見問題</a>
+      <a href="venue.html">交通住宿</a>
+      <a href="exhibition.html">廠商展覽</a>
+      <a href="org.html">組織</a>
+    </div>
+  </nav>
+
+  <main class="site-main">
+    <h1 class="page-title">大會議程</h1>
+    <p class="lead">本屆大會採取「論壇」與「研討會」雙線進行，以下為詳細時程規劃。</p>
+
+    <div class="card">
+      <div class="day-switch">
+        <button onclick="showDay(1)" id="btn-day1" class="day-btn is-active">Day 1｜10/02 (五)</button>
+        <button onclick="showDay(2)" id="btn-day2" class="day-btn">Day 2｜10/03 (六)</button>
       </div>
-    </section>
-    <section class="section hero">
-      <div class="eyebrow">Agenda</div>
-      <h1>議程資訊</h1>
-      <p class="hero-subtitle">本屆大會採技術論壇與研討會雙線進行，以下整理兩日主要議程安排。</p>
-      <div class="hero-meta">
-        <div class="meta-card"><div class="meta-title">Event Date</div><div class="meta-value">2026/10/02（五）— 10/03（六）</div></div>
-        <div class="meta-card"><div class="meta-title">Venue</div><div class="meta-value">國立臺灣科技大學 國際大樓（IB）</div></div>
-        <div class="meta-card"><div class="meta-title">Sections</div><div class="meta-value">技術論壇、學術研討會、晚宴活動</div></div>
+
+      <!-- DAY 1 -->
+      <div id="day1">
+        <h2 class="agenda-day-title">氫能與燃料電池技術論壇 (10/02)</h2>
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr><th>時間</th><th>內容</th><th>地點</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="time">09:00 - 09:30</td><td><span class="session-type type--break">☕ 報到</span> 與會者登錄／資料領取</td><td>IB-101 大廳</td></tr>
+              <tr><td class="time">09:30 - 10:20</td><td><span class="session-type type--forum">🎙️ 論壇專題 I</span> 氫能基礎設施與關鍵技術</td><td>IB-101</td></tr>
+              <tr><td class="time">10:20 - 10:40</td><td><span class="session-type type--break">☕ 茶敘</span> Coffee Break</td><td>IB 2F</td></tr>
+              <tr><td class="time">10:40 - 12:00</td><td><span class="session-type type--forum">🎙️ 論壇專題 II</span> 燃料電池與綠能應用趨勢</td><td>IB-101</td></tr>
+              <tr><td class="time">12:00 - 13:30</td><td><span class="session-type type--break">🍱 午餐</span> 會員交流午餐</td><td>各指定教室</td></tr>
+              <tr><td class="time">13:30 - 15:00</td><td><span class="session-type type--forum">🎙️ 論壇專題 III</span> 產學對談：氫能供應鏈挑戰</td><td>IB-101</td></tr>
+              <tr><td class="time">15:00 - 15:20</td><td><span class="session-type type--break">☕ 茶敘</span> Coffee Break</td><td>IB 2F</td></tr>
+              <tr><td class="time">15:20 - 17:00</td><td><span class="session-type type--forum">🎙️ 論壇專題 IV</span> 淨零排放路徑下的政策與產業展望</td><td>IB-101</td></tr>
+              <tr><td class="time">18:00 - 20:00</td><td><span class="session-type type--break">🏠 晚宴</span> 技術論壇廠商聯誼晚宴</td><td>新店彭園</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </section>
-    <section class="section body-section"><div class="section-head"><div><h2>議程架構</h2><p>10 月 2 日為氫能與燃料電池技術論壇，10 月 3 日為全國氫能與燃料電池研討會。</p></div></div><div class="grid-3"><article class="card"><div class="chip">Day 1</div><h3>技術論壇</h3><p>聚焦氫能基礎設施、燃料電池應用趨勢、產學對談與政策產業展望。</p></article><article class="card"><div class="chip">Day 2</div><h3>學術研討會</h3><p>包含開幕、國際特邀演講、學生論文競賽、口頭發表與海報展示。</p></article><article class="card"><div class="chip">Banquet</div><h3>交流晚宴</h3><p>技術論壇晚宴於新店彭園，大會晚宴於曉鹿鳴樓舉行。</p></article></div></section>
-    <section class="section body-section"><div class="section-head"><div><h2>Day 1｜2026/10/02（五）技術論壇</h2><p>論壇主場地為 IB-101，茶敘安排於 IB 2F。</p></div></div><div class="grid-2"><article class="card"><div class="chip">上午</div><ul class="list"><li><strong>09:00 - 09:30</strong>報到｜與會者登錄／資料領取｜IB-101 大廳</li><li><strong>09:30 - 10:20</strong>論壇專題 I｜氫能基礎設施與關鍵技術｜IB-101</li><li><strong>10:20 - 10:40</strong>茶敘｜Coffee Break｜IB 2F</li><li><strong>10:40 - 12:00</strong>論壇專題 II｜燃料電池與綠能應用趨勢｜IB-101</li></ul></article><article class="card"><div class="chip">下午</div><ul class="list"><li><strong>12:00 - 13:30</strong>午餐｜會員交流午餐｜各指定教室</li><li><strong>13:30 - 15:00</strong>論壇專題 III｜產學對談：氫能供應鏈挑戰｜IB-101</li><li><strong>15:00 - 15:20</strong>茶敘｜Coffee Break｜IB 2F</li><li><strong>15:20 - 17:00</strong>論壇專題 IV｜淨零排放路徑下的政策與產業展望｜IB-101</li><li><strong>18:00 - 20:00</strong>技術論壇廠商聯誼晚宴｜新店彭園</li></ul></article></div></section>
-    <section class="section body-section"><div class="section-head"><div><h2>Day 2｜2026/10/03（六）研討會</h2><p>研討會主場地為 IB-101，分組與海報活動分布於各分會場與 IB 2F。</p></div></div><div class="grid-2"><article class="card"><div class="chip">上午</div><ul class="list"><li><strong>09:00 - 09:30</strong>開幕典禮與致詞｜IB-101</li><li><strong>09:30 - 11:00</strong>國際大會特邀專題演講｜IB-101</li><li><strong>11:00 - 12:00</strong>學生論文競賽與學術口頭報告｜IB 各分會場</li><li><strong>12:00 - 13:30</strong>論文交流午宴｜IB 各分會場</li></ul></article><article class="card"><div class="chip">下午</div><ul class="list"><li><strong>13:30 - 15:00</strong>海報論文發表與現場評選｜IB 2F 走廊</li><li><strong>15:00 - 15:20</strong>茶敘｜Coffee Break｜IB 2F</li><li><strong>15:20 - 17:00</strong>全國氫能與燃料電池學術發表｜IB 各分會場</li><li><strong>17:00 - 17:30</strong>優秀論文頒獎與閉幕｜IB-101</li><li><strong>18:00 - 20:30</strong>大會晚宴（HEFC Banquet）｜曉鹿鳴樓</li></ul></article></div></section>
-  </div>
+
+      <!-- DAY 2 -->
+      <div id="day2" class="is-hidden">
+        <h2 class="agenda-day-title">全國氫能與燃料電池研討會 (10/03)</h2>
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr><th>時間</th><th>內容</th><th>地點</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="time">09:00 - 09:30</td><td><span class="session-type type--break">🏅 開幕</span> 2026 HEFC 開幕典禮與致詞</td><td>IB-101</td></tr>
+              <tr><td class="time">09:30 - 11:00</td><td><span class="session-type type--keynote">🌟 Keynote</span> 國際大會特邀專題演講</td><td>IB-101</td></tr>
+              <tr><td class="time">11:00 - 12:00</td><td><span class="session-type type--sympo">📊 分組</span> 學生論文競賽與學術口頭報告</td><td>IB 各分會場</td></tr>
+              <tr><td class="time">12:00 - 13:30</td><td><span class="session-type type--break">🍱 午餐</span> 論文交流午宴</td><td>IB 各分會場</td></tr>
+              <tr><td class="time">13:30 - 15:00</td><td><span class="session-type type--sympo">🖼️ 海報</span> 海報論文發表與現場評選</td><td>IB 2F 走廊</td></tr>
+              <tr><td class="time">15:00 - 15:20</td><td><span class="session-type type--break">☕ 茶敘</span> Coffee Break</td><td>IB 2F</td></tr>
+              <tr><td class="time">15:20 - 17:00</td><td><span class="session-type type--sympo">📊 分組</span> 全國氫能與燃料電池學術發表</td><td>IB 各分會場</td></tr>
+              <tr><td class="time">17:00 - 17:30</td><td><span class="session-type type--break">🏅 閉幕</span> 優秀論文頒獎與閉幕</td><td>IB-101</td></tr>
+              <tr><td class="time">18:00 - 20:30</td><td><span class="session-type type--break">🎉 晚宴</span> 大會晚宴 (HEFC Banquet)</td><td>曉鹿鳴樓</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function showDay(day) {
+        var day1 = document.getElementById('day1');
+        var day2 = document.getElementById('day2');
+        var btn1 = document.getElementById('btn-day1');
+        var btn2 = document.getElementById('btn-day2');
+        day1.classList.toggle('is-hidden', day !== 1);
+        day2.classList.toggle('is-hidden', day !== 2);
+        btn1.classList.toggle('is-active', day === 1);
+        btn2.classList.toggle('is-active', day === 2);
+      }
+    </script>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p><strong>2026 全國氫能與燃料電池研討會（2026 HEFC）</strong></p>
+      <p>主辦：國立臺灣科技大學 材料科學與工程系 能源材料實驗室 (王丞浩 教授)</p>
+    </div>
+  </footer>
 </body>
 </html>
-
-
-
