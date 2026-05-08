@@ -51,26 +51,132 @@
       </div>
     </section>
 
-    <section class="section body-section">
-      <div class="section-head"><div><h2>格式下載與檔案要求(持續更新中，敬請期待)</h2></div></div>
-      <div class="button-row">
-        <a class="button button-spotlight" href="https://docs.google.com/document/d/1yiD9kYKdctz0EDSV-Oi9rfc1MwTrWSDK2FLguTQukuw/export?format=docx" target="_blank" rel="noopener noreferrer">下載摘要格式（Word）</a>
-        <a class="button button-spotlight" href="https://docs.google.com/document/d/1yiD9kYKdctz0EDSV-Oi9rfc1MwTrWSDK2FLguTQukuw/export?format=pdf" target="_blank" rel="noopener noreferrer">下載摘要範例（PDF）</a>
+    <section class="section body-section submission-system" id="submission-system">
+      <div class="section-head"><div><h2>線上投稿系統</h2><p>目前先完成前端展示與投稿資料格式；送出後會產生投稿資訊預覽，後續再串接 Email、雲端與後端資料庫。</p></div></div>
+      <div class="submission-layout submission-layout-single">
+        <article class="card submission-form-card">
+          <div class="submission-status" id="submission-mode">前端展示模式：不會上傳資料。</div>
+          <h3>論文投稿表單</h3>
+          <form id="abstract-submission-form" class="submission-form" data-mode="offline" novalidate>
+            <div class="form-grid-2">
+              <div class="form-row">
+                <label for="submission-category">論文發表形式與競賽 <span>Presentation Type / 必填</span></label>
+                <select id="submission-category" name="category" required>
+                  <option value="">-- 請選擇發表類別 --</option>
+                  <option value="一般論文">一般論文發表 (Oral)</option>
+                  <option value="學生競賽">學生論文競賽 (Oral Competition)</option>
+                  <option value="海報">海報發表 (Poster)</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <label for="submission-topic">投稿領域 <span>Track / 必填</span></label>
+                <select id="submission-topic" name="topic" required>
+                  <option value="">-- 請選擇領域 --</option>
+                  <option value="氫能">氫能生產與儲存 (Hydrogen Production and Storage)</option>
+                  <option value="燃料電池">燃料電池材料與系統 (Fuel Cell Materials and Systems)</option>
+                  <option value="氫燃料系統">氫燃料系統 (Hydrogen Fuel Systems)</option>
+                  <option value="其他能源應用">其他相關能源技術 (Other Related Energy Technologies)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label for="paper-title">論文題目 <span>必填</span></label>
+              <input type="text" id="paper-title" name="title" required placeholder="請輸入完整論文題目">
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-row">
+                <label for="presenter-name">發表人 <span>必填</span></label>
+                <input type="text" id="presenter-name" name="presenter_name" required placeholder="例：王小明">
+              </div>
+              <div class="form-row">
+                <label for="presenter-email">發表人 Email <span>必填</span></label>
+                <input type="email" id="presenter-email" name="presenter_email" required placeholder="用於發表通知與現場聯繫">
+              </div>
+            </div>
+
+            <label class="checkbox-row" for="presenter-same-as-corresponding">
+              <input type="checkbox" id="presenter-same-as-corresponding">
+              <span>發表人與通訊作者相同</span>
+            </label>
+
+            <div class="form-grid-2" id="corresponding-fields">
+              <div class="form-row">
+                <label for="corresponding-author">通訊作者 <span>必填</span></label>
+                <input type="text" id="corresponding-author" name="corresponding_author" required placeholder="例：陳教授">
+              </div>
+              <div class="form-row">
+                <label for="corresponding-email">通訊作者 Email <span>必填</span></label>
+                <input type="email" id="corresponding-email" name="corresponding_email" required placeholder="用於接收投稿確認信">
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-row">
+                <label for="affiliation-school">單位 / 學校 <span>必填</span></label>
+                <input type="text" id="affiliation-school" name="affiliation_school" required placeholder="例：國立xx大學、私立xx大學">
+              </div>
+              <div class="form-row">
+                <label for="affiliation-department">系所 / 部門 <span>必填</span></label>
+                <input type="text" id="affiliation-department" name="affiliation_department" required placeholder="例：xx系">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label for="author-count">作者群與單位標註 <span>必填，最多 20 位</span></label>
+              <select id="author-count" name="author_count" required>
+                <option value="">-- 請選擇作者人數 --</option>
+              </select>
+              <p class="field-hint">選擇作者人數後，系統會產生對應欄位；作者姓名皆必填，作者 1-4 的單位標註必填。</p>
+            </div>
+
+            <div class="author-fields" id="author-fields" aria-live="polite">
+              <p class="field-hint">尚未選擇作者人數。</p>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-row">
+                <label for="project-number">國科會計畫編號</label>
+                <input type="text" id="project-number" name="project_number" placeholder="例：NSTC xxx-xxxx-x-xxx-xxx">
+              </div>
+              <div class="form-row">
+                <label for="keywords">關鍵字 <span>必填</span></label>
+                <input type="text" id="keywords" name="keywords" required placeholder="2 至 4 詞，例：氫能、燃料電池、熱流分析">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label for="abstract-text">摘要簡述 <span>必填，300-500 字</span></label>
+              <textarea id="abstract-text" name="abstract_text" rows="7" required minlength="300" maxlength="500" placeholder="請在此貼上摘要文字。後續系統會統一整理投稿資訊並產生確認內容。"></textarea>
+              <p class="field-hint"><span id="abstract-count">0</span> / 500 字</p>
+            </div>
+
+            <div class="submission-target" id="submission-target">
+              請先選擇投稿類別，系統會顯示預計歸檔資料夾。
+            </div>
+
+            <div class="form-actions">
+              <button class="button button-spotlight" type="submit">建立離線投稿預覽</button>
+              <button class="button button-secondary" type="reset">清除表單</button>
+            </div>
+            <p class="form-message" id="submission-message" role="status" aria-live="polite"></p>
+          </form>
+          <div class="submission-preview" id="submission-preview" hidden>
+            <h4>投稿資料預覽</h4>
+            <pre id="submission-preview-content"></pre>
+          </div>
+        </article>
       </div>
-      <ul class="list">
-        <li><strong>摘要格式</strong>待公告</li>
-        <li><strong>投稿系統</strong>待公告</li>
-        <li><strong>投稿截止日期</strong>預計 2026 年 7 月中旬</li>
-        <li><strong>檔案規格</strong>待正式徵稿公告確認</li>
-      </ul>
     </section>
 
     <section class="section body-section">
       <div class="section-head"><div><h2>投稿欄位清單</h2></div></div>
       <ul class="list">
         <li><strong>發表形式</strong>一般論文、學生論文競賽、海報展示（68cm × 90 cm）</li>
-        <li><strong>摘要格式</strong>待公告</li>
-        <li><strong>上傳方式</strong>待公告</li>
+        <li><strong>作者資訊</strong>可選擇作者人數，逐一填寫姓名與單位標註</li>
+        <li><strong>摘要內容</strong>直接於表單貼上 300-500 字摘要文字</li>
+        <li><strong>處理方式</strong>後續由系統統一整理投稿資訊、回寄確認信並歸檔至雲端</li>
       </ul>
     </section>
 
@@ -149,5 +255,6 @@
       </div>
     </footer>
   </div>
+  <script src="submission_system.js"></script>
 </body>
 </html>
