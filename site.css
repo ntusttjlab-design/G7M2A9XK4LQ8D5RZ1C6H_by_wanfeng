@@ -135,8 +135,18 @@ h1 { margin-top:18px; font-size:clamp(2.8rem, 7vw, 5rem); line-height:0.94; font
 .stay-table thead th { background:rgba(77,114,112,0.06); color:var(--text); font-size:0.95rem; font-weight:700; }
 .stay-table tbody td { color:var(--text); line-height:1.7; }
 .stay-table tbody tr:last-child td { border-bottom:0; }
+.fee-stack { display:grid; gap:24px; }
+.fee-card h3 { margin-top:0; font-size:1.35rem; }
+.fee-card .stay-table-wrap { margin-top:18px; background:rgba(255,255,255,0.86); }
+.fee-table { min-width:720px; }
+.fee-table th, .fee-table td { white-space:nowrap; }
+.fee-table thead th { color:#102b44; border-bottom:2px solid rgba(16,43,68,0.76); background:rgba(77,114,112,0.045); }
+.fee-table tbody td:first-child { font-weight:650; }
+.fee-note { margin:14px 0 0; color:var(--muted); line-height:1.7; }
 @media (max-width: 720px) {
   .stay-table th, .stay-table td { padding:14px 16px; }
+  .fee-card h3 { font-size:1.18rem; }
+  .fee-table { min-width:680px; }
 }
 
 .button-spotlight {
@@ -150,4 +160,83 @@ h1 { margin-top:18px; font-size:clamp(2.8rem, 7vw, 5rem); line-height:0.94; font
 }
 .button-spotlight:active {
   transform:translateY(1px);
+}
+
+.site-footer {
+  margin-top:28px;
+  padding:30px 32px;
+  border-radius:26px;
+  border:1px solid rgba(255,255,255,0.08);
+  background:
+    radial-gradient(circle at 8% 0%, rgba(132, 171, 162, 0.34), transparent 34%),
+    linear-gradient(135deg, #2f4744 0%, #243936 54%, #1b2827 100%);
+  color:rgba(255,255,255,0.92);
+  box-shadow:0 22px 46px rgba(27, 43, 41, 0.16);
+}
+.site-footer__grid {
+  display:grid;
+  grid-template-columns:1.3fr 1fr 1.2fr;
+  gap:26px;
+}
+.site-footer__label {
+  margin:0 0 8px;
+  color:rgba(207, 232, 226, 0.78);
+  font-size:0.78rem;
+  font-weight:700;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+}
+.site-footer__value {
+  margin:0;
+  color:rgba(250,255,253,0.96);
+  font-size:1rem;
+  font-weight:650;
+  line-height:1.7;
+}
+.site-footer__value span {
+  color:rgba(229, 241, 238, 0.72);
+  font-size:0.9rem;
+  font-weight:500;
+}
+
+@media (max-width: 720px) {
+  .site-footer { padding:22px; border-radius:24px; }
+  .site-footer__grid { grid-template-columns:1fr; gap:18px; }
+}
+
+@media (min-width: 901px) {
+  :root { --max-width: 1280px; }
+  html { font-size:17px; }
+  .page { padding:26px 0 56px; }
+  .site-frame { top:12px; margin-top:8px; margin-bottom:26px; }
+  .site-frame__inner { min-height:56px; padding:0 18px 0 22px; gap:22px; }
+  .site-brand { font-size:1.06rem; }
+  .site-nav { gap:4px; }
+  .site-nav a { min-height:42px; padding:0 14px; font-size:0.92rem; }
+  .section { margin-top:28px; }
+  .hero { padding:54px 50px 48px; }
+  .hero.hero-split { gap:22px; }
+  .hero-main, .hero-side { padding:32px; }
+  .eyebrow, .chip, .label { min-height:34px; padding:0 14px; font-size:0.9rem; }
+  .hero-subtitle { max-width:860px; font-size:1.18rem; }
+  .hero-meta, .grid-2, .grid-3, .grid-4, .poster-grid, .committee-grid, .topic-grid { gap:20px; }
+  .hero-meta { margin-top:34px; }
+  .meta-card, .card, .countdown-panel, .sponsor-lane { padding:28px; }
+  .meta-title { font-size:0.86rem; }
+  .meta-value { font-size:1.1rem; }
+  .body-section, .sponsor-space, .countdown-section { padding:40px 38px 42px; }
+  .section-head { gap:24px; margin-bottom:28px; }
+  .section-head h2 { font-size:2.35rem; }
+  .section-head p, .card p, .list li, .detail-list li, .topic-list li, .committee-note, .countdown-note { font-size:1.06rem; }
+  .card h3, .countdown-panel h2, .sponsor-lane-head h3 { font-size:1.22rem; }
+  .list, .detail-list, .topic-list { gap:14px; margin-top:18px; }
+  .button-row { gap:14px; margin-top:32px; }
+  .button { min-height:52px; padding:0 24px; font-size:1.04rem; }
+  .entry-card { min-height:214px; }
+  .countdown-format { font-size:1rem; }
+  .poster-panel { min-height:480px; padding:42px; }
+  .poster-placeholder { min-height:340px; }
+  .sponsor-marquee-group { gap:18px; margin-top:20px; }
+  .sponsor-slot { min-width:245px; min-height:106px; font-size:1.05rem; }
+  .stay-table th, .stay-table td { padding:22px 24px; font-size:1.05rem; }
 }
