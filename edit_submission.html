@@ -72,12 +72,23 @@
 
           <div class="form-grid">
             <div class="form-row">
-              <label for="update_authors">作者群 <span class="hint">必填</span></label>
+              <label for="update_authors">發表作者 <span class="hint">必填</span></label>
               <input id="update_authors" name="authors" type="text" required>
             </div>
             <div class="form-row">
               <label for="update_keywords">關鍵字 <span class="hint">必填</span></label>
               <input id="update_keywords" name="keywords" type="text" required>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-row">
+              <label for="update_corresponding_author">通訊作者（指導教授）</label>
+              <input id="update_corresponding_author" name="corresponding_author" type="text">
+            </div>
+            <div class="form-row">
+              <label for="update_corresponding_email">通訊作者 Email</label>
+              <input id="update_corresponding_email" name="corresponding_email" type="email" inputmode="email">
             </div>
           </div>
 

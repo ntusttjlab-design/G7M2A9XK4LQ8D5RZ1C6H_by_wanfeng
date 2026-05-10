@@ -94,7 +94,7 @@
 
             <div class="form-grid">
               <div class="form-row">
-                <label for="authors">作者群 <span class="hint">必填</span></label>
+                <label for="authors">發表作者 <span class="hint">必填</span></label>
                 <input id="authors" name="authors" type="text" placeholder="例：王小明、陳怡君、林志豪" required>
               </div>
               <div class="form-row">
@@ -105,13 +105,18 @@
 
             <div class="form-grid">
               <div class="form-row">
-                <label for="corresponding_author">通訊作者 <span class="hint">必填</span></label>
-                <input id="corresponding_author" name="corresponding_author" type="text" placeholder="例：陳教授" required>
-              </div>
-              <div class="form-row">
-                <label for="email">通訊作者 Email <span class="hint">必填</span></label>
+                <label for="email">發表作者 Email <span class="hint">必填</span></label>
                 <input id="email" name="email" type="email" inputmode="email" placeholder="用於接收投稿確認信" required>
               </div>
+              <div class="form-row">
+                <label for="corresponding_author">通訊作者（指導教授）</label>
+                <input id="corresponding_author" name="corresponding_author" type="text" placeholder="例：陳教授">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label for="corresponding_email">通訊作者 Email</label>
+              <input id="corresponding_email" name="corresponding_email" type="email" inputmode="email" placeholder="例：advisor@mail.ntust.edu.tw">
             </div>
 
             <div class="form-row">
@@ -145,7 +150,7 @@
             <h3>修改方式</h3>
             <ul class="detail-list">
               <li><strong>驗證資訊</strong>請使用投稿確認信中的 Email 與驗證碼。</li>
-              <li><strong>可修改內容</strong>論文題目、作者群、摘要、關鍵字與 PDF。</li>
+              <li><strong>可修改內容</strong>論文題目、發表作者、通訊作者、摘要、關鍵字與 PDF。</li>
             </ul>
           </aside>
           <article class="card">
@@ -180,12 +185,22 @@
               </div>
               <div class="form-grid">
                 <div class="form-row">
-                  <label for="inline_update_authors">作者群 <span class="hint">必填</span></label>
+                  <label for="inline_update_authors">發表作者 <span class="hint">必填</span></label>
                   <input id="inline_update_authors" name="authors" type="text" required>
                 </div>
                 <div class="form-row">
                   <label for="inline_update_keywords">關鍵字 <span class="hint">必填</span></label>
                   <input id="inline_update_keywords" name="keywords" type="text" required>
+                </div>
+              </div>
+              <div class="form-grid">
+                <div class="form-row">
+                  <label for="inline_update_corresponding_author">通訊作者（指導教授）</label>
+                  <input id="inline_update_corresponding_author" name="corresponding_author" type="text">
+                </div>
+                <div class="form-row">
+                  <label for="inline_update_corresponding_email">通訊作者 Email</label>
+                  <input id="inline_update_corresponding_email" name="corresponding_email" type="email" inputmode="email">
                 </div>
               </div>
               <div class="form-row">
