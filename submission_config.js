@@ -1,0 +1,1 @@
+window.HEFC_SUBMISSION_API_URL = '';

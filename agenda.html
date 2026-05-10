@@ -11,7 +11,7 @@
     <section class="site-frame">
       <div class="site-frame__inner">
         <a class="site-brand" href="index.html">HEFC 2026</a>
-        <nav class="site-nav" aria-label="頁面導覽">
+        <div class="site-nav-area"><nav class="site-nav" aria-label="頁面導覽">
           <a href="index.html">首頁</a>
           <a href="info.html">會議資訊</a>
           <a href="agenda.html" class="is-current" aria-current="page">議程資訊</a>
@@ -19,8 +19,7 @@
           <a href="faq.html">FAQ</a>
           <a href="traffic_venue.html">交通、住宿與會場</a>
           <a href="contact_sponsor.html">聯絡與贊助</a>
-          <a href="english.html">ENGLISH</a>
-        </nav>
+</nav><a class="language-toggle" href="en/agenda.html" data-language-toggle data-lang="zh" aria-label="Switch language to English"><span class="language-toggle__zh">中文</span><span class="language-toggle__en">English</span></a></div>
       </div>
     </section>
 
@@ -42,7 +41,15 @@
     </section>
 
     <section class="section body-section">
-      <div class="section-head"><div><h2>Day 1｜2026/10/02（五）產業論壇</h2></div></div>
+      <div class="section-head"><div><h2>詳細議程</h2></div></div>
+      <div class="agenda-mode-switch" data-agenda-switch data-mode="day1" role="tablist" aria-label="議程切換">
+        <button class="agenda-mode-switch__option is-active" type="button" data-agenda-mode="day1" role="tab" aria-selected="true">Day 1 產業論壇</button>
+        <button class="agenda-mode-switch__option" type="button" data-agenda-mode="day2-main" role="tab" aria-selected="false">Day 2 學術研討會</button>
+        <button class="agenda-mode-switch__option" type="button" data-agenda-mode="day2-oral" role="tab" aria-selected="false">一般論文發表議程</button>
+        <button class="agenda-mode-switch__option" type="button" data-agenda-mode="day2-student" role="tab" aria-selected="false">學生論文競賽議程</button>
+      </div>
+      <div class="agenda-panel" data-agenda-panel="day1">
+      <div class="section-head agenda-panel-head"><div><h2>Day 1｜2026/10/02（五）產業論壇</h2></div></div>
       <ul class="list">
         <li><strong>09:00 - 10:00</strong>報到，1F 大廳</li>
         <li><strong>10:00 - 10:10</strong>論壇開幕致詞，IB-101</li>
@@ -56,10 +63,9 @@
         <li><strong>16:20 - 17:00</strong>綜合座談與閉幕致詞，IB-101</li>
         <li><strong>18:00</strong>論壇交流晚宴，地點將另行公告</li>
       </ul>
-    </section>
-
-    <section class="section body-section">
-      <div class="section-head"><div><h2>Day 2｜2026/10/03（六）學術研討會</h2></div></div>
+      </div>
+      <div class="agenda-panel is-hidden" data-agenda-panel="day2-main">
+      <div class="section-head agenda-panel-head"><div><h2>Day 2｜2026/10/03（六）學術研討會</h2></div></div>
       <ul class="list">
         <li><strong>08:30 - 17:00</strong>廠商佈展 / 茶敘區，IB A 區（1F）</li>
         <li><strong>09:00 - 09:50</strong>開幕典禮 / 致詞 / 頒獎，IB-101</li>
@@ -73,15 +79,20 @@
         <li><strong>13:30 - 17:00</strong>下午分組議程，IB 各教室</li>
         <li><strong>17:30</strong>大會晚宴，曉鹿鳴樓</li>
       </ul>
-    </section>
-
-    <section class="section body-section">
-      <div class="section-head"><div><h2>Day 2｜2026/10/03（六）下午分組議程</h2></div></div>
+      </div>
+      <div class="agenda-panel is-hidden" data-agenda-panel="day2-student">
+      <div class="section-head agenda-panel-head"><div><h2>Day 2｜2026/10/03（六）學生論文競賽議程</h2></div></div>
       <div class="grid-2">
-        <article class="card"><div class="chip">分組 A</div><h3>學生論文競賽（氫能）｜IB-201</h3><ul class="list"><li><strong>13:30 - 15:00</strong>學生競賽發表（每人 10 分鐘，依序進行）</li><li><strong>15:00 - 15:15</strong>中場休息（茶敘）</li><li><strong>15:15 - 16:55</strong>學生競賽發表（每人 10 分鐘，依序進行）</li><li><strong>16:55 - 17:00</strong>評審講評</li></ul></article>
-        <article class="card"><div class="chip">分組 B</div><h3>學生論文競賽（燃料電池）｜IB-202</h3><ul class="list"><li><strong>13:30 - 15:00</strong>學生競賽發表（每人 10 分鐘，依序進行）</li><li><strong>15:00 - 15:15</strong>中場休息（茶敘）</li><li><strong>15:15 - 16:55</strong>學生競賽發表（每人 10 分鐘，依序進行）</li><li><strong>16:55 - 17:00</strong>評審講評 </li></ul></article>
-        <article class="card"><div class="chip">分組 C</div><h3>一般論文發表（氫能）｜IB-301</h3><ul class="list"><li><strong>13:30 - 13:50</strong>邀請演講 1</li><li><strong>13:50 - 14:05</strong>一般論文發表 01</li><li><strong>14:05 - 14:20</strong>一般論文發表 02</li><li><strong>14:20 - 14:35</strong>一般論文發表 03</li><li><strong>14:35 - 14:50</strong>一般論文發表 04</li><li><strong>14:50 - 15:00</strong>綜合討論</li><li><strong>15:00 - 15:15</strong>中場休息（茶敘）</li><li><strong>15:15 - 15:35</strong>邀請演講 2</li><li><strong>15:35 - 15:50</strong>一般論文發表 05</li><li><strong>15:50 - 16:05</strong>一般論文發表 06</li><li><strong>16:05 - 16:20</strong>一般論文發表 07</li><li><strong>16:20 - 16:35</strong>一般論文發表 08</li><li><strong>16:35 - 16:50</strong>一般論文發表 09</li><li><strong>16:50 - 17:00</strong>綜合討論 </li></ul></article>
-        <article class="card"><div class="chip">分組 D</div><h3>一般論文發表（其他 / Fuel Cell）｜IB-302</h3><ul class="list"><li><strong>13:30 - 13:50</strong>邀請演講 1</li><li><strong>13:50 - 14:05</strong>一般論文發表 01</li><li><strong>14:05 - 14:20</strong>一般論文發表 02</li><li><strong>14:20 - 14:35</strong>一般論文發表 03</li><li><strong>14:35 - 14:50</strong>一般論文發表 04</li><li><strong>14:50 - 15:00</strong>綜合討論</li><li><strong>15:00 - 15:15</strong>中場休息（茶敘）</li><li><strong>15:15 - 15:35</strong>邀請演講 2</li><li><strong>15:35 - 15:50</strong>一般論文發表 05</li><li><strong>15:50 - 16:05</strong>一般論文發表 06</li><li><strong>16:05 - 16:20</strong>一般論文發表 07</li><li><strong>16:20 - 16:35</strong>一般論文發表 08</li><li><strong>16:35 - 16:50</strong>一般論文發表 09</li><li><strong>16:50 - 17:00</strong>綜合討論 </li></ul></article>
+        <article class="card"><h3>學生論文競賽（氫能）｜IB-201</h3><ul class="list"><li><strong>13:30 - 15:00</strong>學生競賽發表（每人 10 分鐘，依序進行）</li><li><strong>15:00 - 15:15</strong>中場休息（茶敘）</li><li><strong>15:15 - 16:55</strong>學生競賽發表（每人 10 分鐘，依序進行）</li><li><strong>16:55 - 17:00</strong>評審講評</li></ul></article>
+        <article class="card"><h3>學生論文競賽（燃料電池）｜IB-202</h3><ul class="list"><li><strong>13:30 - 15:00</strong>學生競賽發表（每人 10 分鐘，依序進行）</li><li><strong>15:00 - 15:15</strong>中場休息（茶敘）</li><li><strong>15:15 - 16:55</strong>學生競賽發表（每人 10 分鐘，依序進行）</li><li><strong>16:55 - 17:00</strong>評審講評 </li></ul></article>
+      </div>
+      </div>
+      <div class="agenda-panel is-hidden" data-agenda-panel="day2-oral">
+      <div class="section-head agenda-panel-head"><div><h2>Day 2｜2026/10/03（六）一般論文發表議程</h2></div></div>
+      <div class="grid-2">
+        <article class="card"><h3>一般論文發表（氫能）｜IB-301</h3><ul class="list"><li><strong>13:30 - 13:50</strong>邀請演講 1</li><li><strong>13:50 - 14:05</strong>一般論文發表 01</li><li><strong>14:05 - 14:20</strong>一般論文發表 02</li><li><strong>14:20 - 14:35</strong>一般論文發表 03</li><li><strong>14:35 - 14:50</strong>一般論文發表 04</li><li><strong>14:50 - 15:00</strong>綜合討論</li><li><strong>15:00 - 15:15</strong>中場休息（茶敘）</li><li><strong>15:15 - 15:35</strong>邀請演講 2</li><li><strong>15:35 - 15:50</strong>一般論文發表 05</li><li><strong>15:50 - 16:05</strong>一般論文發表 06</li><li><strong>16:05 - 16:20</strong>一般論文發表 07</li><li><strong>16:20 - 16:35</strong>一般論文發表 08</li><li><strong>16:35 - 16:50</strong>一般論文發表 09</li><li><strong>16:50 - 17:00</strong>綜合討論 </li></ul></article>
+        <article class="card"><h3>一般論文發表（其他 / Fuel Cell）｜IB-302</h3><ul class="list"><li><strong>13:30 - 13:50</strong>邀請演講 1</li><li><strong>13:50 - 14:05</strong>一般論文發表 01</li><li><strong>14:05 - 14:20</strong>一般論文發表 02</li><li><strong>14:20 - 14:35</strong>一般論文發表 03</li><li><strong>14:35 - 14:50</strong>一般論文發表 04</li><li><strong>14:50 - 15:00</strong>綜合討論</li><li><strong>15:00 - 15:15</strong>中場休息（茶敘）</li><li><strong>15:15 - 15:35</strong>邀請演講 2</li><li><strong>15:35 - 15:50</strong>一般論文發表 05</li><li><strong>15:50 - 16:05</strong>一般論文發表 06</li><li><strong>16:05 - 16:20</strong>一般論文發表 07</li><li><strong>16:20 - 16:35</strong>一般論文發表 08</li><li><strong>16:35 - 16:50</strong>一般論文發表 09</li><li><strong>16:50 - 17:00</strong>綜合討論 </li></ul></article>
+      </div>
       </div>
     </section>
     <footer class="site-footer" aria-label="頁尾資訊">
@@ -92,5 +103,7 @@
       </div>
     </footer>
   </div>
+  <script src="language_toggle.js" defer></script>
+  <script src="agenda_tabs.js" defer></script>
 </body>
 </html>

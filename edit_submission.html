@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="site.css">
+  <title>HEFC 2026 修改稿件</title>
+</head>
+<body>
+  <div class="page">
+    <section class="site-frame">
+      <div class="site-frame__inner">
+        <a class="site-brand" href="index.html">HEFC 2026</a>
+        <div class="site-nav-area"><nav class="site-nav" aria-label="頁面導覽">
+          <a href="index.html">首頁</a>
+          <a href="info.html">會議資訊</a>
+          <a href="agenda.html">議程資訊</a>
+          <a href="call_for_papers.html" class="is-current" aria-current="page">徵稿與報名</a>
+          <a href="faq.html">FAQ</a>
+          <a href="traffic_venue.html">交通、住宿與會場</a>
+          <a href="contact_sponsor.html">聯絡與贊助</a>
+        </nav><a class="language-toggle" href="en/edit_submission.html" data-language-toggle data-lang="zh" aria-label="Switch language to English"><span class="language-toggle__zh">中文</span><span class="language-toggle__en">English</span></a></div>
+      </div>
+    </section>
+
+    <section class="section hero">
+      <div class="eyebrow">Submission Revision</div>
+      <h1>修改稿件</h1>
+      <p class="hero-subtitle">請使用投稿確認信中的 Email 與驗證碼登入。驗證成功後，可更新題目、作者、摘要、關鍵字與 PDF。</p>
+    </section>
+
+    <section class="section body-section">
+      <div class="submit-layout">
+        <aside class="card">
+          <div class="chip">Verify</div>
+          <h3>驗證資訊</h3>
+          <p>驗證碼只會出現在投稿確認信中。若遺失驗證碼，請聯絡大會工作人員協助確認。</p>
+        </aside>
+        <article class="card">
+          <form class="submit-form" data-hefc-verify-form>
+            <div class="form-grid">
+              <div class="form-row">
+                <label for="verify_email">投稿 Email <span class="hint">必填</span></label>
+                <input id="verify_email" name="email" type="email" inputmode="email" placeholder="請輸入投稿時使用的 Email" required>
+              </div>
+              <div class="form-row">
+                <label for="verification_code">驗證碼 <span class="hint">必填</span></label>
+                <input id="verification_code" name="verification_code" type="text" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" placeholder="請輸入確認信中的 5 位數驗證碼" required>
+              </div>
+            </div>
+            <div class="form-status" data-verify-status role="status" aria-live="polite"></div>
+            <div class="button-row">
+              <button class="button button-spotlight button-full" type="submit">驗證並載入稿件</button>
+            </div>
+          </form>
+        </article>
+      </div>
+    </section>
+
+    <section class="section body-section is-hidden" data-update-section>
+      <div class="section-head"><div><h2>更新投稿資料</h2><p>送出後系統會建立新版本 PDF，並寄送更新成功通知信。</p></div></div>
+      <article class="card">
+        <form class="submit-form" data-hefc-update-form enctype="multipart/form-data">
+          <input type="hidden" name="submission_id">
+          <input type="hidden" name="email">
+          <input type="hidden" name="verification_code">
+
+          <div class="form-row">
+            <label for="update_title">論文題目 <span class="hint">必填</span></label>
+            <input id="update_title" name="title" type="text" required>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-row">
+              <label for="update_authors">作者群 <span class="hint">必填</span></label>
+              <input id="update_authors" name="authors" type="text" required>
+            </div>
+            <div class="form-row">
+              <label for="update_keywords">關鍵字 <span class="hint">必填</span></label>
+              <input id="update_keywords" name="keywords" type="text" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label for="update_abstract">摘要簡述 <span class="hint">必填，300-500 字</span></label>
+            <textarea id="update_abstract" name="abstract" maxlength="1000" required></textarea>
+          </div>
+
+          <div class="form-row file-upload-box">
+            <label for="update_pdf">重新上傳論文摘要 PDF <span class="hint">選填，若未選擇則保留原 PDF</span></label>
+            <input id="update_pdf" name="abstract_pdf" type="file" accept=".pdf,application/pdf">
+          </div>
+
+          <div class="form-status" data-update-status role="status" aria-live="polite"></div>
+          <div class="button-row">
+            <button class="button button-spotlight button-full" type="submit">確認更新稿件</button>
+          </div>
+        </form>
+      </article>
+    </section>
+
+    <footer class="site-footer" aria-label="頁尾資訊">
+      <div class="site-footer__grid">
+        <div><p class="site-footer__label">活動名稱 / Event</p><p class="site-footer__value">2026 全國氫能與燃料電池研討會<br><span>2026 National Hydrogen Energy and Fuel Cell Conference</span></p></div>
+        <div><p class="site-footer__label">主辦單位 / Organizer</p><p class="site-footer__value">台灣氫能與燃料電池學會<br><span>Taiwan Association for Hydrogen Energy and Fuel Cells</span></p></div>
+        <div><p class="site-footer__label">合辦單位 / Co-organizer</p><p class="site-footer__value">國立臺灣科技大學材料科學與工程系<br><span>Department of Materials Science and Engineering, NTUST</span></p></div>
+      </div>
+    </footer>
+  </div>
+  <script src="language_toggle.js" defer></script>
+  <script src="submission_config.js" defer></script>
+  <script src="submission_api.js" defer></script>
+</body>
+</html>
