@@ -106,6 +106,8 @@
           authors: '王小明、陳怡君、林志豪',
           affiliation: '國立臺灣科技大學 材料科學與工程系',
           email: DEMO_EMAIL,
+          corresponding_author: '陳教授',
+          corresponding_email: 'advisor@mail.ntust.edu.tw',
           abstract: '本研究針對質子交換膜燃料電池於中低濕度操作條件下之水管理行為進行分析，並探討低鉑觸媒層結構對電池性能之影響。此筆資料為前端展示測試用。',
           keywords: '燃料電池、低鉑觸媒、水管理、質子交換膜',
           pdf_url: '',
@@ -176,6 +178,8 @@
           authors: getValue(form, 'authors'),
           affiliation: getValue(form, 'affiliation'),
           email: getValue(form, 'email'),
+          corresponding_author: getValue(form, 'corresponding_author'),
+          corresponding_email: getValue(form, 'corresponding_email'),
           abstract: getValue(form, 'abstract_text'),
           keywords: getValue(form, 'keywords'),
           presentation_type: getValue(form, 'presentation_type'),
@@ -225,6 +229,12 @@
         updateForm.elements.verification_code.value = payload.verification_code;
         updateForm.elements.title.value = item.title || '';
         updateForm.elements.authors.value = item.authors || '';
+        if (updateForm.elements.corresponding_author) {
+          updateForm.elements.corresponding_author.value = item.corresponding_author || '';
+        }
+        if (updateForm.elements.corresponding_email) {
+          updateForm.elements.corresponding_email.value = item.corresponding_email || '';
+        }
         updateForm.elements.abstract.value = item.abstract || '';
         updateForm.elements.keywords.value = item.keywords || '';
 
@@ -261,6 +271,8 @@
           verification_code: getValue(form, 'verification_code'),
           title: getValue(form, 'title'),
           authors: getValue(form, 'authors'),
+          corresponding_author: getValue(form, 'corresponding_author'),
+          corresponding_email: getValue(form, 'corresponding_email'),
           abstract: getValue(form, 'abstract'),
           keywords: getValue(form, 'keywords'),
           pdf: await buildPdfPayload(file)
