@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="site.css">
+  <title>HEFC 2026 工作人員入口</title>
+</head>
+<body>
+  <div class="page">
+    <section class="site-frame">
+      <div class="site-frame__inner">
+        <a class="site-brand" href="index.html">HEFC 2026</a>
+        <div class="site-nav-area"><nav class="site-nav" aria-label="頁面導覽">
+          <a href="index.html">首頁</a>
+          <a href="payment_admin.html" class="is-current" aria-current="page">工作人員入口</a>
+          <a href="info.html">會議資訊</a>
+          <a href="agenda.html">議程資訊</a>
+          <a href="call_for_papers.html">徵稿與報名</a>
+          <a href="faq.html">FAQ</a>
+          <a href="traffic_venue.html">交通、住宿與會場</a>
+          <a href="contact_sponsor.html">聯絡與贊助</a>
+        </nav><a class="language-toggle" href="en/payment_admin.html" data-language-toggle data-lang="zh" aria-label="Switch language to English"><span class="language-toggle__zh">中文</span><span class="language-toggle__en">English</span></a></div>
+      </div>
+    </section>
+
+    <section class="section hero">
+      <div class="eyebrow">Staff Portal</div>
+      <h1>工作人員入口</h1>
+      <p class="hero-subtitle">請使用工作人員帳號登入。</p>
+    </section>
+
+    <section class="section body-section" id="loginSection">
+      <div class="section-head"><div><h2>登入</h2><p>內部作業使用。</p></div></div>
+      <article class="card">
+        <form class="submit-form" id="staffLoginForm">
+          <div class="form-grid">
+            <div class="form-row">
+              <label for="staff_account">帳號</label>
+              <input id="staff_account" name="staff_account" type="text" autocomplete="username" placeholder="請輸入帳號" required>
+            </div>
+            <div class="form-row">
+              <label for="staff_password">密碼</label>
+              <input id="staff_password" name="staff_password" type="password" autocomplete="current-password" placeholder="請輸入密碼" required>
+            </div>
+          </div>
+          <div class="form-status" id="loginStatus" role="status" aria-live="polite"></div>
+          <div class="button-row">
+            <button class="button button-spotlight" type="submit">登入</button>
+          </div>
+        </form>
+      </article>
+    </section>
+
+    <section class="section body-section is-hidden" id="staffDashboard">
+      <div class="section-head">
+        <div><h2>工作區</h2><p>搜尋資料、查看檔案並更新處理狀態。</p></div>
+        <button class="button button-secondary" type="button" id="staffLogout">登出</button>
+      </div>
+
+      <div class="grid-4">
+        <article class="card"><div class="chip">總數</div><h3 id="statTotal">0</h3><p>目前列表資料。</p></article>
+        <article class="card"><div class="chip">已完成</div><h3 id="statPaid">0</h3><p>已標記完成。</p></article>
+        <article class="card"><div class="chip">待處理</div><h3 id="statUnpaid">0</h3><p>尚未完成。</p></article>
+        <article class="card"><div class="chip">需確認</div><h3 id="statReview">0</h3><p>需要人工確認。</p></article>
+      </div>
+
+      <div class="card" style="margin-top:20px;">
+        <div class="staff-search-row">
+          <div class="form-row">
+            <label for="paymentSearch">搜尋框</label>
+            <input id="paymentSearch" type="search" placeholder="輸入姓名、Email、報名編號或單位">
+          </div>
+          <button class="button button-primary" type="button" id="runPaymentSearch">搜尋</button>
+        </div>
+      </div>
+
+      <div class="staff-actions">
+        <button class="button button-spotlight" type="button" id="syncFromBackend">重新整理後台資料</button>
+        <button class="button button-export" type="button" id="saveToBackend">匯出更改</button>
+      </div>
+      <div class="form-status is-visible" id="dashboardStatus" role="status" aria-live="polite">登入後會先讀取工作人員表，並顯示最近更新 10 筆資料。</div>
+
+      <div class="stay-table-wrap" style="margin-top:20px;">
+        <table class="stay-table fee-table staff-table">
+          <thead>
+            <tr>
+              <th>報名編號</th>
+              <th>姓名</th>
+              <th>Email</th>
+              <th>身分別</th>
+              <th>應繳金額</th>
+              <th>最新 PDF</th>
+              <th>繳費狀態</th>
+              <th>繳費日期</th>
+              <th>轉帳末5碼</th>
+              <th>備註</th>
+            </tr>
+          </thead>
+          <tbody id="paymentRows"></tbody>
+        </table>
+      </div>
+      <p class="fee-note">表格中的狀態與備註可直接調整；完成後請按「匯出更改」寫回後台。</p>
+      <div class="sheet-view-actions">
+        <a class="button button-secondary" href="https://docs.google.com/spreadsheets/d/1OXcCuDK_Uegm522ZfYjBLmzgS4hFFBeeTb8qMsrXBbQ/preview#gid=525594530" target="_blank" rel="noopener noreferrer">檢視工作人員表</a>
+      </div>
+    </section>
+
+    <footer class="site-footer" aria-label="頁尾資訊">
+      <div class="site-footer__grid">
+        <div><p class="site-footer__label">活動名稱 / Event</p><p class="site-footer__value">2026 全國氫能與燃料電池研討會<br><span>2026 National Hydrogen Energy and Fuel Cell Conference</span></p></div>
+        <div><p class="site-footer__label">主辦單位 / Organizer</p><p class="site-footer__value">台灣氫能與燃料電池學會<br><span>Taiwan Association for Hydrogen Energy and Fuel Cells</span></p></div>
+        <div><p class="site-footer__label">合辦單位 / Co-organizer</p><p class="site-footer__value">國立臺灣科技大學材料科學與工程系<br><span>Department of Materials Science and Engineering, NTUST</span></p></div>
+      </div>
+    </footer>
+  </div>
+  <script src="language_toggle.js" defer></script>
+  <script src="submission_config.js" defer></script>
+  <script>
+    (function () {
+      const account = '20262026';
+      const password = '2026';
+      let staffToken = '';
+      let rows = [];
+      let activeSearch = '';
+      const paymentAmountOptions = ['NT$ 2,000', 'NT$ 2,500', 'NT$ 3,000', 'NT$ 3,500', 'NT$ 3,900', 'NT$ 4,200', 'NT$ 4,700', 'NT$ 4,900'];
+      const loginForm = document.getElementById('staffLoginForm');
+      const loginStatus = document.getElementById('loginStatus');
+      const loginSection = document.getElementById('loginSection');
+      const dashboard = document.getElementById('staffDashboard');
+      const search = document.getElementById('paymentSearch');
+      const searchButton = document.getElementById('runPaymentSearch');
+      const tbody = document.getElementById('paymentRows');
+      const dashboardStatus = document.getElementById('dashboardStatus');
+      function showStatus(message, type) {
+        loginStatus.textContent = message;
+        loginStatus.className = 'form-status is-visible' + (type ? ' is-' + type : '');
+      }
+      function showDashboardStatus(message, type) {
+        dashboardStatus.textContent = message;
+        dashboardStatus.className = 'form-status is-visible' + (type ? ' is-' + type : '');
+      }
+      async function callStaffApi(payload) {
+        const apiUrl = window.HEFC_SUBMISSION_API_URL || '';
+        if (!apiUrl) throw new Error('API 尚未設定，使用展示資料。');
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+        if (!data.ok) throw new Error((data.error && data.error.message) || '後端操作失敗。');
+        return data;
+      }
+      function normalizeBackendRows(items) {
+        return (items || []).map((item) => ({
+          record_id: item.record_id || '',
+          name: item.name || '',
+          email: item.email || '',
+          participant_type: item.participant_type || '',
+          payment_amount: item.payment_amount || '',
+          latest_pdf_url: item.latest_pdf_url || '',
+          payment_status: item.payment_status || '未繳費',
+          payment_date: item.payment_date || '',
+          transfer_last5: item.transfer_last5 || item.receipt_no || '',
+          staff_note: item.staff_note || '',
+          organization: item.organization || item.affiliation || '',
+          staff_updated_at: item.staff_updated_at || '',
+          last_submission_update: item.last_submission_update || item.updated_at || ''
+        }));
+      }
+      function rowTimeValue(row) {
+        const value = row.staff_updated_at || row.last_submission_update || '';
+        const time = Date.parse(value);
+        return Number.isNaN(time) ? 0 : time;
+      }
+      function recentRows() {
+        return rows.slice().sort((a, b) => rowTimeValue(b) - rowTimeValue(a)).slice(0, 10);
+      }
+      function searchableText(row) {
+        const emailLocal = String(row.email || '').split('@')[0];
+        return [row.record_id, row.name, emailLocal, row.participant_type, row.organization, row.staff_note].join(' ').toLowerCase();
+      }
+      function updateStats(list) {
+        document.getElementById('statTotal').textContent = list.length;
+        document.getElementById('statPaid').textContent = list.filter((row) => row.payment_status === '已繳費').length;
+        document.getElementById('statUnpaid').textContent = list.filter((row) => row.payment_status === '未繳費').length;
+        document.getElementById('statReview').textContent = list.filter((row) => row.payment_status === '需確認').length;
+      }
+      function renderRows() {
+        const visibleRows = activeSearch ? rows.filter((row) => searchableText(row).includes(activeSearch)) : recentRows();
+        tbody.innerHTML = visibleRows.length ? visibleRows.map((row) => `
+          <tr>
+            <td><strong>${row.record_id}</strong></td>
+            <td>${row.name}</td>
+            <td>${row.email}</td>
+            <td>${row.participant_type}</td>
+            <td>
+              <select data-row="${rows.indexOf(row)}" data-field="payment_amount">
+                ${paymentAmountOptions.map((item) => `<option value="${item}"${item === row.payment_amount ? ' selected' : ''}>${item}</option>`).join('')}
+              </select>
+            </td>
+            <td>${row.latest_pdf_url ? `<a class="button button-secondary" href="${row.latest_pdf_url}" target="_blank" rel="noopener noreferrer">查看 PDF</a>` : '尚無'}</td>
+            <td>
+              <select data-row="${rows.indexOf(row)}" data-field="payment_status">
+                ${['未繳費', '已繳費', '需確認', '已退款'].map((item) => `<option${item === row.payment_status ? ' selected' : ''}>${item}</option>`).join('')}
+              </select>
+            </td>
+            <td><input data-row="${rows.indexOf(row)}" data-field="payment_date" value="${row.payment_date}" placeholder="YYYY/MM/DD"></td>
+            <td><input data-row="${rows.indexOf(row)}" data-field="transfer_last5" value="${row.transfer_last5}" placeholder="轉帳末5碼"></td>
+            <td><input data-row="${rows.indexOf(row)}" data-field="staff_note" value="${row.staff_note}" placeholder="內部備註"></td>
+          </tr>
+        `).join('') : '<tr><td colspan="10">沒有符合條件的資料。</td></tr>';
+        updateStats(visibleRows);
+      }
+      function runSearch() {
+        const keyword = search.value.trim().toLowerCase();
+        const comparableKeyword = keyword.includes('@') ? keyword.split('@')[0] : keyword;
+        if (!comparableKeyword) {
+          activeSearch = '';
+          renderRows();
+          showDashboardStatus('已顯示最近更新 10 筆資料。', 'success');
+          return;
+        }
+        if (comparableKeyword.length < 3) {
+          activeSearch = '';
+          renderRows();
+          showDashboardStatus('請輸入至少 3 個字元再搜尋。', 'error');
+          return;
+        }
+        activeSearch = comparableKeyword;
+        renderRows();
+        showDashboardStatus('已依搜尋條件更新列表。', 'success');
+      }
+      async function loadRowsFromBackend(sync) {
+        try {
+          showDashboardStatus(sync ? '與後台同步中...' : '正在讀取工作人員資料...', '');
+          const result = await callStaffApi({ action: sync ? 'staffSyncPayments' : 'staffListPayments', token: staffToken, sync: sync });
+          rows = normalizeBackendRows(result.rows);
+          activeSearch = '';
+          search.value = '';
+          renderRows();
+          showDashboardStatus(sync ? '同步完成，已更新最新資料。' : '已讀取工作人員表，顯示最近更新 10 筆。', 'success');
+        } catch (error) {
+          rows = [];
+          activeSearch = '';
+          renderRows();
+          showDashboardStatus(error.message || '後端尚未可用，無法讀取資料。', 'error');
+        }
+      }
+      loginForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
+        const inputAccount = document.getElementById('staff_account').value.trim();
+        const inputPassword = document.getElementById('staff_password').value.trim();
+        if (inputAccount !== account || inputPassword !== password) {
+          showStatus('帳號或密碼不正確。', 'error');
+          return;
+        }
+        try {
+          const result = await callStaffApi({ action: 'staffLogin', account: inputAccount, password: inputPassword });
+          staffToken = result.token || '';
+        } catch (error) {
+          showStatus(error.message || '後端登入失敗。', 'error');
+          return;
+        }
+        loginSection.classList.add('is-hidden');
+        dashboard.classList.remove('is-hidden');
+        renderRows();
+        loadRowsFromBackend(false);
+      });
+      document.getElementById('staffLogout').addEventListener('click', function () {
+        dashboard.classList.add('is-hidden');
+        loginSection.classList.remove('is-hidden');
+        staffToken = '';
+        loginForm.reset();
+        showStatus('已登出。', 'success');
+      });
+      document.getElementById('syncFromBackend').addEventListener('click', function () {
+        loadRowsFromBackend(true);
+      });
+      document.getElementById('saveToBackend').addEventListener('click', async function () {
+        const updates = rows.map((row) => ({
+          record_id: row.record_id,
+          payment_amount: row.payment_amount,
+          payment_status: row.payment_status,
+          payment_date: row.payment_date,
+          transfer_last5: row.transfer_last5,
+          staff_note: row.staff_note
+        }));
+        try {
+          showDashboardStatus('同步中，正在匯出更改...', '');
+          const result = await callStaffApi({ action: 'staffUpdatePayments', token: staffToken, updates: updates });
+          rows = normalizeBackendRows(result.rows);
+          activeSearch = '';
+          search.value = '';
+          renderRows();
+          showDashboardStatus('已更新資訊。', 'success');
+        } catch (error) {
+          showDashboardStatus(error.message || '後端尚未可用，目前僅保留在頁面展示資料。', 'error');
+        }
+      });
+      searchButton.addEventListener('click', runSearch);
+      search.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          runSearch();
+        }
+      });
+      tbody.addEventListener('change', function (event) {
+        const target = event.target;
+        const index = Number(target.dataset.row);
+        const field = target.dataset.field;
+        if (!Number.isNaN(index) && field && rows[index]) {
+          rows[index][field] = target.value;
+          renderRows();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

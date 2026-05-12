@@ -85,6 +85,22 @@ h1 { margin-top:18px; font-size:clamp(2.8rem, 7vw, 5rem); line-height:0.94; font
 .button { display:inline-flex; align-items:center; justify-content:center; min-height:46px; padding:0 20px; border-radius:999px; font-size:0.95rem; font-weight:600; text-decoration:none; }
 .button-primary { color:#fff; background:#313d3e; box-shadow:0 10px 24px rgba(49,61,62,0.12); }
 .button-secondary { color:var(--text); background:rgba(255,255,255,0.8); border:1px solid rgba(31,44,47,0.08); }
+.button-export {
+  color:#fff;
+  background:linear-gradient(180deg, #243333 0%, #102121 100%);
+  border:1px solid rgba(16,33,33,0.22);
+  box-shadow:0 14px 26px rgba(16,33,33,0.2), inset 0 1px 0 rgba(255,255,255,0.12);
+  transition:transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+.button-export:hover {
+  transform:translateY(-2px);
+  background:linear-gradient(180deg, #2d4141 0%, #162929 100%);
+  box-shadow:0 18px 34px rgba(16,33,33,0.26), inset 0 1px 0 rgba(255,255,255,0.14);
+}
+.button-export:active {
+  transform:translateY(1px) scale(0.99);
+  box-shadow:0 8px 18px rgba(16,33,33,0.18);
+}
 .countdown-section { background: radial-gradient(circle at 92% 12%, rgba(77,114,112,0.1), transparent 18%), linear-gradient(135deg, rgba(247,250,249,0.98), rgba(237,244,243,0.96)); }
 .countdown-display { margin-top:18px; font-size:clamp(2rem, 4.4vw, 3.4rem); line-height:1.06; font-weight:700; color:var(--text); }
 .countdown-format { margin-top:10px; color:var(--muted); font-size:0.92rem; line-height:1.6; }
@@ -157,10 +173,61 @@ h1 { margin-top:18px; font-size:clamp(2.8rem, 7vw, 5rem); line-height:0.94; font
 .fee-table thead th { color:#102b44; border-bottom:2px solid rgba(16,43,68,0.76); background:rgba(77,114,112,0.045); }
 .fee-table tbody td:first-child { font-weight:650; }
 .fee-note { margin:14px 0 0; color:var(--muted); line-height:1.7; }
+.staff-table {
+  min-width:1120px;
+}
+.staff-table input,
+.staff-table select {
+  width:100%;
+  min-width:130px;
+  min-height:38px;
+  border:1px solid rgba(31,44,47,0.14);
+  border-radius:10px;
+  background:rgba(255,255,255,0.94);
+  color:var(--text);
+  font:inherit;
+  padding:8px 10px;
+}
+.staff-table input:focus,
+.staff-table select:focus {
+  outline:none;
+  border-color:rgba(77,114,112,0.58);
+  box-shadow:0 0 0 3px rgba(77,114,112,0.12);
+}
+.staff-search-row {
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) auto;
+  gap:14px;
+  align-items:end;
+}
+.staff-actions {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-top:20px;
+}
+.staff-actions .button-export {
+  margin-left:auto;
+}
+.sheet-view-actions {
+  display:flex;
+  justify-content:flex-end;
+  margin-top:16px;
+}
 @media (max-width: 720px) {
   .stay-table th, .stay-table td { padding:14px 16px; }
   .fee-card h3 { font-size:1.18rem; }
   .fee-table { min-width:680px; }
+  .staff-table { min-width:1080px; }
+  .staff-search-row, .staff-actions, .sheet-view-actions {
+    grid-template-columns:1fr;
+    flex-direction:column;
+    align-items:stretch;
+  }
+  .staff-actions .button-export {
+    margin-left:0;
+  }
 }
 
 .button-spotlight {
@@ -436,4 +503,58 @@ h1 { margin-top:18px; font-size:clamp(2.8rem, 7vw, 5rem); line-height:0.94; font
   .sponsor-marquee-group { gap:18px; margin-top:20px; }
   .sponsor-slot { min-width:245px; min-height:106px; font-size:1.05rem; }
   .stay-table th, .stay-table td { padding:22px 24px; font-size:1.05rem; }
+}
+
+@media (max-width: 720px) {
+  .submit-layout {
+    grid-template-columns:1fr;
+    gap:16px;
+  }
+  .submit-layout aside .button-row {
+    align-items:stretch;
+  }
+  .submit-layout aside .button {
+    width:100%;
+  }
+  .form-grid {
+    grid-template-columns:1fr;
+    gap:14px;
+  }
+  .card {
+    padding:20px;
+  }
+  .submission-mode-switch {
+    width:100%;
+    min-height:42px;
+  }
+  .submission-mode-switch__option {
+    padding:0 8px;
+    font-size:0.84rem;
+    line-height:1.18;
+  }
+  .form-row input,
+  .form-row select,
+  .form-row textarea {
+    min-width:0;
+    font-size:16px;
+  }
+  .file-upload-box {
+    padding:14px;
+  }
+  .revision-update-head {
+    margin-top:22px;
+  }
+}
+
+@media (max-width: 420px) {
+  .submission-mode-switch__option {
+    font-size:0.78rem;
+  }
+  .form-row label {
+    font-size:0.94rem;
+  }
+  .form-row .hint {
+    display:block;
+    margin-top:3px;
+  }
 }
