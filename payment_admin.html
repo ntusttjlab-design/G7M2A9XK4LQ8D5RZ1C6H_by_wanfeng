@@ -34,6 +34,11 @@
       <div class="section-head"><div><h2>登入</h2><p>內部作業使用。</p></div></div>
       <article class="card">
         <form class="submit-form" id="staffLoginForm">
+          <div class="google-login-panel">
+            <div class="chip">Google 帳戶</div>
+            <p class="form-note">請使用授權的 Google 帳戶登入。</p>
+            <div id="googleSignInButton"></div>
+          </div>
           <div class="form-grid">
             <div class="form-row">
               <label for="staff_account">帳號</label>
@@ -71,6 +76,15 @@
             <label for="paymentSearch">搜尋框</label>
             <input id="paymentSearch" type="search" placeholder="輸入姓名、Email、報名編號或單位">
           </div>
+          <div class="form-row">
+            <label for="participantFilter">身分別篩選</label>
+            <select id="participantFilter">
+              <option value="all">全部</option>
+              <option value="一般海報競賽">一般海報競賽</option>
+              <option value="學生論文競賽">學生論文競賽</option>
+              <option value="海報發表">海報發表</option>
+            </select>
+          </div>
           <button class="button button-primary" type="button" id="runPaymentSearch">搜尋</button>
         </div>
       </div>
@@ -79,7 +93,7 @@
         <button class="button button-spotlight" type="button" id="syncFromBackend">重新整理後台資料</button>
         <button class="button button-export" type="button" id="saveToBackend">匯出更改</button>
       </div>
-      <div class="form-status is-visible" id="dashboardStatus" role="status" aria-live="polite">登入後會先讀取工作人員表，並顯示最近更新 10 筆資料。</div>
+      <div class="form-status is-visible" id="dashboardStatus" role="status" aria-live="polite">登入後會先讀取工作人員表，每頁顯示 20 筆資料。</div>
 
       <div class="stay-table-wrap" style="margin-top:20px;">
         <table class="stay-table fee-table staff-table">
@@ -87,11 +101,12 @@
             <tr>
               <th>報名編號</th>
               <th>姓名</th>
-              <th>Email</th>
               <th>身分別</th>
-              <th>應繳金額</th>
               <th>最新 PDF</th>
+              <th>這篇審核</th>
+              <th>應繳金額</th>
               <th>繳費狀態</th>
+              <th>Email</th>
               <th>繳費日期</th>
               <th>轉帳末5碼</th>
               <th>備註</th>
@@ -99,6 +114,11 @@
           </thead>
           <tbody id="paymentRows"></tbody>
         </table>
+      </div>
+      <div class="staff-pagination" id="staffPagination">
+        <button class="button button-secondary" type="button" id="prevPage">往前翻</button>
+        <span id="pageInfo">第 1 / 1 頁</span>
+        <button class="button button-secondary" type="button" id="nextPage">往後翻</button>
       </div>
       <p class="fee-note">表格中的狀態與備註可直接調整；完成後請按「匯出更改」寫回後台。</p>
       <div class="sheet-view-actions">
@@ -116,6 +136,7 @@
   </div>
   <script src="language_toggle.js" defer></script>
   <script src="submission_config.js" defer></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script>
     (function () {
       const account = '20262026';
@@ -123,15 +144,25 @@
       let staffToken = '';
       let rows = [];
       let activeSearch = '';
+      let activeParticipantFilter = 'all';
+      let currentPage = 1;
+      const pageSize = 20;
       const paymentAmountOptions = ['NT$ 2,000', 'NT$ 2,500', 'NT$ 3,000', 'NT$ 3,500', 'NT$ 3,900', 'NT$ 4,200', 'NT$ 4,700', 'NT$ 4,900'];
+      const participantTypeOptions = ['一般海報競賽', '學生論文競賽', '海報發表'];
+      const reviewStatusOptions = ['尚未審核', '審核通過', '審核未通過'];
       const loginForm = document.getElementById('staffLoginForm');
       const loginStatus = document.getElementById('loginStatus');
       const loginSection = document.getElementById('loginSection');
       const dashboard = document.getElementById('staffDashboard');
       const search = document.getElementById('paymentSearch');
+      const participantFilter = document.getElementById('participantFilter');
       const searchButton = document.getElementById('runPaymentSearch');
       const tbody = document.getElementById('paymentRows');
       const dashboardStatus = document.getElementById('dashboardStatus');
+      const pageInfo = document.getElementById('pageInfo');
+      const prevPage = document.getElementById('prevPage');
+      const nextPage = document.getElementById('nextPage');
+      const googleButton = document.getElementById('googleSignInButton');
       function showStatus(message, type) {
         loginStatus.textContent = message;
         loginStatus.className = 'form-status is-visible' + (type ? ' is-' + type : '');
@@ -152,13 +183,53 @@
         if (!data.ok) throw new Error((data.error && data.error.message) || '後端操作失敗。');
         return data;
       }
+      function enterDashboard(token) {
+        staffToken = token || '';
+        loginSection.classList.add('is-hidden');
+        dashboard.classList.remove('is-hidden');
+        renderRows();
+        loadRowsFromBackend(false);
+      }
+      function initializeGoogleLogin() {
+        const clientId = window.HEFC_GOOGLE_CLIENT_ID || '';
+        if (!clientId || clientId === 'PASTE_GOOGLE_OAUTH_CLIENT_ID_HERE') {
+          showStatus('Google 登入尚未設定 OAuth Client ID；目前可先使用臨時帳密登入。', 'error');
+          return;
+        }
+        if (!window.google || !window.google.accounts || !window.google.accounts.id) {
+          window.setTimeout(initializeGoogleLogin, 250);
+          return;
+        }
+        window.google.accounts.id.initialize({
+          client_id: clientId,
+          callback: handleGoogleCredential
+        });
+        window.google.accounts.id.renderButton(googleButton, {
+          theme: 'outline',
+          size: 'large',
+          text: 'signin_with',
+          shape: 'pill',
+          width: 280
+        });
+      }
+      async function handleGoogleCredential(response) {
+        try {
+          showStatus('正在驗證 Google 帳戶...', '');
+          const result = await callStaffApi({ action: 'staffGoogleLogin', id_token: response.credential });
+          showStatus('Google 登入成功。', 'success');
+          enterDashboard(result.token);
+        } catch (error) {
+          showStatus(error.message || 'Google 登入失敗。', 'error');
+        }
+      }
       function normalizeBackendRows(items) {
         return (items || []).map((item) => ({
           record_id: item.record_id || '',
           name: item.name || '',
           email: item.email || '',
-          participant_type: item.participant_type || '',
-          payment_amount: item.payment_amount || '',
+          participant_type: item.participant_type || '一般海報競賽',
+          review_status: item.review_status || '尚未審核',
+          payment_amount: normalizePaymentAmount(item.payment_amount),
           latest_pdf_url: item.latest_pdf_url || '',
           payment_status: item.payment_status || '未繳費',
           payment_date: item.payment_date || '',
@@ -169,48 +240,72 @@
           last_submission_update: item.last_submission_update || item.updated_at || ''
         }));
       }
+      function normalizePaymentAmount(value) {
+        const compact = String(value || '').replace(/[^\d]/g, '');
+        const byNumber = { 2000: 'NT$ 2,000', 2500: 'NT$ 2,500', 3000: 'NT$ 3,000', 3500: 'NT$ 3,500', 3900: 'NT$ 3,900', 4200: 'NT$ 4,200', 4700: 'NT$ 4,700', 4900: 'NT$ 4,900' };
+        return paymentAmountOptions.includes(String(value || '')) ? String(value || '') : (byNumber[compact] || '');
+      }
       function rowTimeValue(row) {
         const value = row.staff_updated_at || row.last_submission_update || '';
         const time = Date.parse(value);
         return Number.isNaN(time) ? 0 : time;
       }
-      function recentRows() {
-        return rows.slice().sort((a, b) => rowTimeValue(b) - rowTimeValue(a)).slice(0, 10);
-      }
       function searchableText(row) {
         const emailLocal = String(row.email || '').split('@')[0];
-        return [row.record_id, row.name, emailLocal, row.participant_type, row.organization, row.staff_note].join(' ').toLowerCase();
+        return [row.record_id, row.name, emailLocal, row.participant_type, row.review_status, row.organization, row.staff_note].join(' ').toLowerCase();
+      }
+      function filteredRows() {
+        return rows.slice().sort((a, b) => rowTimeValue(b) - rowTimeValue(a)).filter((row) => {
+          const matchesSearch = activeSearch ? searchableText(row).includes(activeSearch) : true;
+          const matchesParticipant = activeParticipantFilter === 'all' || row.participant_type === activeParticipantFilter;
+          return matchesSearch && matchesParticipant;
+        });
       }
       function updateStats(list) {
         document.getElementById('statTotal').textContent = list.length;
         document.getElementById('statPaid').textContent = list.filter((row) => row.payment_status === '已繳費').length;
         document.getElementById('statUnpaid').textContent = list.filter((row) => row.payment_status === '未繳費').length;
-        document.getElementById('statReview').textContent = list.filter((row) => row.payment_status === '需確認').length;
+        document.getElementById('statReview').textContent = list.filter((row) => row.review_status === '尚未審核').length;
       }
       function renderRows() {
-        const visibleRows = activeSearch ? rows.filter((row) => searchableText(row).includes(activeSearch)) : recentRows();
-        tbody.innerHTML = visibleRows.length ? visibleRows.map((row) => `
+        const visibleRows = filteredRows();
+        const totalPages = Math.max(1, Math.ceil(visibleRows.length / pageSize));
+        currentPage = Math.min(Math.max(1, currentPage), totalPages);
+        const pageRows = visibleRows.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+        tbody.innerHTML = pageRows.length ? pageRows.map((row) => `
           <tr>
             <td><strong>${row.record_id}</strong></td>
             <td>${row.name}</td>
-            <td>${row.email}</td>
-            <td>${row.participant_type}</td>
+            <td>
+              <select data-row="${rows.indexOf(row)}" data-field="participant_type">
+                ${participantTypeOptions.map((item) => `<option value="${item}"${item === row.participant_type ? ' selected' : ''}>${item}</option>`).join('')}
+              </select>
+            </td>
+            <td>${row.latest_pdf_url ? `<a class="button button-secondary" href="${row.latest_pdf_url}" target="_blank" rel="noopener noreferrer">查看 PDF</a>` : '尚無'}</td>
+            <td>
+              <select data-row="${rows.indexOf(row)}" data-field="review_status">
+                ${reviewStatusOptions.map((item) => `<option value="${item}"${item === row.review_status ? ' selected' : ''}>${item}</option>`).join('')}
+              </select>
+            </td>
             <td>
               <select data-row="${rows.indexOf(row)}" data-field="payment_amount">
                 ${paymentAmountOptions.map((item) => `<option value="${item}"${item === row.payment_amount ? ' selected' : ''}>${item}</option>`).join('')}
               </select>
             </td>
-            <td>${row.latest_pdf_url ? `<a class="button button-secondary" href="${row.latest_pdf_url}" target="_blank" rel="noopener noreferrer">查看 PDF</a>` : '尚無'}</td>
             <td>
               <select data-row="${rows.indexOf(row)}" data-field="payment_status">
                 ${['未繳費', '已繳費', '需確認', '已退款'].map((item) => `<option${item === row.payment_status ? ' selected' : ''}>${item}</option>`).join('')}
               </select>
             </td>
+            <td>${row.email}</td>
             <td><input data-row="${rows.indexOf(row)}" data-field="payment_date" value="${row.payment_date}" placeholder="YYYY/MM/DD"></td>
             <td><input data-row="${rows.indexOf(row)}" data-field="transfer_last5" value="${row.transfer_last5}" placeholder="轉帳末5碼"></td>
             <td><input data-row="${rows.indexOf(row)}" data-field="staff_note" value="${row.staff_note}" placeholder="內部備註"></td>
           </tr>
-        `).join('') : '<tr><td colspan="10">沒有符合條件的資料。</td></tr>';
+        `).join('') : '<tr><td colspan="11">沒有符合條件的資料。</td></tr>';
+        pageInfo.textContent = `第 ${currentPage} / ${totalPages} 頁，共 ${visibleRows.length} 筆`;
+        prevPage.disabled = currentPage <= 1;
+        nextPage.disabled = currentPage >= totalPages;
         updateStats(visibleRows);
       }
       function runSearch() {
@@ -218,17 +313,20 @@
         const comparableKeyword = keyword.includes('@') ? keyword.split('@')[0] : keyword;
         if (!comparableKeyword) {
           activeSearch = '';
+          currentPage = 1;
           renderRows();
-          showDashboardStatus('已顯示最近更新 10 筆資料。', 'success');
+          showDashboardStatus('已顯示全部資料，每頁 20 筆。', 'success');
           return;
         }
         if (comparableKeyword.length < 3) {
           activeSearch = '';
+          currentPage = 1;
           renderRows();
           showDashboardStatus('請輸入至少 3 個字元再搜尋。', 'error');
           return;
         }
         activeSearch = comparableKeyword;
+        currentPage = 1;
         renderRows();
         showDashboardStatus('已依搜尋條件更新列表。', 'success');
       }
@@ -238,12 +336,16 @@
           const result = await callStaffApi({ action: sync ? 'staffSyncPayments' : 'staffListPayments', token: staffToken, sync: sync });
           rows = normalizeBackendRows(result.rows);
           activeSearch = '';
+          activeParticipantFilter = 'all';
+          participantFilter.value = 'all';
+          currentPage = 1;
           search.value = '';
           renderRows();
-          showDashboardStatus(sync ? '同步完成，已更新最新資料。' : '已讀取工作人員表，顯示最近更新 10 筆。', 'success');
+          showDashboardStatus(sync ? '同步完成，已更新最新資料。' : '已讀取工作人員表，每頁顯示 20 筆。', 'success');
         } catch (error) {
           rows = [];
           activeSearch = '';
+          currentPage = 1;
           renderRows();
           showDashboardStatus(error.message || '後端尚未可用，無法讀取資料。', 'error');
         }
@@ -258,15 +360,12 @@
         }
         try {
           const result = await callStaffApi({ action: 'staffLogin', account: inputAccount, password: inputPassword });
-          staffToken = result.token || '';
+          showStatus('登入成功。', 'success');
+          enterDashboard(result.token);
         } catch (error) {
           showStatus(error.message || '後端登入失敗。', 'error');
           return;
         }
-        loginSection.classList.add('is-hidden');
-        dashboard.classList.remove('is-hidden');
-        renderRows();
-        loadRowsFromBackend(false);
       });
       document.getElementById('staffLogout').addEventListener('click', function () {
         dashboard.classList.add('is-hidden');
@@ -281,6 +380,8 @@
       document.getElementById('saveToBackend').addEventListener('click', async function () {
         const updates = rows.map((row) => ({
           record_id: row.record_id,
+          participant_type: row.participant_type,
+          review_status: row.review_status,
           payment_amount: row.payment_amount,
           payment_status: row.payment_status,
           payment_date: row.payment_date,
@@ -292,6 +393,9 @@
           const result = await callStaffApi({ action: 'staffUpdatePayments', token: staffToken, updates: updates });
           rows = normalizeBackendRows(result.rows);
           activeSearch = '';
+          activeParticipantFilter = 'all';
+          participantFilter.value = 'all';
+          currentPage = 1;
           search.value = '';
           renderRows();
           showDashboardStatus('已更新資訊。', 'success');
@@ -300,6 +404,19 @@
         }
       });
       searchButton.addEventListener('click', runSearch);
+      participantFilter.addEventListener('change', function () {
+        activeParticipantFilter = participantFilter.value;
+        currentPage = 1;
+        renderRows();
+      });
+      prevPage.addEventListener('click', function () {
+        currentPage -= 1;
+        renderRows();
+      });
+      nextPage.addEventListener('click', function () {
+        currentPage += 1;
+        renderRows();
+      });
       search.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
           event.preventDefault();
@@ -315,6 +432,7 @@
           renderRows();
         }
       });
+      window.addEventListener('load', initializeGoogleLogin);
     })();
   </script>
 </body>
