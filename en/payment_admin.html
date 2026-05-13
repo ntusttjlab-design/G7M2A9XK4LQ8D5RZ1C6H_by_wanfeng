@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../site.css">
+  <title>HEFC 2026 Staff Portal</title>
+</head>
+<body>
+  <div class="page">
+    <section class="site-frame">
+      <div class="site-frame__inner">
+        <a class="site-brand" href="index.html">HEFC 2026</a>
+        <div class="site-nav-area"><nav class="site-nav" aria-label="Site navigation">
+          <a href="index.html">Home</a>
+          <a href="payment_admin.html" class="is-current" aria-current="page">Staff Portal</a>
+          <a href="info.html">Conference Info</a>
+          <a href="agenda.html">Agenda</a>
+          <a href="call_for_papers.html">Call & Registration</a>
+          <a href="faq.html">FAQ</a>
+          <a href="traffic_venue.html">Travel, Stay & Venue</a>
+          <a href="contact_sponsor.html">Contact & Sponsorship</a>
+        </nav><a class="language-toggle" href="../payment_admin.html" data-language-toggle data-lang="en" aria-label="切換語言為中文"><span class="language-toggle__zh">中文</span><span class="language-toggle__en">English</span></a></div>
+      </div>
+    </section>
+
+    <section class="section hero">
+      <div class="eyebrow">Staff Portal</div>
+      <h1>Staff Portal</h1>
+      <p class="hero-subtitle">Please sign in with the staff account.</p>
+    </section>
+
+    <section class="section body-section" id="loginSection">
+      <div class="section-head"><div><h2>Sign In</h2><p>For internal use.</p></div></div>
+      <article class="card">
+        <form class="submit-form" id="staffLoginForm">
+          <div class="google-login-panel">
+            <div class="chip">Google Account</div>
+            <p class="form-note">Sign in with an authorized Google account.</p>
+            <div id="googleSignInButton"></div>
+          </div>
+          <div class="form-grid">
+            <div class="form-row">
+              <label for="staff_account">Account</label>
+              <input id="staff_account" name="staff_account" type="text" autocomplete="username" placeholder="Enter account" required>
+            </div>
+            <div class="form-row">
+              <label for="staff_password">Password</label>
+              <input id="staff_password" name="staff_password" type="password" autocomplete="current-password" placeholder="Enter password" required>
+            </div>
+          </div>
+          <div class="form-status" id="loginStatus" role="status" aria-live="polite"></div>
+          <div class="button-row">
+            <button class="button button-spotlight" type="submit">Sign In</button>
+          </div>
+        </form>
+      </article>
+    </section>
+
+    <section class="section body-section is-hidden" id="staffDashboard">
+      <div class="section-head">
+        <div><h2>Workspace</h2><p>Search records, review files, and update processing status.</p></div>
+        <button class="button button-secondary" type="button" id="staffLogout">Sign Out</button>
+      </div>
+
+      <div class="grid-4">
+        <article class="card"><div class="chip">Total</div><h3 id="statTotal">0</h3><p>Visible registrations.</p></article>
+        <article class="card"><div class="chip">Paid</div><h3 id="statPaid">0</h3><p>Ready for receipt handling.</p></article>
+        <article class="card"><div class="chip">Unpaid</div><h3 id="statUnpaid">0</h3><p>Follow-up list.</p></article>
+        <article class="card"><div class="chip">Review</div><h3 id="statReview">0</h3><p>Needs manual confirmation.</p></article>
+      </div>
+
+      <div class="card" style="margin-top:20px;">
+        <div class="staff-search-row">
+          <div class="form-row">
+            <label for="paymentSearch">Search</label>
+            <input id="paymentSearch" type="search" placeholder="Name, email, registration ID, or affiliation">
+          </div>
+          <div class="form-row">
+            <label for="participantFilter">Category Filter</label>
+            <select id="participantFilter">
+              <option value="all">All</option>
+              <option value="一般海報競賽">General Poster Competition</option>
+              <option value="學生論文競賽">Student Paper Competition</option>
+              <option value="海報發表">Poster Presentation</option>
+            </select>
+          </div>
+          <button class="button button-primary" type="button" id="runPaymentSearch">Search</button>
+        </div>
+      </div>
+
+      <div class="staff-actions">
+        <button class="button button-spotlight" type="button" id="syncFromBackend">Refresh Backend Data</button>
+        <button class="button button-export" type="button" id="saveToBackend">Export Changes</button>
+      </div>
+      <div class="form-status is-visible" id="dashboardStatus" role="status" aria-live="polite">After sign-in, the staff sheet will be loaded with 20 records per page.</div>
+
+      <div class="stay-table-wrap" style="margin-top:20px;">
+        <table class="stay-table fee-table staff-table">
+          <thead>
+            <tr>
+              <th>Registration ID</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Latest PDF</th>
+              <th>Review</th>
+              <th>Amount</th>
+              <th>Payment Status</th>
+              <th>Email</th>
+              <th>Payment Date</th>
+              <th>Transfer Last 5</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody id="paymentRows"></tbody>
+        </table>
+      </div>
+      <div class="staff-pagination" id="staffPagination">
+        <button class="button button-secondary" type="button" id="prevPage">Previous</button>
+        <span id="pageInfo">Page 1 / 1</span>
+        <button class="button button-secondary" type="button" id="nextPage">Next</button>
+      </div>
+      <p class="fee-note">Status, payment date, bank transfer last 5 digits, and notes can be edited here. Select “Export Changes” to write updates back to the backend.</p>
+      <div class="sheet-view-actions">
+        <a class="button button-secondary" href="https://docs.google.com/spreadsheets/d/1OXcCuDK_Uegm522ZfYjBLmzgS4hFFBeeTb8qMsrXBbQ/preview#gid=525594530" target="_blank" rel="noopener noreferrer">View Staff Sheet</a>
+      </div>
+    </section>
+
+    <footer class="site-footer" aria-label="Footer">
+      <div class="site-footer__grid">
+        <div><p class="site-footer__label">Event</p><p class="site-footer__value">2026 National Hydrogen Energy and Fuel Cell Conference<br><span>2026 全國氫能與燃料電池研討會</span></p></div>
+        <div><p class="site-footer__label">Organizer</p><p class="site-footer__value">Taiwan Association for Hydrogen Energy and Fuel Cells<br><span>台灣氫能與燃料電池學會</span></p></div>
+        <div><p class="site-footer__label">Co-organizer</p><p class="site-footer__value">Department of Materials Science and Engineering, NTUST<br><span>國立臺灣科技大學材料科學與工程系</span></p></div>
+      </div>
+    </footer>
+  </div>
+  <script src="../language_toggle.js" defer></script>
+  <script src="../submission_config.js" defer></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script>
+    (function () {
+      const account = '20262026';
+      const password = '2026';
+      let staffToken = '';
+      let rows = [];
+      let activeSearch = '';
+      let activeParticipantFilter = 'all';
+      let currentPage = 1;
+      const pageSize = 20;
+      const paymentAmountOptions = ['NT$ 2,000', 'NT$ 2,500', 'NT$ 3,000', 'NT$ 3,500', 'NT$ 3,900', 'NT$ 4,200', 'NT$ 4,700', 'NT$ 4,900'];
+      const participantTypeOptions = ['一般海報競賽', '學生論文競賽', '海報發表'];
+      const reviewStatusOptions = ['尚未審核', '審核通過', '審核未通過'];
+      const loginForm = document.getElementById('staffLoginForm');
+      const loginStatus = document.getElementById('loginStatus');
+      const loginSection = document.getElementById('loginSection');
+      const dashboard = document.getElementById('staffDashboard');
+      const search = document.getElementById('paymentSearch');
+      const participantFilter = document.getElementById('participantFilter');
+      const searchButton = document.getElementById('runPaymentSearch');
+      const tbody = document.getElementById('paymentRows');
+      const dashboardStatus = document.getElementById('dashboardStatus');
+      const pageInfo = document.getElementById('pageInfo');
+      const prevPage = document.getElementById('prevPage');
+      const nextPage = document.getElementById('nextPage');
+      const googleButton = document.getElementById('googleSignInButton');
+      function showStatus(message, type) {
+        loginStatus.textContent = message;
+        loginStatus.className = 'form-status is-visible' + (type ? ' is-' + type : '');
+      }
+      function showDashboardStatus(message, type) {
+        dashboardStatus.textContent = message;
+        dashboardStatus.className = 'form-status is-visible' + (type ? ' is-' + type : '');
+      }
+      async function callStaffApi(payload) {
+        const apiUrl = window.HEFC_SUBMISSION_API_URL || '';
+        if (!apiUrl) throw new Error('API is not configured, showing demo data.');
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+        if (!data.ok) throw new Error((data.error && data.error.message) || 'Backend operation failed.');
+        return data;
+      }
+      function enterDashboard(token) {
+        staffToken = token || '';
+        loginSection.classList.add('is-hidden');
+        dashboard.classList.remove('is-hidden');
+        renderRows();
+        loadRowsFromBackend(false);
+      }
+      function initializeGoogleLogin() {
+        const clientId = window.HEFC_GOOGLE_CLIENT_ID || '';
+        if (!clientId || clientId === 'PASTE_GOOGLE_OAUTH_CLIENT_ID_HERE') {
+          showStatus('Google sign-in OAuth Client ID is not configured yet. Temporary account sign-in remains available.', 'error');
+          return;
+        }
+        if (!window.google || !window.google.accounts || !window.google.accounts.id) {
+          window.setTimeout(initializeGoogleLogin, 250);
+          return;
+        }
+        window.google.accounts.id.initialize({
+          client_id: clientId,
+          callback: handleGoogleCredential
+        });
+        window.google.accounts.id.renderButton(googleButton, {
+          theme: 'outline',
+          size: 'large',
+          text: 'signin_with',
+          shape: 'pill',
+          width: 280
+        });
+      }
+      async function handleGoogleCredential(response) {
+        try {
+          showStatus('Verifying Google account...', '');
+          const result = await callStaffApi({ action: 'staffGoogleLogin', id_token: response.credential });
+          showStatus('Google sign-in successful.', 'success');
+          enterDashboard(result.token);
+        } catch (error) {
+          showStatus(error.message || 'Google sign-in failed.', 'error');
+        }
+      }
+      function normalizeBackendRows(items) {
+        return (items || []).map((item) => ({
+          record_id: item.record_id || '',
+          name: item.name || '',
+          email: item.email || '',
+          participant_type: item.participant_type || '一般海報競賽',
+          review_status: item.review_status || '尚未審核',
+          payment_amount: normalizePaymentAmount(item.payment_amount),
+          latest_pdf_url: item.latest_pdf_url || '',
+          payment_status: item.payment_status || '未繳費',
+          payment_date: item.payment_date || '',
+          transfer_last5: item.transfer_last5 || item.receipt_no || '',
+          staff_note: item.staff_note || '',
+          organization: item.organization || item.affiliation || '',
+          staff_updated_at: item.staff_updated_at || '',
+          last_submission_update: item.last_submission_update || item.updated_at || ''
+        }));
+      }
+      function normalizePaymentAmount(value) {
+        const compact = String(value || '').replace(/[^\d]/g, '');
+        const byNumber = { 2000: 'NT$ 2,000', 2500: 'NT$ 2,500', 3000: 'NT$ 3,000', 3500: 'NT$ 3,500', 3900: 'NT$ 3,900', 4200: 'NT$ 4,200', 4700: 'NT$ 4,700', 4900: 'NT$ 4,900' };
+        return paymentAmountOptions.includes(String(value || '')) ? String(value || '') : (byNumber[compact] || '');
+      }
+      function statusLabel(value) {
+        return { '未繳費': 'Unpaid', '已繳費': 'Paid', '需確認': 'Review', '已退款': 'Refunded' }[value] || value;
+      }
+      function participantLabel(value) {
+        return { '一般海報競賽': 'General Poster Competition', '學生論文競賽': 'Student Paper Competition', '海報發表': 'Poster Presentation' }[value] || value;
+      }
+      function reviewLabel(value) {
+        return { '尚未審核': 'Not Reviewed', '審核通過': 'Approved', '審核未通過': 'Not Approved' }[value] || value;
+      }
+      function rowTimeValue(row) {
+        const value = row.staff_updated_at || row.last_submission_update || '';
+        const time = Date.parse(value);
+        return Number.isNaN(time) ? 0 : time;
+      }
+      function searchableText(row) {
+        const emailLocal = String(row.email || '').split('@')[0];
+        return [row.record_id, row.name, emailLocal, row.participant_type, row.review_status, row.organization, row.staff_note].join(' ').toLowerCase();
+      }
+      function filteredRows() {
+        return rows.slice().sort((a, b) => rowTimeValue(b) - rowTimeValue(a)).filter((row) => {
+          const matchesSearch = activeSearch ? searchableText(row).includes(activeSearch) : true;
+          const matchesParticipant = activeParticipantFilter === 'all' || row.participant_type === activeParticipantFilter;
+          return matchesSearch && matchesParticipant;
+        });
+      }
+      function updateStats(list) {
+        document.getElementById('statTotal').textContent = list.length;
+        document.getElementById('statPaid').textContent = list.filter((row) => row.payment_status === '已繳費').length;
+        document.getElementById('statUnpaid').textContent = list.filter((row) => row.payment_status === '未繳費').length;
+        document.getElementById('statReview').textContent = list.filter((row) => row.review_status === '尚未審核').length;
+      }
+      function renderRows() {
+        const visibleRows = filteredRows();
+        const totalPages = Math.max(1, Math.ceil(visibleRows.length / pageSize));
+        currentPage = Math.min(Math.max(1, currentPage), totalPages);
+        const pageRows = visibleRows.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+        tbody.innerHTML = pageRows.length ? pageRows.map((row) => `
+          <tr>
+            <td><strong>${row.record_id}</strong></td>
+            <td>${row.name}</td>
+            <td>
+              <select data-row="${rows.indexOf(row)}" data-field="participant_type">
+                ${participantTypeOptions.map((item) => `<option value="${item}"${item === row.participant_type ? ' selected' : ''}>${participantLabel(item)}</option>`).join('')}
+              </select>
+            </td>
+            <td>${row.latest_pdf_url ? `<a class="button button-secondary" href="${row.latest_pdf_url}" target="_blank" rel="noopener noreferrer">Open PDF</a>` : 'None'}</td>
+            <td>
+              <select data-row="${rows.indexOf(row)}" data-field="review_status">
+                ${reviewStatusOptions.map((item) => `<option value="${item}"${item === row.review_status ? ' selected' : ''}>${reviewLabel(item)}</option>`).join('')}
+              </select>
+            </td>
+            <td>
+              <select data-row="${rows.indexOf(row)}" data-field="payment_amount">
+                ${paymentAmountOptions.map((item) => `<option value="${item}"${item === row.payment_amount ? ' selected' : ''}>${item}</option>`).join('')}
+              </select>
+            </td>
+            <td><select data-row="${rows.indexOf(row)}" data-field="payment_status">${['未繳費', '已繳費', '需確認', '已退款'].map((item) => `<option value="${item}"${item === row.payment_status ? ' selected' : ''}>${statusLabel(item)}</option>`).join('')}</select></td>
+            <td>${row.email}</td>
+            <td><input data-row="${rows.indexOf(row)}" data-field="payment_date" value="${row.payment_date}" placeholder="YYYY/MM/DD"></td>
+            <td><input data-row="${rows.indexOf(row)}" data-field="transfer_last5" value="${row.transfer_last5}" placeholder="Transfer last 5 digits"></td>
+            <td><input data-row="${rows.indexOf(row)}" data-field="staff_note" value="${row.staff_note}" placeholder="Internal notes"></td>
+          </tr>
+        `).join('') : '<tr><td colspan="11">No matching records.</td></tr>';
+        pageInfo.textContent = `Page ${currentPage} / ${totalPages}, ${visibleRows.length} records`;
+        prevPage.disabled = currentPage <= 1;
+        nextPage.disabled = currentPage >= totalPages;
+        updateStats(visibleRows);
+      }
+      function runSearch() {
+        const keyword = search.value.trim().toLowerCase();
+        const comparableKeyword = keyword.includes('@') ? keyword.split('@')[0] : keyword;
+        if (!comparableKeyword) {
+          activeSearch = '';
+          currentPage = 1;
+          renderRows();
+          showDashboardStatus('Showing all records, 20 per page.', 'success');
+          return;
+        }
+        if (comparableKeyword.length < 3) {
+          activeSearch = '';
+          currentPage = 1;
+          renderRows();
+          showDashboardStatus('Enter at least 3 characters before searching.', 'error');
+          return;
+        }
+        activeSearch = comparableKeyword;
+        currentPage = 1;
+        renderRows();
+        showDashboardStatus('Search results updated.', 'success');
+      }
+      async function loadRowsFromBackend(sync) {
+        try {
+          showDashboardStatus(sync ? 'Syncing with backend...' : 'Loading staff records...', '');
+          const result = await callStaffApi({ action: sync ? 'staffSyncPayments' : 'staffListPayments', token: staffToken, sync: sync });
+          rows = normalizeBackendRows(result.rows);
+          activeSearch = '';
+          activeParticipantFilter = 'all';
+          participantFilter.value = 'all';
+          currentPage = 1;
+          search.value = '';
+          renderRows();
+          showDashboardStatus(sync ? 'Sync complete. Latest records updated.' : 'Staff sheet loaded, 20 records per page.', 'success');
+        } catch (error) {
+          rows = [];
+          activeSearch = '';
+          currentPage = 1;
+          renderRows();
+          showDashboardStatus(error.message || 'Backend unavailable. No data loaded.', 'error');
+        }
+      }
+      loginForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
+        const inputAccount = document.getElementById('staff_account').value.trim();
+        const inputPassword = document.getElementById('staff_password').value.trim();
+        if (inputAccount !== account || inputPassword !== password) {
+          showStatus('Incorrect account or password.', 'error');
+          return;
+        }
+        try {
+          const result = await callStaffApi({ action: 'staffLogin', account: inputAccount, password: inputPassword });
+          showStatus('Signed in.', 'success');
+          enterDashboard(result.token);
+        } catch (error) {
+          showStatus(error.message || 'Backend sign-in failed.', 'error');
+          return;
+        }
+      });
+      document.getElementById('staffLogout').addEventListener('click', function () {
+        dashboard.classList.add('is-hidden');
+        loginSection.classList.remove('is-hidden');
+        staffToken = '';
+        loginForm.reset();
+        showStatus('Signed out.', 'success');
+      });
+      document.getElementById('syncFromBackend').addEventListener('click', function () {
+        loadRowsFromBackend(true);
+      });
+      document.getElementById('saveToBackend').addEventListener('click', async function () {
+        const updates = rows.map((row) => ({
+          record_id: row.record_id,
+          participant_type: row.participant_type,
+          review_status: row.review_status,
+          payment_amount: row.payment_amount,
+          payment_status: row.payment_status,
+          payment_date: row.payment_date,
+          transfer_last5: row.transfer_last5,
+          staff_note: row.staff_note
+        }));
+        try {
+          showDashboardStatus('Exporting changes...', '');
+          const result = await callStaffApi({ action: 'staffUpdatePayments', token: staffToken, updates: updates });
+          rows = normalizeBackendRows(result.rows);
+          activeSearch = '';
+          activeParticipantFilter = 'all';
+          participantFilter.value = 'all';
+          currentPage = 1;
+          search.value = '';
+          renderRows();
+          showDashboardStatus('Information updated.', 'success');
+        } catch (error) {
+          showDashboardStatus(error.message || 'Backend unavailable. Current changes remain in this demo view only.', 'error');
+        }
+      });
+      searchButton.addEventListener('click', runSearch);
+      participantFilter.addEventListener('change', function () {
+        activeParticipantFilter = participantFilter.value;
+        currentPage = 1;
+        renderRows();
+      });
+      prevPage.addEventListener('click', function () {
+        currentPage -= 1;
+        renderRows();
+      });
+      nextPage.addEventListener('click', function () {
+        currentPage += 1;
+        renderRows();
+      });
+      search.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          runSearch();
+        }
+      });
+      tbody.addEventListener('change', function (event) {
+        const target = event.target;
+        const index = Number(target.dataset.row);
+        const field = target.dataset.field;
+        if (!Number.isNaN(index) && field && rows[index]) {
+          rows[index][field] = target.value;
+          renderRows();
+        }
+      });
+      window.addEventListener('load', initializeGoogleLogin);
+    })();
+  </script>
+</body>
+</html>

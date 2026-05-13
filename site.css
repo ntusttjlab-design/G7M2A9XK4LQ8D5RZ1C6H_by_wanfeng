@@ -174,7 +174,7 @@ h1 { margin-top:18px; font-size:clamp(2.8rem, 7vw, 5rem); line-height:0.94; font
 .fee-table tbody td:first-child { font-weight:650; }
 .fee-note { margin:14px 0 0; color:var(--muted); line-height:1.7; }
 .staff-table {
-  min-width:1120px;
+  min-width:1460px;
 }
 .staff-table input,
 .staff-table select {
@@ -196,7 +196,7 @@ h1 { margin-top:18px; font-size:clamp(2.8rem, 7vw, 5rem); line-height:0.94; font
 }
 .staff-search-row {
   display:grid;
-  grid-template-columns:minmax(0, 1fr) auto;
+  grid-template-columns:minmax(0, 1fr) minmax(220px, 0.32fr) auto;
   gap:14px;
   align-items:end;
 }
@@ -215,13 +215,44 @@ h1 { margin-top:18px; font-size:clamp(2.8rem, 7vw, 5rem); line-height:0.94; font
   justify-content:flex-end;
   margin-top:16px;
 }
+.staff-pagination {
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  gap:12px;
+  margin-top:16px;
+  color:var(--muted);
+  font-weight:650;
+}
+.google-login-panel {
+  display:grid;
+  gap:10px;
+  padding:18px;
+  border:1px solid rgba(31,44,47,0.08);
+  border-radius:18px;
+  background:rgba(255,255,255,0.62);
+}
+.google-login-panel .form-note {
+  margin:0;
+}
+.button:disabled {
+  opacity:0.48;
+  cursor:not-allowed;
+  transform:none;
+  box-shadow:none;
+}
 @media (max-width: 720px) {
   .stay-table th, .stay-table td { padding:14px 16px; }
   .fee-card h3 { font-size:1.18rem; }
   .fee-table { min-width:680px; }
-  .staff-table { min-width:1080px; }
+  .staff-table { min-width:1420px; }
   .staff-search-row, .staff-actions, .sheet-view-actions {
     grid-template-columns:1fr;
+    flex-direction:column;
+    align-items:stretch;
+  }
+  .staff-pagination {
+    justify-content:stretch;
     flex-direction:column;
     align-items:stretch;
   }
