@@ -139,8 +139,6 @@
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script>
     (function () {
-      const account = '20262026';
-      const password = '2026';
       let staffToken = '';
       let rows = [];
       let activeSearch = '';
@@ -354,10 +352,6 @@
         event.preventDefault();
         const inputAccount = document.getElementById('staff_account').value.trim();
         const inputPassword = document.getElementById('staff_password').value.trim();
-        if (inputAccount !== account || inputPassword !== password) {
-          showStatus('帳號或密碼不正確。', 'error');
-          return;
-        }
         try {
           const result = await callStaffApi({ action: 'staffLogin', account: inputAccount, password: inputPassword });
           showStatus('登入成功。', 'success');
