@@ -51,9 +51,13 @@
     <section class="section countdown-section">
       <article class="countdown-panel">
         <div class="chip">Live Countdown</div>
-        <h2>活動倒數</h2>
-        <div class="countdown-display" id="countdownText">離開始還有 000：00：00</div>
-        <p class="countdown-format">天：小時：分鐘</p>
+        <h2>HEFC 2026 倒數</h2>
+        <div class="countdown-display countdown-grid" id="countdownText" aria-live="polite">
+          <span class="countdown-unit"><strong>000</strong><em>天</em></span>
+          <span class="countdown-unit"><strong>00</strong><em>小時</em></span>
+          <span class="countdown-unit"><strong>00</strong><em>分</em></span>
+          <span class="countdown-unit"><strong>00</strong><em>秒</em></span>
+        </div>
         <p class="countdown-note">依所在地時間自動更新。</p>
       </article>
     </section>
@@ -98,6 +102,7 @@
       </div>
     </section>
 
+    <!-- 大會海報尚未完成，暫時隱藏；海報定稿後可恢復此區塊。
     <section class="section poster-space">
       <div class="poster-panel" aria-label="大會海報預留區">
         <div class="poster-placeholder">
@@ -107,17 +112,18 @@
         </div>
       </div>
     </section>
+    -->
 
     <section class="section sponsor-space">
       <div class="section-head"><div><h2>贊助商空間</h2></div></div>
       <div class="sponsor-marquee-group">
         <article class="sponsor-lane">
-          <div class="sponsor-lane-head"><div class="chip">Sponsor</div><h3>贊助商尚未確定</h3></div>
-          <div class="sponsor-marquee"><div class="sponsor-track"><div class="sponsor-slot">尚未確定</div><div class="sponsor-slot">尚未確定</div><div class="sponsor-slot">尚未確定</div><div class="sponsor-slot">尚未確定</div><div class="sponsor-slot">尚未確定</div><div class="sponsor-slot">尚未確定</div><div class="sponsor-slot">尚未確定</div><div class="sponsor-slot">尚未確定</div></div></div>
+          <div class="sponsor-lane-head"><div class="chip">Sponsor</div><h3>贊助夥伴陸續公告</h3></div>
+          <div class="sponsor-marquee"><div class="sponsor-track"><div class="sponsor-slot">敬請期待</div><div class="sponsor-slot">敬請期待</div><div class="sponsor-slot">敬請期待</div><div class="sponsor-slot">敬請期待</div><div class="sponsor-slot">敬請期待</div><div class="sponsor-slot">敬請期待</div><div class="sponsor-slot">敬請期待</div><div class="sponsor-slot">敬請期待</div></div></div>
         </article>
         <article class="sponsor-lane">
-          <div class="sponsor-lane-head"><div class="chip">Sponsor</div><h3>合作夥伴尚未確定</h3></div>
-          <div class="sponsor-marquee"><div class="sponsor-track is-slower"><div class="sponsor-slot">尚未確定</div><div class="sponsor-slot">尚未確定</div><div class="sponsor-slot">尚未確定</div><div class="sponsor-slot">尚未確定</div><div class="sponsor-slot">尚未確定</div><div class="sponsor-slot">尚未確定</div><div class="sponsor-slot">尚未確定</div><div class="sponsor-slot">尚未確定</div><div class="sponsor-slot">尚未確定</div><div class="sponsor-slot">尚未確定</div><div class="sponsor-slot">尚未確定</div><div class="sponsor-slot">尚未確定</div></div></div>
+          <div class="sponsor-lane-head"><div class="chip">Sponsor</div><h3>合作夥伴陸續公告</h3></div>
+          <div class="sponsor-marquee"><div class="sponsor-track is-slower"><div class="sponsor-slot">敬請期待</div><div class="sponsor-slot">敬請期待</div><div class="sponsor-slot">敬請期待</div><div class="sponsor-slot">敬請期待</div><div class="sponsor-slot">敬請期待</div><div class="sponsor-slot">敬請期待</div><div class="sponsor-slot">敬請期待</div><div class="sponsor-slot">敬請期待</div><div class="sponsor-slot">敬請期待</div><div class="sponsor-slot">敬請期待</div><div class="sponsor-slot">敬請期待</div><div class="sponsor-slot">敬請期待</div></div></div>
         </article>
       </div>
       <div class="button-row" style="margin-top:20px;">
@@ -144,10 +150,15 @@
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
         const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        countdownEl.textContent = '離開始還有 ' + String(days).padStart(3, '0') + '：' + String(hours).padStart(2, '0') + '：' + String(minutes).padStart(2, '0');
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        countdownEl.innerHTML =
+          '<span class="countdown-unit"><strong>' + String(days).padStart(3, '0') + '</strong><em>天</em></span>' +
+          '<span class="countdown-unit"><strong>' + String(hours).padStart(2, '0') + '</strong><em>小時</em></span>' +
+          '<span class="countdown-unit"><strong>' + String(minutes).padStart(2, '0') + '</strong><em>分</em></span>' +
+          '<span class="countdown-unit"><strong>' + String(seconds).padStart(2, '0') + '</strong><em>秒</em></span>';
       }
       updateCountdown();
-      setInterval(updateCountdown, 60000);
+      setInterval(updateCountdown, 1000);
     })();
   </script>
   <script src="language_toggle.js" defer></script>
