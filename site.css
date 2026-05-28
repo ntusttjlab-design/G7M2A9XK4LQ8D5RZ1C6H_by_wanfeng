@@ -619,3 +619,500 @@ h1 { margin-top:18px; font-size:clamp(2.8rem, 7vw, 5rem); line-height:0.94; font
     margin-top:3px;
   }
 }
+
+/* 0529 B3 visual system: hydrogen molecule background and ceremony hero. */
+:root {
+  --text: #102a3b;
+  --muted: #58707c;
+  --line: rgba(16, 42, 59, 0.11);
+  --surface: rgba(255, 255, 255, 0.9);
+  --surface-soft: rgba(247, 253, 252, 0.96);
+  --primary: #126a7a;
+  --primary-deep: #082f4a;
+  --chip: rgba(18, 106, 122, 0.1);
+  --shadow: 0 20px 54px rgba(8, 47, 74, 0.08);
+}
+
+body {
+  background:
+    radial-gradient(circle at 8% 14%, rgba(56, 200, 194, 0.18), transparent 20%),
+    radial-gradient(circle at 91% 10%, rgba(18, 106, 122, 0.15), transparent 18%),
+    radial-gradient(circle at 92% 72%, rgba(111, 215, 205, 0.16), transparent 20%),
+    linear-gradient(180deg, #edf9f9 0%, #ffffff 48%, #eef8f8 100%);
+  letter-spacing: 0;
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+}
+
+body::before {
+  opacity: 0.48;
+  background:
+    linear-gradient(34deg, transparent 0 28%, rgba(41, 170, 182, 0.17) 28.2% 28.45%, transparent 28.7%),
+    linear-gradient(149deg, transparent 0 54%, rgba(11, 74, 110, 0.11) 54.15% 54.42%, transparent 54.7%),
+    radial-gradient(circle at 8% 42%, rgba(37, 151, 165, 0.22) 0 3px, transparent 4px),
+    radial-gradient(circle at 14% 48%, rgba(255, 255, 255, 0.9) 0 12px, rgba(31, 145, 160, 0.2) 13px 15px, transparent 16px),
+    radial-gradient(circle at 88% 35%, rgba(255, 255, 255, 0.88) 0 14px, rgba(31, 145, 160, 0.18) 15px 17px, transparent 18px),
+    radial-gradient(circle at 94% 58%, rgba(37, 151, 165, 0.22) 0 4px, transparent 5px);
+}
+
+body::after {
+  z-index: -1;
+  opacity: 0.22;
+  background:
+    radial-gradient(circle at 1.5rem 15rem, transparent 0 20px, rgba(18, 106, 122, 0.3) 21px 23px, transparent 24px),
+    radial-gradient(circle at calc(100% - 1.8rem) 24rem, transparent 0 18px, rgba(18, 106, 122, 0.28) 19px 21px, transparent 22px),
+    linear-gradient(115deg, transparent 0 72%, rgba(18, 106, 122, 0.1) 72.2% 72.4%, transparent 72.6%);
+}
+
+.page {
+  position: relative;
+}
+
+.page::before,
+.page::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 999px;
+  opacity: 0.55;
+}
+
+.page::before {
+  width: 150px;
+  height: 150px;
+  left: -96px;
+  top: 760px;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.82) 0 16px, rgba(83, 206, 198, 0.28) 17px 20px, transparent 21px),
+    linear-gradient(42deg, transparent 0 49%, rgba(18, 106, 122, 0.18) 49.3% 50%, transparent 50.3%);
+}
+
+.page::after {
+  width: 170px;
+  height: 170px;
+  right: -112px;
+  top: 1180px;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.84) 0 18px, rgba(83, 206, 198, 0.24) 19px 22px, transparent 23px),
+    linear-gradient(135deg, transparent 0 49%, rgba(18, 106, 122, 0.16) 49.3% 50%, transparent 50.3%);
+}
+
+.section {
+  border-radius: 22px;
+}
+
+.hero.hero-split {
+  min-height: 430px;
+  grid-template-columns: minmax(0, 0.88fr) minmax(390px, 0.66fr);
+  align-items: center;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(5, 42, 72, 0.85) 0%, rgba(17, 116, 128, 0.34) 48%, rgba(255, 255, 255, 0.86) 76%),
+    url("assets/hefc_2026_visual.png") left center / cover no-repeat;
+}
+
+.hero.hero-split .hero-main {
+  grid-column: 2;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.86);
+  box-shadow: 0 22px 46px rgba(8, 47, 74, 0.13);
+}
+
+.hero.hero-split .hero-main::before {
+  content: "Opening Forum · Academic Symposium · Poster Session";
+  display: block;
+  margin-bottom: 18px;
+  color: var(--primary-deep);
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero.hero-split .hero-side {
+  display: none;
+}
+
+.hero.hero-split h1 {
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(16, 42, 59, 0.14);
+}
+
+.hero.hero-split .hero-meta {
+  grid-template-columns: 1fr;
+  max-width: 360px;
+}
+
+.hero.hero-split .meta-card {
+  padding: 18px 20px;
+}
+
+.button {
+  border-radius: 10px;
+}
+
+.button-spotlight,
+.button-primary {
+  color: #fff;
+  background: linear-gradient(180deg, #148a99, #0b5163);
+  box-shadow: 0 14px 28px rgba(11, 81, 99, 0.18);
+}
+
+.button-secondary {
+  color: var(--primary-deep);
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(18, 106, 122, 0.16);
+}
+
+.card {
+  border-left: 3px solid rgba(18, 106, 122, 0.2);
+}
+
+.sponsor-space {
+  color: var(--text);
+  background:
+    radial-gradient(circle at 12% 18%, rgba(83, 206, 198, 0.14), transparent 24%),
+    linear-gradient(180deg, rgba(250, 255, 254, 0.95), rgba(239, 250, 249, 0.92));
+}
+
+.sponsor-lane,
+.sponsor-marquee,
+.sponsor-slot {
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.site-footer {
+  margin-top: 28px;
+  padding: 28px;
+  border-radius: 22px;
+  color: #e9fbfb;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(83, 206, 198, 0.22), transparent 28%),
+    linear-gradient(135deg, #082f4a, #0d5965);
+  box-shadow: var(--shadow);
+}
+
+.site-footer__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.site-footer__label {
+  margin: 0 0 8px;
+  color: rgba(233, 251, 251, 0.72);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.site-footer__value {
+  margin: 0;
+  color: #fff;
+  line-height: 1.65;
+  font-weight: 650;
+}
+
+.site-footer__value span {
+  color: rgba(233, 251, 251, 0.78);
+  font-weight: 500;
+}
+
+.download-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+@media (max-width: 900px) {
+  .hero.hero-split {
+    grid-template-columns: 1fr;
+    background:
+      linear-gradient(180deg, rgba(5, 42, 72, 0.42), rgba(255, 255, 255, 0.92)),
+      url("assets/hefc_2026_visual.png") center / cover no-repeat;
+  }
+
+  .hero.hero-split .hero-main {
+    grid-column: auto;
+  }
+
+  .site-footer__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 0529 standard visual direction: selected V2 homepage hero and themed page headers. */
+.hero.hero-split {
+  min-height: auto;
+  padding: 0;
+  display: block;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.hero.hero-split .hero-main {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  min-height: 520px;
+  margin: 0;
+  padding: 34px 42px;
+  display: grid;
+  grid-template-columns: minmax(430px, 1.05fr) minmax(330px, 0.8fr);
+  gap: 16px 36px;
+  align-content: center;
+  background-color: #f3fbfb;
+  background-image:
+    radial-gradient(ellipse at 17% 45%, rgba(255,255,255,0.97) 0 22%, rgba(255,255,255,0.76) 41%, rgba(255,255,255,0.32) 61%, transparent 82%),
+    linear-gradient(100deg, rgba(247,253,253,0.91) 0%, rgba(247,253,253,0.62) 31%, rgba(255,255,255,0.2) 52%, rgba(215,247,247,0.02) 100%),
+    url("assets/hefc_2026_visual.png");
+  background-position: left center, center, 34% 54%;
+  background-size: 700px 510px, cover, 124% auto;
+  background-repeat: no-repeat;
+  border: 1px solid rgba(8,47,74,0.08);
+  border-radius: 22px;
+  box-shadow: 0 20px 50px rgba(8,47,74,0.09);
+}
+
+.hero.hero-split .hero-main::before,
+.hero.hero-split .hero-main::after,
+.hero:not(.hero-split)::before {
+  pointer-events: none;
+}
+
+.hero.hero-split .hero-main::before {
+  grid-column: 1 / -1;
+  position: relative;
+  z-index: 1;
+  content: "Opening Forum · Academic Symposium · Poster Session";
+  display: block;
+  margin-bottom: 18px;
+  color: #082f4a;
+  font-size: 0.84rem;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.hero.hero-split .hero-main::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.46;
+  background-image:
+    url("assets/hefc_2026_visual.png"),
+    url("assets/hefc_2026_visual.png");
+  background-position: 76% 35%, 4% 114%;
+  background-size: 116% auto, 116% auto;
+  background-repeat: no-repeat;
+  -webkit-mask-image: linear-gradient(104deg, transparent 0%, rgba(0,0,0,0.12) 22%, rgba(0,0,0,0.48) 48%, rgba(0,0,0,0.84) 76%, #000 100%);
+  mask-image: linear-gradient(104deg, transparent 0%, rgba(0,0,0,0.12) 22%, rgba(0,0,0,0.48) 48%, rgba(0,0,0,0.84) 76%, #000 100%);
+}
+
+.hero.hero-split .hero-main > * {
+  position: relative;
+  z-index: 1;
+}
+
+.hero.hero-split .hero-main > .eyebrow {
+  display: none;
+}
+
+.hero.hero-split h1 {
+  grid-column: 1;
+  margin-top: 8px;
+  padding-bottom: 18px;
+  font-size: clamp(4rem, 8.6vw, 7.4rem);
+  line-height: 0.92;
+  border-bottom: 1px solid rgba(8,47,74,0.14);
+}
+
+.hero.hero-split .hero-subtitle {
+  grid-column: 1;
+  max-width: 680px;
+  margin: 0;
+  font-size: 1.08rem;
+}
+
+.hero.hero-split .hero-meta {
+  grid-column: 1 / -1;
+  grid-row: auto;
+  align-self: auto;
+  display: flex;
+  justify-content: flex-end;
+  gap: 34px;
+  width: min(100%, 720px);
+  max-width: 720px;
+  margin: 30px 0 0 auto;
+  padding-top: 18px;
+  border-top: 1px solid rgba(8, 47, 74, 0.16);
+}
+
+.hero.hero-split .meta-card {
+  min-width: 230px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.hero.hero-split .meta-card:first-child {
+  min-width: 300px;
+}
+
+.hero.hero-split .meta-card:last-child {
+  min-width: 280px;
+}
+
+.hero.hero-split .meta-card:first-child .meta-value {
+  white-space: nowrap;
+}
+
+.hero.hero-split .meta-title {
+  margin-bottom: 8px;
+  color: rgba(8, 47, 74, 0.62);
+}
+
+.hero.hero-split .meta-value {
+  color: #082f4a;
+  text-shadow: 0 1px 14px rgba(255,255,255,0.84);
+}
+
+.hero.hero-split .button-row {
+  grid-column: 1 / -1;
+}
+
+.hero.hero-split .hero-side {
+  display: none;
+}
+
+.hero:not(.hero-split) {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 330px;
+  padding: 50px 46px 46px;
+  background:
+    radial-gradient(ellipse at 18% 44%, rgba(255,255,255,0.98) 0 23%, rgba(255,255,255,0.76) 43%, rgba(255,255,255,0.34) 64%, transparent 84%),
+    linear-gradient(102deg, rgba(247,253,253,0.94) 0%, rgba(247,253,253,0.68) 35%, rgba(255,255,255,0.3) 58%, rgba(215,247,247,0.04) 100%),
+    url("assets/hefc_2026_visual.png");
+  background-position: left center, center, 42% 54%;
+  background-size: 700px 500px, cover, 112% auto;
+  background-repeat: no-repeat;
+}
+
+.hero:not(.hero-split)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.42;
+  background-image:
+    url("assets/hefc_2026_visual.png"),
+    url("assets/hefc_2026_visual.png");
+  background-position: 82% 36%, 6% 112%;
+  background-size: 105% auto, 108% auto;
+  background-repeat: no-repeat;
+  -webkit-mask-image: linear-gradient(104deg, transparent 0%, rgba(0,0,0,0.1) 24%, rgba(0,0,0,0.48) 52%, rgba(0,0,0,0.86) 80%, #000 100%);
+  mask-image: linear-gradient(104deg, transparent 0%, rgba(0,0,0,0.1) 24%, rgba(0,0,0,0.48) 52%, rgba(0,0,0,0.86) 80%, #000 100%);
+}
+
+.hero:not(.hero-split) .eyebrow,
+.hero:not(.hero-split) h1,
+.hero:not(.hero-split) .hero-subtitle,
+.hero:not(.hero-split) .hero-meta,
+.hero:not(.hero-split) .button-row {
+  position: relative;
+  z-index: 1;
+}
+
+.hero:not(.hero-split) h1 {
+  max-width: 760px;
+  text-shadow: 0 1px 18px rgba(255,255,255,0.72);
+}
+
+.hero:not(.hero-split) .hero-subtitle {
+  max-width: 760px;
+}
+
+.hero:not(.hero-split) .hero-meta {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: 1080px;
+}
+
+.hero:not(.hero-split) .meta-card {
+  background: rgba(255,255,255,0.68);
+  border-color: rgba(8,47,74,0.08);
+  backdrop-filter: blur(10px);
+}
+
+@media (max-width: 900px) {
+  .hero.hero-split .hero-main {
+    min-height: auto;
+    padding: 30px 24px;
+    display: block;
+    background-position: left center, center, 48% 46%;
+    background-size: 620px 520px, cover, auto 108%;
+  }
+
+  .hero.hero-split .hero-main::after {
+    opacity: 0.32;
+    background-position: 72% 10%, 4% 108%;
+    background-size: auto 100%, auto 95%;
+    -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,0.36) 0%, rgba(0,0,0,0.2) 34%, transparent 78%);
+    mask-image: linear-gradient(180deg, rgba(0,0,0,0.36) 0%, rgba(0,0,0,0.2) 34%, transparent 78%);
+  }
+
+  .hero.hero-split h1 {
+    font-size: clamp(3.1rem, 18vw, 5rem);
+  }
+
+  .hero.hero-split .hero-meta {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+    gap: 16px;
+  }
+
+  .hero.hero-split .meta-card,
+  .hero.hero-split .meta-card:first-child,
+  .hero.hero-split .meta-card:last-child {
+    min-width: 0;
+  }
+
+  .hero.hero-split .meta-card:first-child .meta-value {
+    white-space: normal;
+  }
+
+  .hero:not(.hero-split) {
+    min-height: auto;
+    padding: 34px 24px 30px;
+    background-position: left center, center, 56% 38%;
+    background-size: 600px 480px, cover, auto 100%;
+  }
+
+  .hero:not(.hero-split)::before {
+    opacity: 0.28;
+    background-position: 82% 8%, 0% 108%;
+    background-size: auto 92%, auto 82%;
+    -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,0.34) 0%, rgba(0,0,0,0.16) 42%, transparent 82%);
+    mask-image: linear-gradient(180deg, rgba(0,0,0,0.34) 0%, rgba(0,0,0,0.16) 42%, transparent 82%);
+  }
+
+  .hero:not(.hero-split) .hero-meta {
+    grid-template-columns: 1fr;
+  }
+}
