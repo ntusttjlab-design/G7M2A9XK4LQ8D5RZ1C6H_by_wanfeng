@@ -841,6 +841,9 @@ body::after {
   flex-direction: column;
   justify-content: space-between;
 }
+.sponsor-addon-grid {
+  margin-top: 20px;
+}
 
 @media (max-width: 900px) {
   .hero.hero-split {
