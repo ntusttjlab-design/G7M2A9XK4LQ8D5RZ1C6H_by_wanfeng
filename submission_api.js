@@ -163,8 +163,6 @@
         });
         if (mode === 'revise' && window.history && window.history.replaceState) {
           window.history.replaceState(null, '', '#revision');
-        } else if (mode === 'payment' && window.history && window.history.replaceState) {
-          window.history.replaceState(null, '', '#payment');
         } else if (mode === 'submit' && window.history && window.history.replaceState && window.location.hash === '#revision') {
           window.history.replaceState(null, '', window.location.pathname + window.location.search);
         } else if (mode === 'submit' && window.history && window.history.replaceState && window.location.hash === '#payment') {
@@ -177,7 +175,7 @@
           setMode(option.dataset.submissionMode);
         });
       });
-      const initialMode = window.location.hash === '#revision' ? 'revise' : (window.location.hash === '#payment' ? 'payment' : (switcher.dataset.mode || 'submit'));
+      const initialMode = (window.location.hash === '#revision' || window.location.hash === '#payment') ? 'revise' : (switcher.dataset.mode || 'submit');
       setMode(initialMode);
     });
   }
@@ -229,8 +227,11 @@
 
     verifyForms.forEach(function (verifyForm) {
       const panel = verifyForm.closest('[data-submission-panel]') || document;
+      const section = verifyForm.closest('.body-section') || document;
       const updateForm = panel.querySelector('[data-hefc-update-form]') || document.querySelector('[data-hefc-update-form]');
+      const paymentForm = panel.querySelector('[data-hefc-payment-form]') || document.querySelector('[data-hefc-payment-form]');
       const updateSection = panel.querySelector('[data-update-section]') || document.querySelector('[data-update-section]');
+      const paymentPanel = section.querySelector('[data-submission-panel="payment"]');
       if (!updateForm || !updateSection) return;
       const verifyStatus = verifyForm.querySelector('[data-verify-status]') || panel.querySelector('[data-verify-status]') || document.querySelector('[data-verify-status]');
 
@@ -251,6 +252,10 @@
         updateForm.elements.submission_id.value = item.submission_id || '';
         updateForm.elements.email.value = payload.email;
         updateForm.elements.verification_code.value = payload.verification_code;
+        if (paymentForm) {
+          paymentForm.elements.email.value = payload.email;
+          paymentForm.elements.verification_code.value = payload.verification_code;
+        }
         updateForm.elements.title.value = item.title || '';
         updateForm.elements.authors.value = item.authors || '';
         if (updateForm.elements.corresponding_author) {
@@ -263,6 +268,9 @@
         updateForm.elements.keywords.value = item.keywords || '';
 
         updateSection.classList.remove('is-hidden');
+        if (paymentPanel) {
+          paymentPanel.classList.remove('is-hidden');
+        }
         showStatus(verifyStatus, text.verifySuccess, 'success');
         updateSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
       } catch (error) {

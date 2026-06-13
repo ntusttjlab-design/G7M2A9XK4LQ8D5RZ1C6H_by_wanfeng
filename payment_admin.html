@@ -137,7 +137,6 @@
       let activeStaffMode = 'review';
       let currentPage = 1;
       const pageSize = 20;
-      const paymentAmountOptions = ['NT$ 2,000', 'NT$ 2,500', 'NT$ 3,000', 'NT$ 3,500', 'NT$ 3,900', 'NT$ 4,200', 'NT$ 4,700', 'NT$ 4,900'];
       const participantTypeOptions = ['一般海報競賽', '學生論文競賽', '海報發表'];
       const reviewStatusOptions = ['尚未審核', '審核通過', '審核未通過'];
       const loginForm = document.getElementById('staffLoginForm');
@@ -221,7 +220,7 @@
           email: item.email || '',
           participant_type: item.participant_type || '一般海報競賽',
           review_status: item.review_status || '尚未審核',
-          payment_amount: normalizePaymentAmount(item.payment_amount),
+          payment_amount: fixedPaymentAmount(item),
           latest_pdf_url: item.latest_pdf_url || '',
           payment_status: item.payment_status || '未繳費',
           payment_date: item.payment_date || '',
@@ -238,7 +237,13 @@
       function normalizePaymentAmount(value) {
         const compact = String(value || '').replace(/[^\d]/g, '');
         const byNumber = { 2000: 'NT$ 2,000', 2500: 'NT$ 2,500', 3000: 'NT$ 3,000', 3500: 'NT$ 3,500', 3900: 'NT$ 3,900', 4200: 'NT$ 4,200', 4700: 'NT$ 4,700', 4900: 'NT$ 4,900' };
-        return paymentAmountOptions.includes(String(value || '')) ? String(value || '') : (byNumber[compact] || '');
+        return byNumber[compact] || String(value || '');
+      }
+      function fixedPaymentAmount(item) {
+        const typeText = [item.participant_type, item.presentation_type].join(' ');
+        if (/技術|forum/i.test(typeText)) return 'NT$ 2,000';
+        if (/學生|student/i.test(typeText)) return 'NT$ 3,500';
+        return 'NT$ 4,200';
       }
       function rowTimeValue(row) {
         const value = row.staff_updated_at || row.last_submission_update || '';
@@ -270,14 +275,13 @@
       }
       function renderTableHead() {
         const headers = activeStaffMode === 'review'
-          ? ['報名編號', '姓名', '身分別', '最新 PDF', '這篇審核', 'Email', '單位', '投稿主題', '備註']
-          : ['報名編號', '姓名', 'Email', '應繳金額', '繳費狀態', '繳費日期', '轉帳末5碼', '匯款證明', '回報時間', '備註'];
+          ? ['姓名', '身分別', '最新 PDF', '審核', 'Email', '單位', '投稿主題', '備註', '報名編號']
+          : ['姓名', 'Email', '應繳金額', '繳費日期', '繳費狀態', '轉帳末5碼', '匯款證明', '備註', '報名編號'];
         staffTableHead.innerHTML = '<tr>' + headers.map((header) => `<th>${header}</th>`).join('') + '</tr>';
       }
       function renderReviewRow(row, index) {
         return `
           <tr>
-            <td><strong>${row.record_id}</strong></td>
             <td>${row.name}</td>
             <td>
               <select data-row="${index}" data-field="participant_type">
@@ -294,30 +298,26 @@
             <td>${row.organization}</td>
             <td>${row.topic_area || ''}</td>
             <td><input data-row="${index}" data-field="staff_note" value="${row.staff_note}" placeholder="審稿備註"></td>
+            <td><strong>${row.record_id}</strong></td>
           </tr>
         `;
       }
       function renderPaymentRow(row, index) {
         return `
           <tr>
-            <td><strong>${row.record_id}</strong></td>
             <td>${row.name}</td>
             <td>${row.email}</td>
-            <td>
-              <select data-row="${index}" data-field="payment_amount">
-                ${paymentAmountOptions.map((item) => `<option value="${item}"${item === row.payment_amount ? ' selected' : ''}>${item}</option>`).join('')}
-              </select>
-            </td>
+            <td>${row.payment_amount}</td>
+            <td><input data-row="${index}" data-field="payment_date" value="${row.payment_date}" placeholder="YYYY/MM/DD"></td>
             <td>
               <select data-row="${index}" data-field="payment_status">
                 ${['未繳費', '待確認', '已繳費', '需確認', '已退款'].map((item) => `<option${item === row.payment_status ? ' selected' : ''}>${item}</option>`).join('')}
               </select>
             </td>
-            <td><input data-row="${index}" data-field="payment_date" value="${row.payment_date}" placeholder="YYYY/MM/DD"></td>
             <td><input data-row="${index}" data-field="transfer_last5" value="${row.transfer_last5}" placeholder="轉帳末5碼"></td>
             <td>${row.payment_proof_url ? `<a class="button button-secondary" href="${row.payment_proof_url}" target="_blank" rel="noopener noreferrer">查看證明</a>` : '尚無'}</td>
-            <td>${row.payment_reported_at || ''}</td>
             <td><input data-row="${index}" data-field="staff_note" value="${row.staff_note}" placeholder="繳費備註"></td>
+            <td><strong>${row.record_id}</strong></td>
           </tr>
         `;
       }
@@ -406,7 +406,6 @@
           record_id: row.record_id,
           participant_type: row.participant_type,
           review_status: row.review_status,
-          payment_amount: row.payment_amount,
           payment_status: row.payment_status,
           payment_date: row.payment_date,
           transfer_last5: row.transfer_last5,

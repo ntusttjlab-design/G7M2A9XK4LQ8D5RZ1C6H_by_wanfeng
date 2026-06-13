@@ -88,8 +88,7 @@
       <div class="section-head"><div><h2>線上投稿</h2><p>請依摘要範本準備 PDF，並確認聯絡 Email 可正常收信。</p></div></div>
       <div class="submission-mode-switch" data-submission-switch data-mode="submit" role="tablist" aria-label="投稿功能切換">
         <button class="submission-mode-switch__option is-active" type="button" data-submission-mode="submit" role="tab" aria-selected="true">線上投稿</button>
-        <button class="submission-mode-switch__option" type="button" data-submission-mode="revise" role="tab" aria-selected="false">修改稿件</button>
-        <button class="submission-mode-switch__option" type="button" data-submission-mode="payment" role="tab" aria-selected="false">匯款資料回報</button>
+        <button class="submission-mode-switch__option" type="button" data-submission-mode="revise" role="tab" aria-selected="false">稿件與匯款管理</button>
       </div>
       <div class="submission-panel" data-submission-panel="submit">
       <div class="submit-layout">
@@ -189,10 +188,10 @@
         <div class="submit-layout">
           <aside class="card">
             <div class="chip">Revision Notes</div>
-            <h3>修改方式</h3>
+            <h3>管理方式</h3>
             <ul class="detail-list">
               <li><strong>驗證資訊</strong>請使用投稿確認信中的 Email 與驗證碼。</li>
-              <li><strong>可修改內容</strong>論文題目、發表作者、通訊作者、摘要、關鍵字與 PDF。</li>
+              <li><strong>可使用功能</strong>驗證成功後，可修改稿件或回報匯款資料。</li>
             </ul>
           </aside>
           <article class="card">
@@ -259,37 +258,18 @@
               </div>
             </form>
           </article>
-        </div>
-      </div>
-      <div class="submission-panel is-hidden" data-submission-panel="payment">
-        <div class="submit-layout">
-          <aside class="card">
-            <div class="chip">Payment Report</div>
-            <h3>回報方式</h3>
-            <ul class="detail-list">
-              <li><strong>驗證資訊</strong>請使用投稿確認信中的 Email 與驗證碼。</li>
-              <li><strong>匯款資料</strong>請填寫轉帳末5碼，工作人員確認後會寄送通知信。</li>
-            </ul>
-          </aside>
+          <div class="section-head revision-update-head"><div><h2>匯款資料回報</h2><p>請填寫匯款資訊；工作人員確認後會寄送通知信。</p></div></div>
           <article class="card">
             <form class="submit-form" data-hefc-payment-form enctype="multipart/form-data">
-              <div class="form-grid">
-                <div class="form-row">
-                  <label for="payment_email">投稿 Email <span class="hint">必填</span></label>
-                  <input id="payment_email" name="email" type="email" inputmode="email" placeholder="請輸入投稿時使用的 Email" required>
-                </div>
-                <div class="form-row">
-                  <label for="payment_verification_code">驗證碼 <span class="hint">必填</span></label>
-                  <input id="payment_verification_code" name="verification_code" type="text" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" placeholder="請輸入確認信中的 5 位數驗證碼" required>
-                </div>
-              </div>
+              <input type="hidden" name="email">
+              <input type="hidden" name="verification_code">
               <div class="form-row">
                 <label for="transfer_last5">轉帳末5碼 <span class="hint">必填</span></label>
                 <input id="transfer_last5" name="transfer_last5" type="text" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" placeholder="請輸入轉帳帳號末5碼" required>
               </div>
               <div class="form-row">
                 <label for="payment_note">匯款備註</label>
-                <textarea id="payment_note" name="payment_note" maxlength="500" placeholder="例：轉帳末碼 12345，已匯款 NT$ 4,200"></textarea>
+                <textarea id="payment_note" name="payment_note" maxlength="500" placeholder="我已經從XX銀行帳號（末五碼 XXXXX）轉 $X 到您的XXXX（末五碼 XXXX）。"></textarea>
               </div>
               <div class="form-row file-upload-box">
                 <label for="payment_proof">上傳匯款證明</label>
