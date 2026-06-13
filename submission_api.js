@@ -15,10 +15,13 @@
     sending: isEnglish ? 'Submitting. Please wait...' : '正在送出，請稍候...',
     verifying: isEnglish ? 'Verifying. Please wait...' : '正在驗證，請稍候...',
     updating: isEnglish ? 'Updating. Please wait...' : '正在更新，請稍候...',
+    reportingPayment: isEnglish ? 'Submitting payment information. Please wait...' : '正在送出匯款資料，請稍候...',
     submitSuccess: isEnglish ? 'Submission received. Please check the confirmation email.' : '投稿已送出，請查收投稿確認信。',
     verifySuccess: isEnglish ? 'Verification successful. Submission data has been loaded.' : '驗證成功，已載入投稿資料。',
     updateSuccess: isEnglish ? 'Submission updated. Please check the update confirmation email.' : '稿件已更新，請查收更新成功通知信。',
+    paymentSuccess: isEnglish ? 'Payment information received. Please check the confirmation email.' : '匯款資料已送出，請查收確認信。',
     networkError: isEnglish ? 'Unable to connect to the submission service.' : '無法連線到投稿服務。',
+    proofOnly: isEnglish ? 'Payment proof must be PDF, PNG, JPG, or JPEG.' : '匯款證明僅接受 PDF、PNG、JPG 或 JPEG。',
     demoVerifyFailed: isEnglish
       ? 'Demo mode: use demo@hefc2026.test and verification code 12345.'
       : '展示模式：請使用 demo@hefc2026.test 與驗證碼 12345。'
@@ -53,6 +56,13 @@
     if (file.size > MAX_PDF_BYTES) throw new Error(text.pdfTooLarge);
   }
 
+  function validatePaymentProof(file) {
+    if (!file) return;
+    const allowed = file.type === 'application/pdf' || file.type === 'image/png' || file.type === 'image/jpeg' || /\.(pdf|png|jpe?g)$/i.test(file.name);
+    if (!allowed) throw new Error(text.proofOnly);
+    if (file.size > MAX_PDF_BYTES) throw new Error(text.pdfTooLarge);
+  }
+
   function readFileAsBase64(file) {
     return new Promise(function (resolve, reject) {
       const reader = new FileReader();
@@ -72,6 +82,16 @@
     return {
       fileName: file.name,
       mimeType: file.type || 'application/pdf',
+      size: file.size,
+      base64: await readFileAsBase64(file)
+    };
+  }
+
+  async function buildFilePayload(file) {
+    if (!file) return null;
+    return {
+      fileName: file.name,
+      mimeType: file.type || 'application/octet-stream',
       size: file.size,
       base64: await readFileAsBase64(file)
     };
@@ -143,7 +163,11 @@
         });
         if (mode === 'revise' && window.history && window.history.replaceState) {
           window.history.replaceState(null, '', '#revision');
+        } else if (mode === 'payment' && window.history && window.history.replaceState) {
+          window.history.replaceState(null, '', '#payment');
         } else if (mode === 'submit' && window.history && window.history.replaceState && window.location.hash === '#revision') {
+          window.history.replaceState(null, '', window.location.pathname + window.location.search);
+        } else if (mode === 'submit' && window.history && window.history.replaceState && window.location.hash === '#payment') {
           window.history.replaceState(null, '', window.location.pathname + window.location.search);
         }
       }
@@ -153,7 +177,7 @@
           setMode(option.dataset.submissionMode);
         });
       });
-      const initialMode = window.location.hash === '#revision' ? 'revise' : (switcher.dataset.mode || 'submit');
+      const initialMode = window.location.hash === '#revision' ? 'revise' : (window.location.hash === '#payment' ? 'payment' : (switcher.dataset.mode || 'submit'));
       setMode(initialMode);
     });
   }
@@ -290,8 +314,44 @@
     });
   }
 
+  function bindPaymentForm() {
+    const forms = document.querySelectorAll('[data-hefc-payment-form]');
+    if (!forms.length) return;
+
+    forms.forEach(function (form) {
+      const status = form.querySelector('[data-payment-status]') || document.querySelector('[data-payment-status]');
+      form.addEventListener('submit', async function (event) {
+        event.preventDefault();
+        setBusy(form, true);
+        showStatus(status, text.reportingPayment);
+
+        try {
+          const file = form.elements.payment_proof.files[0];
+          validatePaymentProof(file);
+          const payload = {
+            action: 'submitPaymentReport',
+            email: getValue(form, 'email'),
+            verification_code: getValue(form, 'verification_code'),
+            transfer_last5: getValue(form, 'transfer_last5'),
+            payment_note: getValue(form, 'payment_note'),
+            payment_proof: await buildFilePayload(file)
+          };
+          const result = await callApi(payload);
+          const submissionId = result.submission_id ? ' ' + result.submission_id : '';
+          showStatus(status, text.paymentSuccess + submissionId, 'success');
+          form.reset();
+        } catch (error) {
+          showStatus(status, error.message || text.networkError, 'error');
+        } finally {
+          setBusy(form, false);
+        }
+      });
+    });
+  }
+
   bindSubmissionModeSwitches();
   bindSubmitForm();
   bindVerifyForm();
   bindUpdateForm();
+  bindPaymentForm();
 })();
