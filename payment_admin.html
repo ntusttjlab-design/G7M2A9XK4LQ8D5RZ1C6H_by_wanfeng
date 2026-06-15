@@ -402,15 +402,23 @@
         loadRowsFromBackend(true);
       });
       document.getElementById('saveToBackend').addEventListener('click', async function () {
-        const updates = rows.map((row) => ({
-          record_id: row.record_id,
-          participant_type: row.participant_type,
-          review_status: row.review_status,
-          payment_status: row.payment_status,
-          payment_date: row.payment_date,
-          transfer_last5: row.transfer_last5,
-          staff_note: row.staff_note
-        }));
+        const updates = rows.map((row) => {
+          const base = {
+            record_id: row.record_id,
+            staff_note: row.staff_note
+          };
+          if (activeStaffMode === 'review') {
+            return Object.assign(base, {
+              participant_type: row.participant_type,
+              review_status: row.review_status
+            });
+          }
+          return Object.assign(base, {
+            payment_status: row.payment_status,
+            payment_date: row.payment_date,
+            transfer_last5: row.transfer_last5
+          });
+        });
         try {
           showDashboardStatus('同步中，正在匯出更改...', '');
           const result = await callStaffApi({ action: 'staffUpdatePayments', token: staffToken, updates: updates });

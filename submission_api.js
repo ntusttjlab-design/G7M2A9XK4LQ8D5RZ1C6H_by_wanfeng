@@ -16,10 +16,10 @@
     verifying: isEnglish ? 'Verifying. Please wait...' : '正在驗證，請稍候...',
     updating: isEnglish ? 'Updating. Please wait...' : '正在更新，請稍候...',
     reportingPayment: isEnglish ? 'Submitting payment information. Please wait...' : '正在送出匯款資料，請稍候...',
-    submitSuccess: isEnglish ? 'Submission received. Please check the confirmation email.' : '投稿已送出，請查收投稿確認信。',
+    submitSuccess: isEnglish ? 'Submission received. Please check the confirmation email. If it does not arrive, please check your spam or junk folder.' : '投稿已送出，請查收投稿確認信；若未收到，請先檢查垃圾郵件匣。',
     verifySuccess: isEnglish ? 'Verification successful. Submission data has been loaded.' : '驗證成功，已載入投稿資料。',
-    updateSuccess: isEnglish ? 'Submission updated. Please check the update confirmation email.' : '稿件已更新，請查收更新成功通知信。',
-    paymentSuccess: isEnglish ? 'Payment information received. Please check the confirmation email.' : '匯款資料已送出，請查收確認信。',
+    updateSuccess: isEnglish ? 'Submission updated. Please check the update confirmation email. If it does not arrive, please check your spam or junk folder.' : '稿件已更新，請查收更新成功通知信；若未收到，請先檢查垃圾郵件匣。',
+    paymentSuccess: isEnglish ? 'Payment information received. Please check the confirmation email. If it does not arrive, please check your spam or junk folder.' : '匯款資料已送出，請查收確認信；若未收到，請先檢查垃圾郵件匣。',
     networkError: isEnglish ? 'Unable to connect to the submission service.' : '無法連線到投稿服務。',
     proofOnly: isEnglish ? 'Payment proof must be PDF, PNG, JPG, or JPEG.' : '匯款證明僅接受 PDF、PNG、JPG 或 JPEG。',
     demoVerifyFailed: isEnglish
