@@ -23,8 +23,8 @@
     networkError: isEnglish ? 'Unable to connect to the submission service.' : '無法連線到投稿服務。',
     proofOnly: isEnglish ? 'Payment proof must be PDF, PNG, JPG, or JPEG.' : '匯款證明僅接受 PDF、PNG、JPG 或 JPEG。',
     demoVerifyFailed: isEnglish
-      ? 'Demo mode: use demo@hefc2026.test and verification code 12345.'
-      : '展示模式：請使用 demo@hefc2026.test 與驗證碼 12345。'
+        ? 'Demo mode: use demo@hefc2026.test and verification code 12345.'
+        : '展示模式：請使用 demo@hefc2026.test 與驗證碼 12345。'
   };
 
   function showStatus(target, message, type) {
