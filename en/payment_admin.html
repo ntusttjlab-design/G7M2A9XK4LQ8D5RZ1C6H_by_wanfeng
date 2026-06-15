@@ -244,7 +244,7 @@
         return paymentAmountOptions.includes(String(value || '')) ? String(value || '') : (byNumber[compact] || '');
       }
       function statusLabel(value) {
-        return { '未繳費': 'Unpaid', '已繳費': 'Paid', '需確認': 'Review', '已退款': 'Refunded' }[value] || value;
+        return { '未繳費': 'Unpaid', '待確認': 'Pending', '已繳費': 'Paid' }[value] || value;
       }
       function participantLabel(value) {
         return { '一般海報競賽': 'General Poster Competition', '學生論文競賽': 'Student Paper Competition', '海報發表': 'Poster Presentation' }[value] || value;
@@ -283,25 +283,17 @@
           <tr>
             <td><strong>${row.record_id}</strong></td>
             <td>${row.name}</td>
-            <td>
-              <select data-row="${rows.indexOf(row)}" data-field="participant_type">
-                ${participantTypeOptions.map((item) => `<option value="${item}"${item === row.participant_type ? ' selected' : ''}>${participantLabel(item)}</option>`).join('')}
-              </select>
-            </td>
+            <td>${participantLabel(row.participant_type)}</td>
             <td>${row.latest_pdf_url ? `<a class="button button-secondary" href="${row.latest_pdf_url}" target="_blank" rel="noopener noreferrer">Open PDF</a>` : 'None'}</td>
             <td>
-              <select data-row="${rows.indexOf(row)}" data-field="review_status">
+              <select data-row="${rows.indexOf(row)}" data-field="review_status"${row.review_status === '審核通過' ? ' disabled title="Review approved and locked"' : ''}>
                 ${reviewStatusOptions.map((item) => `<option value="${item}"${item === row.review_status ? ' selected' : ''}>${reviewLabel(item)}</option>`).join('')}
               </select>
             </td>
-            <td>
-              <select data-row="${rows.indexOf(row)}" data-field="payment_amount">
-                ${paymentAmountOptions.map((item) => `<option value="${item}"${item === row.payment_amount ? ' selected' : ''}>${item}</option>`).join('')}
-              </select>
-            </td>
-            <td><select data-row="${rows.indexOf(row)}" data-field="payment_status">${['未繳費', '已繳費', '需確認', '已退款'].map((item) => `<option value="${item}"${item === row.payment_status ? ' selected' : ''}>${statusLabel(item)}</option>`).join('')}</select></td>
+            <td>${row.payment_amount}</td>
+            <td><select data-row="${rows.indexOf(row)}" data-field="payment_status"${row.payment_status === '已繳費' ? ' disabled title="Payment confirmed and locked"' : ''}>${['未繳費', '待確認', '已繳費'].map((item) => `<option value="${item}"${item === row.payment_status ? ' selected' : ''}>${statusLabel(item)}</option>`).join('')}</select></td>
             <td>${row.email}</td>
-            <td><input data-row="${rows.indexOf(row)}" data-field="payment_date" value="${row.payment_date}" placeholder="YYYY/MM/DD"></td>
+            <td>${row.payment_date || 'Not reported'}</td>
             <td><input data-row="${rows.indexOf(row)}" data-field="transfer_last5" value="${row.transfer_last5}" placeholder="Transfer last 5 digits"></td>
             <td><input data-row="${rows.indexOf(row)}" data-field="staff_note" value="${row.staff_note}" placeholder="Internal notes"></td>
           </tr>
@@ -379,11 +371,8 @@
       document.getElementById('saveToBackend').addEventListener('click', async function () {
         const updates = rows.map((row) => ({
           record_id: row.record_id,
-          participant_type: row.participant_type,
           review_status: row.review_status,
-          payment_amount: row.payment_amount,
           payment_status: row.payment_status,
-          payment_date: row.payment_date,
           transfer_last5: row.transfer_last5,
           staff_note: row.staff_note
         }));

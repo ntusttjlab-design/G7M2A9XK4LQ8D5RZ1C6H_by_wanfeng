@@ -341,6 +341,7 @@
             email: getValue(form, 'email'),
             verification_code: getValue(form, 'verification_code'),
             transfer_last5: getValue(form, 'transfer_last5'),
+            payment_date: getValue(form, 'payment_date'),
             payment_note: getValue(form, 'payment_note'),
             payment_proof: await buildFilePayload(file)
           };
