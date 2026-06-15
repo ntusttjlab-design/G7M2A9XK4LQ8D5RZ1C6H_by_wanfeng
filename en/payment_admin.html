@@ -91,6 +91,7 @@
 
       <div class="staff-actions">
         <button class="button button-spotlight" type="button" id="syncFromBackend">Refresh Backend Data</button>
+        <button class="button button-secondary" type="button" id="rebuildStaffSheet">Rebuild Staff Sheet</button>
         <button class="button button-export" type="button" id="saveToBackend">Export Changes</button>
       </div>
       <div class="form-status is-visible" id="dashboardStatus" role="status" aria-live="polite">After sign-in, the staff sheet will be loaded with 20 records per page.</div>
@@ -369,7 +370,7 @@
           currentPage = 1;
           search.value = '';
           renderRows();
-          showDashboardStatus(sync ? 'Sync complete. Latest records updated.' : 'Staff sheet loaded, 20 records per page.', 'success');
+          showDashboardStatus(sync ? `Sync complete. ${result.changed_count || 0} changed records updated.` : 'Staff sheet loaded, 20 records per page.', 'success');
         } catch (error) {
           rows = [];
           activeSearch = '';
@@ -400,6 +401,23 @@
       });
       document.getElementById('syncFromBackend').addEventListener('click', function () {
         loadRowsFromBackend(true);
+      });
+      document.getElementById('rebuildStaffSheet').addEventListener('click', async function () {
+        if (!window.confirm('Rebuilding rewrites the full staff sheet and may take longer. Usually, use Refresh Backend Data. Continue?')) return;
+        try {
+          showDashboardStatus('Rebuilding staff sheet. Please wait...', '');
+          const result = await callStaffApi({ action: 'staffRebuildPayments', token: staffToken });
+          rows = normalizeBackendRows(result.rows);
+          activeSearch = '';
+          activeParticipantFilter = 'all';
+          participantFilter.value = 'all';
+          currentPage = 1;
+          search.value = '';
+          renderRows();
+          showDashboardStatus(`Rebuild complete. ${result.count || rows.length} records organized.`, 'success');
+        } catch (error) {
+          showDashboardStatus(error.message || 'Staff sheet rebuild failed.', 'error');
+        }
       });
       document.getElementById('saveToBackend').addEventListener('click', async function () {
         const updates = rows.map((row) => ({

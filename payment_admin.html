@@ -96,6 +96,7 @@
 
       <div class="staff-actions">
         <button class="button button-spotlight" type="button" id="syncFromBackend">重新整理後台資料</button>
+        <button class="button button-secondary" type="button" id="rebuildStaffSheet">重建工作人員表</button>
         <button class="button button-export" type="button" id="saveToBackend">匯出更改</button>
       </div>
       <div class="form-status is-visible" id="dashboardStatus" role="status" aria-live="polite">登入後會先讀取工作人員表，每頁顯示 20 筆資料。</div>
@@ -417,7 +418,7 @@
           currentPage = 1;
           search.value = '';
           renderRows();
-          showDashboardStatus(sync ? '同步完成，已更新最新資料。' : '已讀取工作人員表，每頁顯示 20 筆。', 'success');
+          showDashboardStatus(sync ? `同步完成，已更新 ${result.changed_count || 0} 筆變動資料。` : '已讀取工作人員表，每頁顯示 20 筆。', 'success');
         } catch (error) {
           rows = [];
           activeSearch = '';
@@ -448,6 +449,23 @@
       });
       document.getElementById('syncFromBackend').addEventListener('click', function () {
         loadRowsFromBackend(true);
+      });
+      document.getElementById('rebuildStaffSheet').addEventListener('click', async function () {
+        if (!window.confirm('重建會重新整理整張工作人員表，資料量大時會比較久。平常只需要按「重新整理後台資料」。確定要重建嗎？')) return;
+        try {
+          showDashboardStatus('正在重建工作人員表，請稍候...', '');
+          const result = await callStaffApi({ action: 'staffRebuildPayments', token: staffToken });
+          rows = normalizeBackendRows(result.rows);
+          activeSearch = '';
+          activeParticipantFilter = 'all';
+          participantFilter.value = 'all';
+          currentPage = 1;
+          search.value = '';
+          renderRows();
+          showDashboardStatus(`重建完成，共整理 ${result.count || rows.length} 筆資料。`, 'success');
+        } catch (error) {
+          showDashboardStatus(error.message || '重建工作人員表失敗。', 'error');
+        }
       });
       document.getElementById('saveToBackend').addEventListener('click', async function () {
         const updates = rows.map((row) => {
