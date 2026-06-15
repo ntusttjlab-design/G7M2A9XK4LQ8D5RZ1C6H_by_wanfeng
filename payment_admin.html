@@ -85,7 +85,7 @@
             <label for="participantFilter" id="filterLabel">身分別篩選</label>
             <select id="participantFilter">
               <option value="all">全部</option>
-              <option value="一般海報競賽">一般海報競賽</option>
+              <option value="一般論文發表">一般論文發表</option>
               <option value="學生論文競賽">學生論文競賽</option>
               <option value="海報發表">海報發表</option>
             </select>
@@ -218,7 +218,7 @@
           record_id: item.record_id || '',
           name: item.name || '',
           email: item.email || '',
-          participant_type: item.participant_type || '一般海報競賽',
+          participant_type: normalizeParticipantType(item.participant_type || '一般論文發表'),
           review_status: item.review_status || '尚未審核',
           committed_review_status: item.review_status || '尚未審核',
           payment_amount: normalizePaymentAmount(item.payment_amount) || fixedPaymentAmount(item),
@@ -244,6 +244,15 @@
       function normalizePaymentStatus(value) {
         if (value === '需確認' || value === '已退款') return '待確認';
         return paymentStatusOptions.includes(value) ? value : '未繳費';
+      }
+      function normalizeParticipantType(value) {
+        const text = String(value || '').trim();
+        if (!text) return '一般論文發表';
+        if (text.indexOf('一般海報競賽') !== -1) return '一般論文發表';
+        if (text.indexOf('一般論文') !== -1 || text.toLowerCase().indexOf('general paper') !== -1 || text.toLowerCase().indexOf('oral') !== -1) return '一般論文發表';
+        if (text.indexOf('學生') !== -1) return '學生論文競賽';
+        if (text.indexOf('海報') !== -1 || text.toLowerCase().indexOf('poster') !== -1) return '海報發表';
+        return text;
       }
       function fixedPaymentAmount(item) {
         const typeText = [item.participant_type, item.presentation_type].join(' ');
@@ -307,7 +316,7 @@
       }
       function updateFilterOptions() {
         const options = activeStaffMode === 'review'
-          ? ['全部', '一般海報競賽', '學生論文競賽', '海報發表']
+          ? ['全部', '一般論文發表', '學生論文競賽', '海報發表']
           : ['全部', '未繳費', '待確認', '已繳費'];
         document.getElementById('filterLabel').textContent = activeStaffMode === 'review' ? '身分別篩選' : '繳費狀態篩選';
         participantFilter.innerHTML = options.map((item, index) => `<option value="${index === 0 ? 'all' : item}">${item}</option>`).join('');

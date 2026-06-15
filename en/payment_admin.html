@@ -80,7 +80,7 @@
             <label for="participantFilter">Category Filter</label>
             <select id="participantFilter">
               <option value="all">All</option>
-              <option value="一般海報競賽">General Poster Competition</option>
+              <option value="一般論文發表">General Paper Presentation</option>
               <option value="學生論文競賽">Student Paper Competition</option>
               <option value="海報發表">Poster Presentation</option>
             </select>
@@ -146,7 +146,7 @@
       let currentPage = 1;
       const pageSize = 20;
       const paymentAmountOptions = ['NT$ 2,000', 'NT$ 2,500', 'NT$ 3,000', 'NT$ 3,500', 'NT$ 3,900', 'NT$ 4,200', 'NT$ 4,700', 'NT$ 4,900'];
-      const participantTypeOptions = ['一般海報競賽', '學生論文競賽', '海報發表'];
+      const participantTypeOptions = ['一般論文發表', '學生論文競賽', '海報發表'];
       const reviewStatusOptions = ['尚未審核', '審核通過', '審核未通過'];
       const loginForm = document.getElementById('staffLoginForm');
       const loginStatus = document.getElementById('loginStatus');
@@ -225,7 +225,7 @@
           record_id: item.record_id || '',
           name: item.name || '',
           email: item.email || '',
-          participant_type: item.participant_type || '一般海報競賽',
+          participant_type: normalizeParticipantType(item.participant_type || '一般論文發表'),
           review_status: item.review_status || '尚未審核',
           committed_review_status: item.review_status || '尚未審核',
           payment_amount: normalizePaymentAmount(item.payment_amount),
@@ -252,7 +252,16 @@
         return { '未繳費': 'Unpaid', '待確認': 'Pending', '已繳費': 'Paid' }[value] || value;
       }
       function participantLabel(value) {
-        return { '一般海報競賽': 'General Poster Competition', '學生論文競賽': 'Student Paper Competition', '海報發表': 'Poster Presentation' }[value] || value;
+        return { '一般論文發表': 'General Paper Presentation', '學生論文競賽': 'Student Paper Competition', '海報發表': 'Poster Presentation' }[value] || value;
+      }
+      function normalizeParticipantType(value) {
+        const text = String(value || '').trim();
+        if (!text) return '一般論文發表';
+        if (text.indexOf('一般海報競賽') !== -1) return '一般論文發表';
+        if (text.indexOf('一般論文') !== -1 || text.toLowerCase().indexOf('general paper') !== -1 || text.toLowerCase().indexOf('oral') !== -1) return '一般論文發表';
+        if (text.indexOf('學生') !== -1) return '學生論文競賽';
+        if (text.indexOf('海報') !== -1 || text.toLowerCase().indexOf('poster') !== -1) return '海報發表';
+        return text;
       }
       function reviewLabel(value) {
         return { '尚未審核': 'Not Reviewed', '審核通過': 'Approved', '審核未通過': 'Not Approved' }[value] || value;
