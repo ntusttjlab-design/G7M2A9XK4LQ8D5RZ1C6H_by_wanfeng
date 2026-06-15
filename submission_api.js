@@ -22,6 +22,7 @@
     paymentSuccess: isEnglish ? 'Payment information received. Please check the confirmation email. If it does not arrive, please check your spam or junk folder.' : '匯款資料已送出，請查收確認信；若未收到，請先檢查垃圾郵件匣。',
     networkError: isEnglish ? 'Unable to connect to the submission service.' : '無法連線到投稿服務。',
     proofOnly: isEnglish ? 'Payment proof must be PDF, PNG, JPG, or JPEG.' : '匯款證明僅接受 PDF、PNG、JPG 或 JPEG。',
+    oralClosed: isEnglish ? 'Oral abstract submission is closed. Poster submissions remain available.' : '口頭論文摘要投稿已截止，海報投稿仍可送出。',
     demoVerifyFailed: isEnglish
         ? 'Demo mode: use demo@hefc2026.test and verification code 12345.'
         : '展示模式：請使用 demo@hefc2026.test 與驗證碼 12345。'
@@ -44,6 +45,46 @@
   function getValue(form, name) {
     const field = form.elements[name];
     return field ? field.value.trim() : '';
+  }
+
+  function normalizePresentationType(value) {
+    const textValue = String(value || '').trim();
+    const lower = textValue.toLowerCase();
+    if (textValue === '學生論文競賽 (Oral Competition)' || lower.includes('student oral') || lower.includes('oral competition') || textValue.includes('學生論文競賽')) {
+      return '學生論文競賽 (Oral Competition)';
+    }
+    if (textValue === '海報發表 (Poster)' || lower.includes('poster') || textValue.includes('海報')) {
+      return '海報發表 (Poster)';
+    }
+    if (textValue === '一般論文發表 (Oral)' || lower.includes('oral') || textValue.includes('一般論文')) {
+      return '一般論文發表 (Oral)';
+    }
+    return textValue;
+  }
+
+  function normalizeTopicArea(value) {
+    const textValue = String(value || '').trim();
+    const lower = textValue.toLowerCase();
+    if (/^1[.．]/.test(textValue) || textValue.includes('氫能') || lower.includes('hydrogen production') || lower.includes('storage')) {
+      return '1. 氫能生產與儲存';
+    }
+    if (/^2[.．]/.test(textValue) || textValue.includes('燃料電池') || lower.includes('fuel cell')) {
+      return '2. 燃料電池材料與系統';
+    }
+    if (/^3[.．]/.test(textValue) || textValue.includes('能源政策') || lower.includes('policy') || lower.includes('industry')) {
+      return '3. 能源政策與產業展望';
+    }
+    if (/^4[.．]/.test(textValue) || textValue.includes('其他') || lower.includes('other')) {
+      return '4. 其他相關能源技術';
+    }
+    return textValue;
+  }
+
+  function oralSubmissionClosed(presentationType) {
+    if (normalizePresentationType(presentationType) === '海報發表 (Poster)') return false;
+    const now = new Date();
+    const compact = now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
+    return compact >= 20260808;
   }
 
   function validatePdf(file, required) {
@@ -194,6 +235,10 @@
       try {
         const file = form.elements.abstract_pdf.files[0];
         validatePdf(file, true);
+        const presentationType = normalizePresentationType(getValue(form, 'presentation_type'));
+        if (oralSubmissionClosed(presentationType)) {
+          throw new Error(text.oralClosed);
+        }
         const payload = {
           action: 'submit',
           title: getValue(form, 'paper_title'),
@@ -204,8 +249,8 @@
           corresponding_email: getValue(form, 'corresponding_email'),
           abstract: getValue(form, 'abstract_text'),
           keywords: getValue(form, 'keywords'),
-          presentation_type: getValue(form, 'presentation_type'),
-          topic_area: getValue(form, 'track'),
+          presentation_type: presentationType,
+          topic_area: normalizeTopicArea(getValue(form, 'track')),
           pdf: await buildPdfPayload(file)
         };
         const result = await callApi(payload);

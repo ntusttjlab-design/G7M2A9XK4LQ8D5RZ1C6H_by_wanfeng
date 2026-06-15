@@ -220,9 +220,11 @@
           email: item.email || '',
           participant_type: item.participant_type || '一般海報競賽',
           review_status: item.review_status || '尚未審核',
+          committed_review_status: item.review_status || '尚未審核',
           payment_amount: normalizePaymentAmount(item.payment_amount) || fixedPaymentAmount(item),
           latest_pdf_url: item.latest_pdf_url || '',
           payment_status: normalizePaymentStatus(item.payment_status),
+          committed_payment_status: normalizePaymentStatus(item.payment_status),
           payment_date: item.payment_date || '',
           transfer_last5: item.transfer_last5 || item.receipt_no || '',
           payment_proof_url: item.payment_proof_url || '',
@@ -263,7 +265,26 @@
       }
       function searchableText(row) {
         const emailLocal = String(row.email || '').split('@')[0];
-        return [row.record_id, row.name, emailLocal, row.participant_type, row.review_status, row.organization, row.staff_note].join(' ').toLowerCase();
+        const paymentAmountCompact = String(row.payment_amount || '').replace(/[^\d]/g, '');
+        return [
+          row.record_id,
+          row.name,
+          row.email,
+          emailLocal,
+          row.participant_type,
+          row.review_status,
+          row.payment_amount,
+          paymentAmountCompact,
+          row.payment_status,
+          row.payment_date,
+          row.transfer_last5,
+          row.payment_proof_url,
+          row.payment_reported_at,
+          row.organization,
+          row.topic_area,
+          row.staff_note,
+          row.latest_pdf_url
+        ].join(' ').toLowerCase();
       }
       function filteredRows() {
         return rows.slice().sort((a, b) => rowTimeValue(b) - rowTimeValue(a)).filter((row) => {
@@ -299,7 +320,7 @@
         staffTableHead.innerHTML = '<tr>' + headers.map((header) => `<th>${header}</th>`).join('') + '</tr>';
       }
       function renderReviewRow(row, index) {
-        const locked = row.review_status === '審核通過';
+        const locked = row.committed_review_status === '審核通過';
         return `
           <tr>
             <td>${row.name}</td>
@@ -319,7 +340,7 @@
         `;
       }
       function renderPaymentRow(row, index) {
-        const locked = row.payment_status === '已繳費';
+        const locked = row.committed_payment_status === '已繳費';
         return `
           <tr>
             <td>${row.name}</td>
@@ -371,7 +392,7 @@
           showDashboardStatus('請輸入至少 3 個字元再搜尋。', 'error');
           return;
         }
-        activeSearch = comparableKeyword;
+        activeSearch = keyword;
         currentPage = 1;
         renderRows();
         showDashboardStatus('已依搜尋條件更新列表。', 'success');
