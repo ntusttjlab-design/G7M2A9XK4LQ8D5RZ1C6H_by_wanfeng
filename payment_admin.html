@@ -137,6 +137,8 @@
       let activeParticipantFilter = 'all';
       let activeStaffMode = 'review';
       let currentPage = 1;
+      let pageMeta = { total: 0, total_pages: 1, stats: { total: 0, done: 0, pending: 0, attention: 0 } };
+      let dirtyRecordIds = new Set();
       const pageSize = 20;
       const reviewStatusOptions = ['尚未審核', '審核通過', '審核未通過'];
       const paymentStatusOptions = ['未繳費', '待確認', '已繳費'];
@@ -297,23 +299,14 @@
         ].join(' ').toLowerCase();
       }
       function filteredRows() {
-        return rows.slice().sort((a, b) => rowTimeValue(b) - rowTimeValue(a)).filter((row) => {
-          const matchesSearch = activeSearch ? searchableText(row).includes(activeSearch) : true;
-          const matchesParticipant = activeParticipantFilter === 'all' || (activeStaffMode === 'review' ? row.participant_type === activeParticipantFilter : row.payment_status === activeParticipantFilter);
-          return matchesSearch && matchesParticipant;
-        });
+        return rows.slice().sort((a, b) => rowTimeValue(b) - rowTimeValue(a));
       }
       function updateStats(list) {
-        document.getElementById('statTotal').textContent = list.length;
-        document.getElementById('statPaid').textContent = activeStaffMode === 'review'
-          ? list.filter((row) => row.review_status === '審核通過').length
-          : list.filter((row) => row.payment_status === '已繳費').length;
-        document.getElementById('statUnpaid').textContent = activeStaffMode === 'review'
-          ? list.filter((row) => row.review_status === '尚未審核').length
-          : list.filter((row) => row.payment_status === '未繳費').length;
-        document.getElementById('statReview').textContent = activeStaffMode === 'review'
-          ? list.filter((row) => row.review_status === '審核未通過').length
-          : list.filter((row) => row.payment_status === '待確認').length;
+        const stats = pageMeta.stats || {};
+        document.getElementById('statTotal').textContent = stats.total ?? list.length;
+        document.getElementById('statPaid').textContent = stats.done ?? 0;
+        document.getElementById('statUnpaid').textContent = stats.pending ?? 0;
+        document.getElementById('statReview').textContent = stats.attention ?? 0;
       }
       function updateFilterOptions() {
         const options = activeStaffMode === 'review'
@@ -371,16 +364,16 @@
       }
       function renderRows() {
         const visibleRows = filteredRows();
-        const totalPages = Math.max(1, Math.ceil(visibleRows.length / pageSize));
+        const totalPages = Math.max(1, Number(pageMeta.total_pages || 1));
         currentPage = Math.min(Math.max(1, currentPage), totalPages);
-        const pageRows = visibleRows.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+        const pageRows = visibleRows;
         renderTableHead();
         updateFilterOptions();
         tbody.innerHTML = pageRows.length ? pageRows.map((row) => {
           const index = rows.indexOf(row);
           return activeStaffMode === 'review' ? renderReviewRow(row, index) : renderPaymentRow(row, index);
         }).join('') : '<tr><td colspan="10">沒有符合條件的資料。</td></tr>';
-        pageInfo.textContent = `第 ${currentPage} / ${totalPages} 頁，共 ${visibleRows.length} 筆`;
+        pageInfo.textContent = `第 ${currentPage} / ${totalPages} 頁，共 ${pageMeta.total || visibleRows.length} 筆`;
         prevPage.disabled = currentPage <= 1;
         nextPage.disabled = currentPage >= totalPages;
         updateStats(visibleRows);
@@ -391,7 +384,7 @@
         if (!comparableKeyword) {
           activeSearch = '';
           currentPage = 1;
-          renderRows();
+          loadRowsFromBackend(false);
           showDashboardStatus('已顯示全部資料，每頁 20 筆。', 'success');
           return;
         }
@@ -404,23 +397,34 @@
         }
         activeSearch = keyword;
         currentPage = 1;
-        renderRows();
+        loadRowsFromBackend(false);
         showDashboardStatus('已依搜尋條件更新列表。', 'success');
       }
       async function loadRowsFromBackend(sync) {
         try {
           showDashboardStatus(sync ? '與後台同步中...' : '正在讀取工作人員資料...', '');
-          const result = await callStaffApi({ action: sync ? 'staffSyncPayments' : 'staffListPayments', token: staffToken, sync: sync });
+          const result = await callStaffApi({
+            action: sync ? 'staffSyncPayments' : 'staffListPayments',
+            token: staffToken,
+            page: currentPage,
+            page_size: pageSize,
+            mode: activeStaffMode,
+            filter: activeParticipantFilter,
+            search: activeSearch
+          });
           rows = normalizeBackendRows(result.rows);
-          activeSearch = '';
-          activeParticipantFilter = 'all';
-          participantFilter.value = 'all';
-          currentPage = 1;
-          search.value = '';
+          pageMeta = {
+            total: result.total || rows.length,
+            total_pages: result.total_pages || 1,
+            stats: result.stats || { total: rows.length, done: 0, pending: 0, attention: 0 }
+          };
+          currentPage = result.page || currentPage;
+          dirtyRecordIds = new Set();
           renderRows();
           showDashboardStatus(sync ? `同步完成，已更新 ${result.changed_count || 0} 筆變動資料。` : '已讀取工作人員表，每頁顯示 20 筆。', 'success');
         } catch (error) {
           rows = [];
+          pageMeta = { total: 0, total_pages: 1, stats: { total: 0, done: 0, pending: 0, attention: 0 } };
           activeSearch = '';
           currentPage = 1;
           renderRows();
@@ -456,6 +460,12 @@
           showDashboardStatus('正在重建工作人員表，請稍候...', '');
           const result = await callStaffApi({ action: 'staffRebuildPayments', token: staffToken });
           rows = normalizeBackendRows(result.rows);
+          pageMeta = {
+            total: result.total || rows.length,
+            total_pages: result.total_pages || 1,
+            stats: result.stats || { total: rows.length, done: 0, pending: 0, attention: 0 }
+          };
+          dirtyRecordIds = new Set();
           activeSearch = '';
           activeParticipantFilter = 'all';
           participantFilter.value = 'all';
@@ -468,7 +478,7 @@
         }
       });
       document.getElementById('saveToBackend').addEventListener('click', async function () {
-        const updates = rows.map((row) => {
+        const updates = rows.filter((row) => dirtyRecordIds.has(row.record_id)).map((row) => {
           const base = {
             record_id: row.record_id,
             staff_note: row.staff_note
@@ -483,15 +493,29 @@
             transfer_last5: row.transfer_last5
           });
         });
+        if (!updates.length) {
+          showDashboardStatus('目前沒有需要匯出的更改。', 'success');
+          return;
+        }
         try {
           showDashboardStatus('同步中，正在匯出更改...', '');
-          const result = await callStaffApi({ action: 'staffUpdatePayments', token: staffToken, updates: updates });
+          const result = await callStaffApi({
+            action: 'staffUpdatePayments',
+            token: staffToken,
+            updates: updates,
+            page: currentPage,
+            page_size: pageSize,
+            mode: activeStaffMode,
+            filter: activeParticipantFilter,
+            search: activeSearch
+          });
           rows = normalizeBackendRows(result.rows);
-          activeSearch = '';
-          activeParticipantFilter = 'all';
-          participantFilter.value = 'all';
-          currentPage = 1;
-          search.value = '';
+          pageMeta = {
+            total: result.total || rows.length,
+            total_pages: result.total_pages || 1,
+            stats: result.stats || { total: rows.length, done: 0, pending: 0, attention: 0 }
+          };
+          dirtyRecordIds = new Set();
           renderRows();
           showDashboardStatus('已更新資訊。', 'success');
         } catch (error) {
@@ -502,7 +526,7 @@
       participantFilter.addEventListener('change', function () {
         activeParticipantFilter = participantFilter.value;
         currentPage = 1;
-        renderRows();
+        loadRowsFromBackend(false);
       });
       if (staffModeSwitch) {
         staffModeSwitch.querySelectorAll('[data-staff-mode]').forEach(function (button) {
@@ -524,11 +548,11 @@
       }
       prevPage.addEventListener('click', function () {
         currentPage -= 1;
-        renderRows();
+        loadRowsFromBackend(false);
       });
       nextPage.addEventListener('click', function () {
         currentPage += 1;
-        renderRows();
+        loadRowsFromBackend(false);
       });
       search.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
@@ -542,6 +566,7 @@
         const field = target.dataset.field;
         if (!Number.isNaN(index) && field && rows[index]) {
           rows[index][field] = target.value;
+          dirtyRecordIds.add(rows[index].record_id);
           renderRows();
         }
       });
