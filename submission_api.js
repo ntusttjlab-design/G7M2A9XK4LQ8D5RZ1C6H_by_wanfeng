@@ -12,6 +12,8 @@
     pdfRequired: isEnglish ? 'Please upload a PDF file.' : '請上傳 PDF 檔案。',
     pdfOnly: isEnglish ? 'Only PDF files are accepted.' : '僅接受 PDF 檔案。',
     pdfTooLarge: isEnglish ? 'PDF file size must not exceed 10 MB.' : 'PDF 檔案大小不可超過 10 MB。',
+    studentIdRequired: isEnglish ? 'Please upload student ID proof.' : '請上傳學生證明。',
+    studentIdOnly: isEnglish ? 'Student ID proof must be PDF, PNG, JPG, or JPEG.' : '學生證明僅接受 PDF、PNG、JPG 或 JPEG。',
     sending: isEnglish ? 'Submitting. Please wait...' : '正在送出，請稍候...',
     verifying: isEnglish ? 'Verifying. Please wait...' : '正在驗證，請稍候...',
     updating: isEnglish ? 'Updating. Please wait...' : '正在更新，請稍候...',
@@ -101,6 +103,16 @@
     if (!file) return;
     const allowed = file.type === 'application/pdf' || file.type === 'image/png' || file.type === 'image/jpeg' || /\.(pdf|png|jpe?g)$/i.test(file.name);
     if (!allowed) throw new Error(text.proofOnly);
+    if (file.size > MAX_PDF_BYTES) throw new Error(text.pdfTooLarge);
+  }
+
+  function validateStudentId(file, required) {
+    if (!file) {
+      if (required) throw new Error(text.studentIdRequired);
+      return;
+    }
+    const allowed = file.type === 'application/pdf' || file.type === 'image/png' || file.type === 'image/jpeg' || /\.(pdf|png|jpe?g)$/i.test(file.name);
+    if (!allowed) throw new Error(text.studentIdOnly);
     if (file.size > MAX_PDF_BYTES) throw new Error(text.pdfTooLarge);
   }
 
@@ -236,6 +248,10 @@
         const file = form.elements.abstract_pdf.files[0];
         validatePdf(file, true);
         const presentationType = normalizePresentationType(getValue(form, 'presentation_type'));
+        const registrantIdentity = getValue(form, 'registrant_identity');
+        const studentIdInput = form.elements.student_id_file;
+        const studentIdFile = studentIdInput && studentIdInput.files ? studentIdInput.files[0] : null;
+        validateStudentId(studentIdFile, registrantIdentity === '學生');
         if (oralSubmissionClosed(presentationType)) {
           throw new Error(text.oralClosed);
         }
@@ -250,8 +266,10 @@
           abstract: getValue(form, 'abstract_text'),
           keywords: getValue(form, 'keywords'),
           presentation_type: presentationType,
+          registrant_identity: registrantIdentity,
           topic_area: normalizeTopicArea(getValue(form, 'track')),
-          pdf: await buildPdfPayload(file)
+          pdf: await buildPdfPayload(file),
+          student_id: await buildFilePayload(studentIdFile)
         };
         const result = await callApi(payload);
         const submissionId = result.submission_id ? ' ' + result.submission_id : '';
@@ -263,6 +281,25 @@
         setBusy(form, false);
       }
     });
+    });
+  }
+
+  function bindRegistrantIdentityFields() {
+    document.querySelectorAll('[data-hefc-submit-form]').forEach(function (form) {
+      const select = form.querySelector('[data-registrant-identity]');
+      const row = form.querySelector('[data-student-id-row]');
+      const input = form.querySelector('[data-student-id-input]');
+      if (!select || !row || !input) return;
+
+      function updateVisibility() {
+        const isStudent = select.value === '學生';
+        row.classList.toggle('is-hidden', !isStudent);
+        input.required = isStudent;
+        if (!isStudent) input.value = '';
+      }
+
+      select.addEventListener('change', updateVisibility);
+      updateVisibility();
     });
   }
 
@@ -404,6 +441,7 @@
   }
 
   bindSubmissionModeSwitches();
+  bindRegistrantIdentityFields();
   bindSubmitForm();
   bindVerifyForm();
   bindUpdateForm();

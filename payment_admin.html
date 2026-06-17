@@ -222,6 +222,8 @@
           name: item.name || '',
           email: item.email || '',
           participant_type: normalizeParticipantType(item.participant_type || '一般論文發表'),
+          registrant_identity: normalizeRegistrantIdentity(item.registrant_identity || ''),
+          student_id_url: item.student_id_url || '',
           review_status: item.review_status || '尚未審核',
           committed_review_status: item.review_status || '尚未審核',
           payment_amount: normalizePaymentAmount(item.payment_amount) || fixedPaymentAmount(item),
@@ -232,7 +234,10 @@
           transfer_last5: item.transfer_last5 || item.receipt_no || '',
           payment_proof_url: item.payment_proof_url || '',
           payment_reported_at: item.payment_reported_at || '',
+          submitter_note: item.submitter_note || item.payment_note || '',
           staff_note: item.staff_note || '',
+          staff_note_updated_at: item.staff_note_updated_at || '',
+          staff_note_updated_by: item.staff_note_updated_by || '',
           organization: item.organization || item.affiliation || '',
           topic_area: item.topic_area || '',
           staff_updated_at: item.staff_updated_at || '',
@@ -257,8 +262,14 @@
         if (text.indexOf('海報') !== -1 || text.toLowerCase().indexOf('poster') !== -1) return '海報發表';
         return text;
       }
+      function normalizeRegistrantIdentity(value) {
+        const text = String(value || '').trim();
+        if (/學生|student/i.test(text)) return '學生';
+        if (/一般|general/i.test(text)) return '一般人員';
+        return '';
+      }
       function fixedPaymentAmount(item) {
-        const typeText = [item.participant_type, item.presentation_type].join(' ');
+        const typeText = [item.registrant_identity, item.participant_type, item.presentation_type].join(' ');
         const today = new Date();
         const compact = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
         const phase = compact <= 20260831 ? 'early' : (compact < 20261002 ? 'regular' : 'onsite');
@@ -284,6 +295,7 @@
           row.email,
           emailLocal,
           row.participant_type,
+          row.registrant_identity,
           row.review_status,
           row.payment_amount,
           paymentAmountCompact,
@@ -292,11 +304,25 @@
           row.transfer_last5,
           row.payment_proof_url,
           row.payment_reported_at,
+          row.submitter_note,
           row.organization,
           row.topic_area,
+          row.student_id_url,
           row.staff_note,
+          row.staff_note_updated_at,
+          row.staff_note_updated_by,
           row.latest_pdf_url
         ].join(' ').toLowerCase();
+      }
+      function formatDateOnly(value) {
+        if (!value) return '';
+        if (/^\d{4}[\/-]\d{1,2}[\/-]\d{1,2}$/.test(String(value))) return String(value).replace(/-/g, '/');
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return String(value).split(/[ T]/)[0].replace(/-/g, '/');
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}/${month}/${day}`;
       }
       function filteredRows() {
         return rows.slice().sort((a, b) => rowTimeValue(b) - rowTimeValue(a));
@@ -318,8 +344,8 @@
       }
       function renderTableHead() {
         const headers = activeStaffMode === 'review'
-          ? ['姓名', '身分別', '最新 PDF', '審核', 'Email', '單位', '投稿主題', '備註', '報名編號']
-          : ['姓名', 'Email', '應繳金額', '繳費日期', '繳費狀態', '轉帳末5碼', '匯款證明', '備註', '報名編號'];
+          ? ['姓名', '身分別', '最新 PDF', '審核', 'Email', '單位', '投稿主題', '投稿者備註', '工作人員備註', '報名編號']
+          : ['姓名', '報名者身分', '學生證', 'Email', '應繳金額', '繳費日期', '繳費狀態', '轉帳末5碼', '匯款證明', '投稿者備註', '工作人員備註', '報名編號'];
         staffTableHead.innerHTML = '<tr>' + headers.map((header) => `<th>${header}</th>`).join('') + '</tr>';
       }
       function renderReviewRow(row, index) {
@@ -337,7 +363,8 @@
             <td>${row.email}</td>
             <td>${row.organization}</td>
             <td>${row.topic_area || ''}</td>
-            <td><input data-row="${index}" data-field="staff_note" value="${row.staff_note}" placeholder="審稿備註"></td>
+            <td>${row.submitter_note || '無'}</td>
+            <td><input data-row="${index}" data-field="staff_note" value="${row.staff_note}" placeholder="工作人員備註"></td>
             <td><strong>${row.record_id}</strong></td>
           </tr>
         `;
@@ -347,9 +374,11 @@
         return `
           <tr>
             <td>${row.name}</td>
+            <td>${row.registrant_identity || '一般人員'}</td>
+            <td>${row.student_id_url ? `<a class="button button-secondary" href="${row.student_id_url}" target="_blank" rel="noopener noreferrer">查看學生證</a>` : '無'}</td>
             <td>${row.email}</td>
             <td>${row.payment_amount}</td>
-            <td>${row.payment_date || '尚未回報'}</td>
+            <td>${formatDateOnly(row.payment_date) || '尚未回報'}</td>
             <td>
               <select data-row="${index}" data-field="payment_status"${locked ? ' disabled title="已繳費，狀態已鎖定"' : ''}>
                 ${paymentStatusOptions.map((item) => `<option${item === row.payment_status ? ' selected' : ''}>${item}</option>`).join('')}
@@ -357,7 +386,8 @@
             </td>
             <td><input data-row="${index}" data-field="transfer_last5" value="${row.transfer_last5}" placeholder="轉帳末5碼"></td>
             <td>${row.payment_proof_url ? `<a class="button button-secondary" href="${row.payment_proof_url}" target="_blank" rel="noopener noreferrer">查看證明</a>` : '尚無'}</td>
-            <td><input data-row="${index}" data-field="staff_note" value="${row.staff_note}" placeholder="繳費備註"></td>
+            <td>${row.submitter_note || '無'}</td>
+            <td><input data-row="${index}" data-field="staff_note" value="${row.staff_note}" placeholder="工作人員備註"></td>
             <td><strong>${row.record_id}</strong></td>
           </tr>
         `;
@@ -372,7 +402,7 @@
         tbody.innerHTML = pageRows.length ? pageRows.map((row) => {
           const index = rows.indexOf(row);
           return activeStaffMode === 'review' ? renderReviewRow(row, index) : renderPaymentRow(row, index);
-        }).join('') : '<tr><td colspan="10">沒有符合條件的資料。</td></tr>';
+        }).join('') : `<tr><td colspan="${activeStaffMode === 'review' ? 10 : 12}">沒有符合條件的資料。</td></tr>`;
         pageInfo.textContent = `第 ${currentPage} / ${totalPages} 頁，共 ${pageMeta.total || visibleRows.length} 筆`;
         prevPage.disabled = currentPage <= 1;
         nextPage.disabled = currentPage >= totalPages;

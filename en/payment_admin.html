@@ -103,6 +103,8 @@
               <th>Registration ID</th>
               <th>Name</th>
               <th>Category</th>
+              <th>Registrant Type</th>
+              <th>Student ID</th>
               <th>Latest PDF</th>
               <th>Review</th>
               <th>Amount</th>
@@ -110,6 +112,7 @@
               <th>Email</th>
               <th>Payment Date</th>
               <th>Transfer Last 5</th>
+              <th>Submitter Notes</th>
               <th>Notes</th>
             </tr>
           </thead>
@@ -229,6 +232,8 @@
           name: item.name || '',
           email: item.email || '',
           participant_type: normalizeParticipantType(item.participant_type || '一般論文發表'),
+          registrant_identity: normalizeRegistrantIdentity(item.registrant_identity || ''),
+          student_id_url: item.student_id_url || '',
           review_status: item.review_status || '尚未審核',
           committed_review_status: item.review_status || '尚未審核',
           payment_amount: normalizePaymentAmount(item.payment_amount),
@@ -239,7 +244,10 @@
           transfer_last5: item.transfer_last5 || item.receipt_no || '',
           payment_proof_url: item.payment_proof_url || '',
           payment_reported_at: item.payment_reported_at || '',
+          submitter_note: item.submitter_note || item.payment_note || '',
           staff_note: item.staff_note || '',
+          staff_note_updated_at: item.staff_note_updated_at || '',
+          staff_note_updated_by: item.staff_note_updated_by || '',
           organization: item.organization || item.affiliation || '',
           topic_area: item.topic_area || '',
           staff_updated_at: item.staff_updated_at || '',
@@ -266,6 +274,12 @@
         if (text.indexOf('海報') !== -1 || text.toLowerCase().indexOf('poster') !== -1) return '海報發表';
         return text;
       }
+      function normalizeRegistrantIdentity(value) {
+        const text = String(value || '').trim();
+        if (/學生|student/i.test(text)) return 'Student';
+        if (/一般|general/i.test(text)) return 'General';
+        return '';
+      }
       function reviewLabel(value) {
         return { '尚未審核': 'Not Reviewed', '審核通過': 'Approved', '審核未通過': 'Not Approved' }[value] || value;
       }
@@ -283,6 +297,7 @@
           row.email,
           emailLocal,
           row.participant_type,
+          row.registrant_identity,
           row.review_status,
           row.payment_amount,
           paymentAmountCompact,
@@ -291,11 +306,25 @@
           row.transfer_last5,
           row.payment_proof_url,
           row.payment_reported_at,
+          row.submitter_note,
           row.organization,
           row.topic_area,
+          row.student_id_url,
           row.staff_note,
+          row.staff_note_updated_at,
+          row.staff_note_updated_by,
           row.latest_pdf_url
         ].join(' ').toLowerCase();
+      }
+      function formatDateOnly(value) {
+        if (!value) return '';
+        if (/^\d{4}[\/-]\d{1,2}[\/-]\d{1,2}$/.test(String(value))) return String(value).replace(/-/g, '/');
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return String(value).split(/[ T]/)[0].replace(/-/g, '/');
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}/${month}/${day}`;
       }
       function filteredRows() {
         return rows.slice().sort((a, b) => rowTimeValue(b) - rowTimeValue(a));
@@ -317,6 +346,8 @@
             <td><strong>${row.record_id}</strong></td>
             <td>${row.name}</td>
             <td>${participantLabel(row.participant_type)}</td>
+            <td>${row.registrant_identity || 'General'}</td>
+            <td>${row.student_id_url ? `<a class="button button-secondary" href="${row.student_id_url}" target="_blank" rel="noopener noreferrer">Student ID</a>` : 'None'}</td>
             <td>${row.latest_pdf_url ? `<a class="button button-secondary" href="${row.latest_pdf_url}" target="_blank" rel="noopener noreferrer">Open PDF</a>` : 'None'}</td>
             <td>
               <select data-row="${rows.indexOf(row)}" data-field="review_status"${row.committed_review_status === '審核通過' ? ' disabled title="Review approved and locked"' : ''}>
@@ -326,11 +357,12 @@
             <td>${row.payment_amount}</td>
             <td><select data-row="${rows.indexOf(row)}" data-field="payment_status"${row.committed_payment_status === '已繳費' ? ' disabled title="Payment confirmed and locked"' : ''}>${['未繳費', '待確認', '已繳費'].map((item) => `<option value="${item}"${item === row.payment_status ? ' selected' : ''}>${statusLabel(item)}</option>`).join('')}</select></td>
             <td>${row.email}</td>
-            <td>${row.payment_date || 'Not reported'}</td>
+            <td>${formatDateOnly(row.payment_date) || 'Not reported'}</td>
             <td><input data-row="${rows.indexOf(row)}" data-field="transfer_last5" value="${row.transfer_last5}" placeholder="Transfer last 5 digits"></td>
-            <td><input data-row="${rows.indexOf(row)}" data-field="staff_note" value="${row.staff_note}" placeholder="Internal notes"></td>
+            <td>${row.submitter_note || 'None'}</td>
+            <td><input data-row="${rows.indexOf(row)}" data-field="staff_note" value="${row.staff_note}" placeholder="Staff notes"></td>
           </tr>
-        `).join('') : '<tr><td colspan="11">No matching records.</td></tr>';
+        `).join('') : '<tr><td colspan="14">No matching records.</td></tr>';
         pageInfo.textContent = `Page ${currentPage} / ${totalPages}, ${pageMeta.total || visibleRows.length} records`;
         prevPage.disabled = currentPage <= 1;
         nextPage.disabled = currentPage >= totalPages;

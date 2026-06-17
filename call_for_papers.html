@@ -126,14 +126,29 @@
                 <input id="email" name="email" type="email" inputmode="email" placeholder="用於接收投稿確認信" required>
               </div>
               <div class="form-row">
-                <label for="corresponding_author">通訊作者（指導教授）</label>
-                <input id="corresponding_author" name="corresponding_author" type="text" placeholder="例：陳教授">
+                <label for="registrant_identity">報名者身分 <span class="hint">必填</span></label>
+                <select id="registrant_identity" name="registrant_identity" required data-registrant-identity>
+                  <option value="">— 請選擇身分 —</option>
+                  <option value="一般人員">一般人員</option>
+                  <option value="學生">學生</option>
+                </select>
               </div>
             </div>
 
-            <div class="form-row">
-              <label for="corresponding_email">通訊作者 Email</label>
-              <input id="corresponding_email" name="corresponding_email" type="email" inputmode="email" placeholder="例：advisor@mail.ntust.edu.tw">
+            <div class="form-row file-upload-box is-hidden" data-student-id-row>
+              <label for="student_id_file">上傳學生證明 <span class="hint">學生必填，接受 PDF、PNG、JPG</span></label>
+              <input id="student_id_file" name="student_id_file" type="file" accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg" data-student-id-input>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-row">
+                <label for="corresponding_author">通訊作者（指導教授）</label>
+                <input id="corresponding_author" name="corresponding_author" type="text" placeholder="例：陳教授">
+              </div>
+              <div class="form-row">
+                <label for="corresponding_email">通訊作者 Email</label>
+                <input id="corresponding_email" name="corresponding_email" type="email" inputmode="email" placeholder="例：advisor@mail.ntust.edu.tw">
+              </div>
             </div>
 
             <div class="form-row">
