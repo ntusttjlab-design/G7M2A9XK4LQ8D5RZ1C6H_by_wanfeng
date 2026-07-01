@@ -25,6 +25,9 @@
     networkError: isEnglish ? 'Unable to connect to the submission service.' : '無法連線到投稿服務。',
     proofOnly: isEnglish ? 'Payment proof must be PDF, PNG, JPG, or JPEG.' : '匯款證明僅接受 PDF、PNG、JPG 或 JPEG。',
     oralClosed: isEnglish ? 'Oral abstract submission is closed. Poster submissions remain available.' : '口頭論文摘要投稿已截止，海報投稿仍可送出。',
+    badApiResponse: isEnglish
+      ? 'The submission service returned an invalid response. Please contact the conference staff.'
+      : '投稿服務回傳格式錯誤，請聯絡大會工作人員。',
     demoVerifyFailed: isEnglish
         ? 'Demo mode: use demo@hefc2026.test and verification code 12345.'
         : '展示模式：請使用 demo@hefc2026.test 與驗證碼 12345。'
@@ -69,6 +72,17 @@
       forumAddon.checked = disabled ? true : forumAddon.checked;
       forumAddon.disabled = disabled;
     }
+  }
+
+  function syncStudentIdField(form) {
+    const select = form.querySelector('[data-registrant-identity]');
+    const row = form.querySelector('[data-student-id-row]');
+    const input = form.querySelector('[data-student-id-input]');
+    if (!select || !row || !input) return;
+    const isStudent = select.value === '學生';
+    row.classList.toggle('is-hidden', !isStudent);
+    input.required = isStudent;
+    if (!isStudent) input.value = '';
   }
 
   function bindForumOnlyToggle(form) {
@@ -189,7 +203,13 @@
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(payload)
     });
-    const data = await response.json();
+    const raw = await response.text();
+    let data;
+    try {
+      data = JSON.parse(raw);
+    } catch (error) {
+      throw new Error(text.badApiResponse);
+    }
     if (!data.ok) {
       throw new Error((data.error && data.error.message) || text.networkError);
     }
@@ -313,6 +333,7 @@
         showStatus(status, text.submitSuccess + submissionId, 'success');
         form.reset();
         setPaperFieldsDisabled(form, false);
+        syncStudentIdField(form);
       } catch (error) {
         showStatus(status, error.message || text.networkError, 'error');
       } finally {
@@ -325,19 +346,12 @@
   function bindRegistrantIdentityFields() {
     document.querySelectorAll('[data-hefc-submit-form]').forEach(function (form) {
       const select = form.querySelector('[data-registrant-identity]');
-      const row = form.querySelector('[data-student-id-row]');
-      const input = form.querySelector('[data-student-id-input]');
-      if (!select || !row || !input) return;
+      if (!select) return;
 
-      function updateVisibility() {
-        const isStudent = select.value === '學生';
-        row.classList.toggle('is-hidden', !isStudent);
-        input.required = isStudent;
-        if (!isStudent) input.value = '';
-      }
-
-      select.addEventListener('change', updateVisibility);
-      updateVisibility();
+      select.addEventListener('change', function () {
+        syncStudentIdField(form);
+      });
+      syncStudentIdField(form);
     });
   }
 
