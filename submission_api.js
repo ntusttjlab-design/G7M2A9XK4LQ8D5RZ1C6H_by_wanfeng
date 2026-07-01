@@ -49,6 +49,38 @@
     return field ? field.value.trim() : '';
   }
 
+  function isForumOnly(form) {
+    return !!(form.elements.forum_only_registration && form.elements.forum_only_registration.checked);
+  }
+
+  function setPaperFieldsDisabled(form, disabled) {
+    form.querySelectorAll('[data-paper-only-field]').forEach(function (row) {
+      row.classList.toggle('is-disabled', disabled);
+      row.querySelectorAll('input, select, textarea').forEach(function (field) {
+        if (field.dataset.originalRequired === undefined) {
+          field.dataset.originalRequired = field.required ? '1' : '0';
+        }
+        field.disabled = disabled;
+        field.required = disabled ? false : field.dataset.originalRequired === '1';
+      });
+    });
+    const forumAddon = form.elements.technical_forum_registration;
+    if (forumAddon) {
+      forumAddon.checked = disabled ? true : forumAddon.checked;
+      forumAddon.disabled = disabled;
+    }
+  }
+
+  function bindForumOnlyToggle(form) {
+    const toggle = form.querySelector('[data-forum-only-toggle]');
+    if (!toggle) return;
+    const update = function () {
+      setPaperFieldsDisabled(form, toggle.checked);
+    };
+    toggle.addEventListener('change', update);
+    update();
+  }
+
   function normalizePresentationType(value) {
     const textValue = String(value || '').trim();
     const lower = textValue.toLowerCase();
@@ -238,6 +270,7 @@
     if (!forms.length) return;
 
     forms.forEach(function (form) {
+      bindForumOnlyToggle(form);
       const status = form.querySelector('[data-submit-status]') || document.querySelector('[data-submit-status]');
       form.addEventListener('submit', async function (event) {
       event.preventDefault();
@@ -245,29 +278,33 @@
       showStatus(status, text.sending);
 
       try {
-        const file = form.elements.abstract_pdf.files[0];
-        validatePdf(file, true);
-        const presentationType = normalizePresentationType(getValue(form, 'presentation_type'));
+        const forumOnly = isForumOnly(form);
+        const file = form.elements.abstract_pdf && form.elements.abstract_pdf.files ? form.elements.abstract_pdf.files[0] : null;
+        validatePdf(file, !forumOnly);
+        const presentationType = forumOnly ? '技術論壇報名' : normalizePresentationType(getValue(form, 'presentation_type'));
         const registrantIdentity = getValue(form, 'registrant_identity');
+        const technicalForumRegistration = forumOnly || (form.elements.technical_forum_registration && form.elements.technical_forum_registration.checked) ? '是' : '否';
         const studentIdInput = form.elements.student_id_file;
         const studentIdFile = studentIdInput && studentIdInput.files ? studentIdInput.files[0] : null;
         validateStudentId(studentIdFile, registrantIdentity === '學生');
-        if (oralSubmissionClosed(presentationType)) {
+        if (!forumOnly && oralSubmissionClosed(presentationType)) {
           throw new Error(text.oralClosed);
         }
         const payload = {
           action: 'submit',
-          title: getValue(form, 'paper_title'),
+          registration_mode: forumOnly ? '只報名技術論壇' : '論文投稿',
+          title: forumOnly ? '只報名技術論壇' : getValue(form, 'paper_title'),
           authors: getValue(form, 'authors'),
           affiliation: getValue(form, 'affiliation'),
           email: getValue(form, 'email'),
-          corresponding_author: getValue(form, 'corresponding_author'),
-          corresponding_email: getValue(form, 'corresponding_email'),
-          abstract: getValue(form, 'abstract_text'),
-          keywords: getValue(form, 'keywords'),
+          corresponding_author: forumOnly ? '' : getValue(form, 'corresponding_author'),
+          corresponding_email: forumOnly ? '' : getValue(form, 'corresponding_email'),
+          abstract: forumOnly ? '只報名技術論壇' : getValue(form, 'abstract_text'),
+          keywords: forumOnly ? '技術論壇' : getValue(form, 'keywords'),
           presentation_type: presentationType,
           registrant_identity: registrantIdentity,
-          topic_area: normalizeTopicArea(getValue(form, 'track')),
+          technical_forum_registration: technicalForumRegistration,
+          topic_area: forumOnly ? '技術論壇' : normalizeTopicArea(getValue(form, 'track')),
           pdf: await buildPdfPayload(file),
           student_id: await buildFilePayload(studentIdFile)
         };
@@ -275,6 +312,7 @@
         const submissionId = result.submission_id ? ' ' + result.submission_id : '';
         showStatus(status, text.submitSuccess + submissionId, 'success');
         form.reset();
+        setPaperFieldsDisabled(form, false);
       } catch (error) {
         showStatus(status, error.message || text.networkError, 'error');
       } finally {

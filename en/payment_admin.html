@@ -103,7 +103,9 @@
               <th>Registration ID</th>
               <th>Name</th>
               <th>Category</th>
+              <th>Registration Mode</th>
               <th>Registrant Type</th>
+              <th>Technical Forum</th>
               <th>Student ID</th>
               <th>Latest PDF</th>
               <th>Review</th>
@@ -151,7 +153,7 @@
       let pageMeta = { total: 0, total_pages: 1, stats: { total: 0, done: 0, pending: 0, attention: 0 } };
       let dirtyRecordIds = new Set();
       const pageSize = 20;
-      const paymentAmountOptions = ['NT$ 2,000', 'NT$ 2,500', 'NT$ 3,000', 'NT$ 3,500', 'NT$ 3,900', 'NT$ 4,200', 'NT$ 4,700', 'NT$ 4,900'];
+      const paymentAmountOptions = ['NT$ 2,000', 'NT$ 2,500', 'NT$ 3,000', 'NT$ 3,500', 'NT$ 3,900', 'NT$ 4,200', 'NT$ 4,700', 'NT$ 4,900', 'NT$ 5,500', 'NT$ 6,200', 'NT$ 6,400', 'NT$ 7,200', 'NT$ 7,900'];
       const participantTypeOptions = ['一般論文發表', '學生論文競賽', '海報發表'];
       const reviewStatusOptions = ['尚未審核', '審核通過', '審核未通過'];
       const loginForm = document.getElementById('staffLoginForm');
@@ -232,7 +234,9 @@
           name: item.name || '',
           email: item.email || '',
           participant_type: normalizeParticipantType(item.participant_type || '一般論文發表'),
+          registration_mode: normalizeRegistrationMode(item.registration_mode || ''),
           registrant_identity: normalizeRegistrantIdentity(item.registrant_identity || ''),
+          technical_forum_registration: normalizeTechnicalForumRegistration(item.technical_forum_registration || ''),
           student_id_url: item.student_id_url || '',
           review_status: item.review_status || '尚未審核',
           committed_review_status: item.review_status || '尚未審核',
@@ -256,11 +260,23 @@
       }
       function normalizePaymentAmount(value) {
         const compact = String(value || '').replace(/[^\d]/g, '');
-        const byNumber = { 2000: 'NT$ 2,000', 2500: 'NT$ 2,500', 3000: 'NT$ 3,000', 3500: 'NT$ 3,500', 3900: 'NT$ 3,900', 4200: 'NT$ 4,200', 4700: 'NT$ 4,700', 4900: 'NT$ 4,900' };
+        const byNumber = { 2000: 'NT$ 2,000', 2500: 'NT$ 2,500', 3000: 'NT$ 3,000', 3500: 'NT$ 3,500', 3900: 'NT$ 3,900', 4200: 'NT$ 4,200', 4700: 'NT$ 4,700', 4900: 'NT$ 4,900', 5500: 'NT$ 5,500', 6200: 'NT$ 6,200', 6400: 'NT$ 6,400', 7200: 'NT$ 7,200', 7900: 'NT$ 7,900' };
         return paymentAmountOptions.includes(String(value || '')) ? String(value || '') : (byNumber[compact] || '');
+      }
+      function normalizeTechnicalForumRegistration(value) {
+        return /是|yes|true|on|forum|技術/i.test(String(value || '')) ? '是' : '否';
+      }
+      function technicalForumLabel(value) {
+        return normalizeTechnicalForumRegistration(value) === '是' ? 'Yes' : 'No';
       }
       function statusLabel(value) {
         return { '未繳費': 'Unpaid', '待確認': 'Pending', '已繳費': 'Paid' }[value] || value;
+      }
+      function registrationModeLabel(value) {
+        return normalizeRegistrationMode(value) === '只報名技術論壇' ? 'Technical Forum Only' : 'Paper Submission';
+      }
+      function normalizeRegistrationMode(value) {
+        return /只報名技術論壇|forum only|technical forum only/i.test(String(value || '')) ? '只報名技術論壇' : '論文投稿';
       }
       function participantLabel(value) {
         return { '一般論文發表': 'General Paper Presentation', '學生論文競賽': 'Student Paper Competition', '海報發表': 'Poster Presentation' }[value] || value;
@@ -297,7 +313,9 @@
           row.email,
           emailLocal,
           row.participant_type,
+          row.registration_mode,
           row.registrant_identity,
+          row.technical_forum_registration,
           row.review_status,
           row.payment_amount,
           paymentAmountCompact,
@@ -346,7 +364,9 @@
             <td><strong>${row.record_id}</strong></td>
             <td>${row.name}</td>
             <td>${participantLabel(row.participant_type)}</td>
+            <td>${registrationModeLabel(row.registration_mode)}</td>
             <td>${row.registrant_identity || 'General'}</td>
+            <td>${technicalForumLabel(row.technical_forum_registration)}</td>
             <td>${row.student_id_url ? `<a class="button button-secondary" href="${row.student_id_url}" target="_blank" rel="noopener noreferrer">Student ID</a>` : 'None'}</td>
             <td>${row.latest_pdf_url ? `<a class="button button-secondary" href="${row.latest_pdf_url}" target="_blank" rel="noopener noreferrer">Open PDF</a>` : 'None'}</td>
             <td>
@@ -362,7 +382,7 @@
             <td>${row.submitter_note || 'None'}</td>
             <td><input data-row="${rows.indexOf(row)}" data-field="staff_note" value="${row.staff_note}" placeholder="Staff notes"></td>
           </tr>
-        `).join('') : '<tr><td colspan="14">No matching records.</td></tr>';
+        `).join('') : '<tr><td colspan="16">No matching records.</td></tr>';
         pageInfo.textContent = `Page ${currentPage} / ${totalPages}, ${pageMeta.total || visibleRows.length} records`;
         prevPage.disabled = currentPage <= 1;
         nextPage.disabled = currentPage >= totalPages;

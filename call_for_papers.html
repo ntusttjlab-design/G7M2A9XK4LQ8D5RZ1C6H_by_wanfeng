@@ -84,8 +84,16 @@
         </aside>
         <article class="card">
           <form class="submit-form" data-hefc-submit-form enctype="multipart/form-data">
+            <div class="form-row option-row forum-only-row">
+              <label for="forum_only_registration">報名模式</label>
+              <label class="checkbox-line">
+                <input id="forum_only_registration" name="forum_only_registration" type="checkbox" value="是" data-forum-only-toggle>
+                <span>只報名技術論壇</span>
+              </label>
+              <p class="form-note">勾選後，只需填寫姓名、單位、Email 與報名者身分；論文投稿相關欄位會停用。</p>
+            </div>
             <div class="form-grid">
-              <div class="form-row">
+              <div class="form-row" data-paper-only-field>
                 <label for="presentation_type">論文發表形式與競賽 <span class="hint">必填</span></label>
                 <select id="presentation_type" name="presentation_type" required>
                   <option value="">請選擇</option>
@@ -94,7 +102,7 @@
                   <option>海報發表 (Poster)</option>
                 </select>
               </div>
-              <div class="form-row">
+              <div class="form-row" data-paper-only-field>
                 <label for="track">投稿領域 <span class="hint">必填</span></label>
                 <select id="track" name="track" required>
                   <option value="">— 請選擇領域 —</option>
@@ -106,14 +114,14 @@
               </div>
             </div>
 
-            <div class="form-row">
+            <div class="form-row" data-paper-only-field>
               <label for="paper_title">論文題目 <span class="hint">必填</span></label>
               <input id="paper_title" name="paper_title" type="text" placeholder="請輸入論文完整題目" required>
             </div>
 
             <div class="form-grid">
               <div class="form-row">
-                <label for="authors">發表作者 <span class="hint">必填</span></label>
+                <label for="authors">姓名 / 發表作者 <span class="hint">必填</span></label>
                 <input id="authors" name="authors" type="text" placeholder="例：王小明、陳怡君、林志豪" required>
               </div>
               <div class="form-row">
@@ -135,6 +143,14 @@
                   <option value="學生">學生</option>
                 </select>
               </div>
+              <div class="form-row option-row">
+                <label for="technical_forum_registration">技術論壇</label>
+                <label class="checkbox-line">
+                  <input id="technical_forum_registration" name="technical_forum_registration" type="checkbox" value="是">
+                  <span>同時報名技術論壇</span>
+                </label>
+                <p class="form-note">勾選後，系統會依報名時程加計技術論壇註冊費。</p>
+              </div>
             </div>
 
             <div class="form-row file-upload-box is-hidden" data-student-id-row>
@@ -143,27 +159,27 @@
             </div>
 
             <div class="form-grid">
-              <div class="form-row">
+              <div class="form-row" data-paper-only-field>
                 <label for="corresponding_author">通訊作者（指導教授）</label>
                 <input id="corresponding_author" name="corresponding_author" type="text" placeholder="例：陳教授">
               </div>
-              <div class="form-row">
+              <div class="form-row" data-paper-only-field>
                 <label for="corresponding_email">通訊作者 Email</label>
                 <input id="corresponding_email" name="corresponding_email" type="email" inputmode="email" placeholder="例：advisor@mail.ntust.edu.tw">
               </div>
             </div>
 
-            <div class="form-row">
+            <div class="form-row" data-paper-only-field>
               <label for="abstract_text">摘要簡述 <span class="hint">必填，300-500 字</span></label>
               <textarea id="abstract_text" name="abstract_text" maxlength="1000" placeholder="請在此貼上摘要文字" required></textarea>
             </div>
 
-            <div class="form-row">
+            <div class="form-row" data-paper-only-field>
               <label for="keywords">關鍵字 <span class="hint">必填</span></label>
               <input id="keywords" name="keywords" type="text" placeholder="例：氫能、燃料電池、觸媒、水管理" required>
             </div>
 
-            <div class="form-row file-upload-box">
+            <div class="form-row file-upload-box" data-paper-only-field>
               <label for="abstract_pdf">上傳論文摘要 PDF <span class="hint">必要，格式請參考左側範本</span></label>
               <input id="abstract_pdf" name="abstract_pdf" type="file" accept=".pdf,application/pdf" required>
             </div>

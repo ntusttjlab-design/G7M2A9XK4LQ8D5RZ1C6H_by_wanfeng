@@ -222,7 +222,9 @@
           name: item.name || '',
           email: item.email || '',
           participant_type: normalizeParticipantType(item.participant_type || '一般論文發表'),
+          registration_mode: normalizeRegistrationMode(item.registration_mode || ''),
           registrant_identity: normalizeRegistrantIdentity(item.registrant_identity || ''),
+          technical_forum_registration: normalizeTechnicalForumRegistration(item.technical_forum_registration || ''),
           student_id_url: item.student_id_url || '',
           review_status: item.review_status || '尚未審核',
           committed_review_status: item.review_status || '尚未審核',
@@ -246,8 +248,11 @@
       }
       function normalizePaymentAmount(value) {
         const compact = String(value || '').replace(/[^\d]/g, '');
-        const byNumber = { 2000: 'NT$ 2,000', 2500: 'NT$ 2,500', 3000: 'NT$ 3,000', 3500: 'NT$ 3,500', 3900: 'NT$ 3,900', 4200: 'NT$ 4,200', 4700: 'NT$ 4,700', 4900: 'NT$ 4,900' };
+        const byNumber = { 2000: 'NT$ 2,000', 2500: 'NT$ 2,500', 3000: 'NT$ 3,000', 3500: 'NT$ 3,500', 3900: 'NT$ 3,900', 4200: 'NT$ 4,200', 4700: 'NT$ 4,700', 4900: 'NT$ 4,900', 5500: 'NT$ 5,500', 6200: 'NT$ 6,200', 6400: 'NT$ 6,400', 7200: 'NT$ 7,200', 7900: 'NT$ 7,900' };
         return byNumber[compact] || String(value || '');
+      }
+      function normalizeTechnicalForumRegistration(value) {
+        return /是|yes|true|on|forum|技術/i.test(String(value || '')) ? '是' : '否';
       }
       function normalizePaymentStatus(value) {
         if (value === '需確認' || value === '已退款') return '待確認';
@@ -268,18 +273,23 @@
         if (/一般|general/i.test(text)) return '一般人員';
         return '';
       }
+      function normalizeRegistrationMode(value) {
+        return /只報名技術論壇|forum only|technical forum only/i.test(String(value || '')) ? '只報名技術論壇' : '論文投稿';
+      }
       function fixedPaymentAmount(item) {
         const typeText = [item.registrant_identity, item.participant_type, item.presentation_type].join(' ');
         const today = new Date();
         const compact = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
         const phase = compact <= 20260831 ? 'early' : (compact < 20261002 ? 'regular' : 'onsite');
-        const fees = /學生|student/i.test(typeText)
-          ? { early: 'NT$ 3,500', regular: 'NT$ 3,900', onsite: 'NT$ 4,200' }
-          : { early: 'NT$ 4,200', regular: 'NT$ 4,700', onsite: 'NT$ 4,900' };
-        if (/技術|forum/i.test(typeText)) {
-          return { early: 'NT$ 2,000', regular: 'NT$ 2,500', onsite: 'NT$ 3,000' }[phase];
+        const forum = { early: 2000, regular: 2500, onsite: 3000 };
+        if (normalizeRegistrationMode(item.registration_mode) === '只報名技術論壇') {
+          return 'NT$ ' + forum[phase].toLocaleString('en-US');
         }
-        return fees[phase];
+        const base = /學生|student/i.test(typeText)
+          ? { early: 3500, regular: 3900, onsite: 4200 }
+          : { early: 4200, regular: 4700, onsite: 4900 };
+        const total = base[phase] + (normalizeTechnicalForumRegistration(item.technical_forum_registration) === '是' ? forum[phase] : 0);
+        return 'NT$ ' + total.toLocaleString('en-US');
       }
       function rowTimeValue(row) {
         const value = row.staff_updated_at || row.last_submission_update || '';
@@ -295,7 +305,9 @@
           row.email,
           emailLocal,
           row.participant_type,
+          row.registration_mode,
           row.registrant_identity,
+          row.technical_forum_registration,
           row.review_status,
           row.payment_amount,
           paymentAmountCompact,
@@ -345,7 +357,7 @@
       function renderTableHead() {
         const headers = activeStaffMode === 'review'
           ? ['姓名', '身分別', '最新 PDF', '審核', 'Email', '單位', '投稿主題', '投稿者備註', '工作人員備註', '報名編號']
-          : ['姓名', '報名者身分', '學生證', 'Email', '應繳金額', '繳費日期', '繳費狀態', '轉帳末5碼', '匯款證明', '投稿者備註', '工作人員備註', '報名編號'];
+          : ['姓名', '報名模式', '報名者身分', '技術論壇', '學生證', 'Email', '應繳金額', '繳費日期', '繳費狀態', '轉帳末5碼', '匯款證明', '投稿者備註', '工作人員備註', '報名編號'];
         staffTableHead.innerHTML = '<tr>' + headers.map((header) => `<th>${header}</th>`).join('') + '</tr>';
       }
       function renderReviewRow(row, index) {
@@ -374,7 +386,9 @@
         return `
           <tr>
             <td>${row.name}</td>
+            <td>${row.registration_mode || '論文投稿'}</td>
             <td>${row.registrant_identity || '一般人員'}</td>
+            <td>${row.technical_forum_registration || '否'}</td>
             <td>${row.student_id_url ? `<a class="button button-secondary" href="${row.student_id_url}" target="_blank" rel="noopener noreferrer">查看學生證</a>` : '無'}</td>
             <td>${row.email}</td>
             <td>${row.payment_amount}</td>
@@ -402,7 +416,7 @@
         tbody.innerHTML = pageRows.length ? pageRows.map((row) => {
           const index = rows.indexOf(row);
           return activeStaffMode === 'review' ? renderReviewRow(row, index) : renderPaymentRow(row, index);
-        }).join('') : `<tr><td colspan="${activeStaffMode === 'review' ? 10 : 12}">沒有符合條件的資料。</td></tr>`;
+        }).join('') : `<tr><td colspan="${activeStaffMode === 'review' ? 10 : 14}">沒有符合條件的資料。</td></tr>`;
         pageInfo.textContent = `第 ${currentPage} / ${totalPages} 頁，共 ${pageMeta.total || visibleRows.length} 筆`;
         prevPage.disabled = currentPage <= 1;
         nextPage.disabled = currentPage >= totalPages;
