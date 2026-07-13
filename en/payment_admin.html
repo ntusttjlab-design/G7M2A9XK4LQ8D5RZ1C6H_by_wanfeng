@@ -114,6 +114,7 @@
               <th>Email</th>
               <th>Payment Date</th>
               <th>Transfer Last 5</th>
+              <th>Tax ID Invoice</th>
               <th>Submitter Notes</th>
               <th>Notes</th>
             </tr>
@@ -246,6 +247,9 @@
           committed_payment_status: item.payment_status || '未繳費',
           payment_date: item.payment_date || '',
           transfer_last5: item.transfer_last5 || item.receipt_no || '',
+          invoice_tax_id_required: item.invoice_tax_id_required || '否',
+          invoice_title: item.invoice_title || '',
+          invoice_tax_id: item.invoice_tax_id || '',
           payment_proof_url: item.payment_proof_url || '',
           payment_reported_at: item.payment_reported_at || '',
           submitter_note: item.submitter_note || item.payment_note || '',
@@ -262,6 +266,11 @@
         const compact = String(value || '').replace(/[^\d]/g, '');
         const byNumber = { 2000: 'NT$ 2,000', 2500: 'NT$ 2,500', 3000: 'NT$ 3,000', 3500: 'NT$ 3,500', 3900: 'NT$ 3,900', 4200: 'NT$ 4,200', 4700: 'NT$ 4,700', 4900: 'NT$ 4,900', 5500: 'NT$ 5,500', 6200: 'NT$ 6,200', 6400: 'NT$ 6,400', 7200: 'NT$ 7,200', 7900: 'NT$ 7,900' };
         return paymentAmountOptions.includes(String(value || '')) ? String(value || '') : (byNumber[compact] || '');
+      }
+      function escapeHtml(value) {
+        return String(value || '').replace(/[&<>"']/g, function (character) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character];
+        });
       }
       function normalizeTechnicalForumRegistration(value) {
         return /是|yes|true|on|forum|技術/i.test(String(value || '')) ? '是' : '否';
@@ -322,6 +331,9 @@
           row.payment_status,
           row.payment_date,
           row.transfer_last5,
+          row.invoice_tax_id_required,
+          row.invoice_title,
+          row.invoice_tax_id,
           row.payment_proof_url,
           row.payment_reported_at,
           row.submitter_note,
@@ -379,10 +391,11 @@
             <td>${row.email}</td>
             <td>${formatDateOnly(row.payment_date) || 'Not reported'}</td>
             <td><input data-row="${rows.indexOf(row)}" data-field="transfer_last5" value="${row.transfer_last5}" placeholder="Transfer last 5 digits"></td>
+            <td>${row.invoice_tax_id_required === '是' ? `${escapeHtml(row.invoice_title || 'Not provided')}<br><small>${escapeHtml(row.invoice_tax_id || 'Not provided')}</small>` : 'Not required'}</td>
             <td>${row.submitter_note || 'None'}</td>
             <td><input data-row="${rows.indexOf(row)}" data-field="staff_note" value="${row.staff_note}" placeholder="Staff notes"></td>
           </tr>
-        `).join('') : '<tr><td colspan="16">No matching records.</td></tr>';
+        `).join('') : '<tr><td colspan="17">No matching records.</td></tr>';
         pageInfo.textContent = `Page ${currentPage} / ${totalPages}, ${pageMeta.total || visibleRows.length} records`;
         prevPage.disabled = currentPage <= 1;
         nextPage.disabled = currentPage >= totalPages;

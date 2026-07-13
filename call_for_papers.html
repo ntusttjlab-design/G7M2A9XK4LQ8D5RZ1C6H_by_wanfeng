@@ -288,6 +288,7 @@
               <div class="form-row">
                 <label for="transfer_last5">轉帳末5碼 <span class="hint">必填</span></label>
                 <input id="transfer_last5" name="transfer_last5" type="text" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" placeholder="請輸入轉帳帳號末5碼" required>
+                <p class="form-note">使用台灣 Pay 轉帳者，請提供實際轉帳帳戶後五碼（請勿提供台灣 Pay 虛擬帳號後五碼）。</p>
               </div>
               <div class="form-row">
                 <label for="payment_date">轉帳日期 <span class="hint">必填</span></label>
@@ -296,6 +297,23 @@
               <div class="form-row">
                 <label for="payment_note">匯款備註</label>
                 <textarea id="payment_note" name="payment_note" maxlength="500" placeholder="我已經從XX銀行帳號（末五碼 XXXXX）轉 $X 到您的XXXX（末五碼 XXXX）。"></textarea>
+              </div>
+              <div class="form-row">
+                <label for="invoice_tax_id_required">是否需要開立統一編號？</label>
+                <select id="invoice_tax_id_required" name="invoice_tax_id_required">
+                  <option value="否" selected>否</option>
+                  <option value="是">是</option>
+                </select>
+              </div>
+              <div class="form-grid is-hidden" data-invoice-fields>
+                <div class="form-row">
+                  <label for="invoice_title">抬頭 <span class="hint">必填</span></label>
+                  <input id="invoice_title" name="invoice_title" type="text" maxlength="100" placeholder="例：國立臺灣科技大學">
+                </div>
+                <div class="form-row">
+                  <label for="invoice_tax_id">統一編號 <span class="hint">必填</span></label>
+                  <input id="invoice_tax_id" name="invoice_tax_id" type="text" inputmode="numeric" pattern="[0-9]{8}" maxlength="8" placeholder="例：04126516">
+                </div>
               </div>
               <div class="form-row file-upload-box">
                 <label for="payment_proof">上傳匯款證明</label>

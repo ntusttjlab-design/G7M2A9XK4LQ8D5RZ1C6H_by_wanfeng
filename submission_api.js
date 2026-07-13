@@ -85,6 +85,22 @@
     if (!isStudent) input.value = '';
   }
 
+  function syncInvoiceFields(form) {
+    const select = form.elements.invoice_tax_id_required;
+    const fields = form.querySelector('[data-invoice-fields]');
+    const title = form.elements.invoice_title;
+    const taxId = form.elements.invoice_tax_id;
+    if (!select || !fields || !title || !taxId) return;
+    const required = String(select.value || '') === '是';
+    fields.classList.toggle('is-hidden', !required);
+    title.required = required;
+    taxId.required = required;
+    if (!required) {
+      title.value = '';
+      taxId.value = '';
+    }
+  }
+
   function bindForumOnlyToggle(form) {
     const toggle = form.querySelector('[data-forum-only-toggle]');
     if (!toggle) return;
@@ -462,6 +478,11 @@
 
     forms.forEach(function (form) {
       const status = form.querySelector('[data-payment-status]') || document.querySelector('[data-payment-status]');
+      const invoiceSelect = form.elements.invoice_tax_id_required;
+      if (invoiceSelect) {
+        invoiceSelect.addEventListener('change', function () { syncInvoiceFields(form); });
+        syncInvoiceFields(form);
+      }
       form.addEventListener('submit', async function (event) {
         event.preventDefault();
         setBusy(form, true);
@@ -477,12 +498,16 @@
             transfer_last5: getValue(form, 'transfer_last5'),
             payment_date: getValue(form, 'payment_date'),
             payment_note: getValue(form, 'payment_note'),
+            invoice_tax_id_required: getValue(form, 'invoice_tax_id_required'),
+            invoice_title: getValue(form, 'invoice_title'),
+            invoice_tax_id: getValue(form, 'invoice_tax_id'),
             payment_proof: await buildFilePayload(file)
           };
           const result = await callApi(payload);
           const submissionId = result.submission_id ? ' ' + result.submission_id : '';
           showStatus(status, text.paymentSuccess + submissionId, 'success');
           form.reset();
+          syncInvoiceFields(form);
         } catch (error) {
           showStatus(status, error.message || text.networkError, 'error');
         } finally {
