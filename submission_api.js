@@ -22,6 +22,9 @@
     verifySuccess: isEnglish ? 'Verification successful. Submission data has been loaded.' : '驗證成功，已載入投稿資料。',
     updateSuccess: isEnglish ? 'Submission updated. Please check the update confirmation email. If it does not arrive, please check your spam or junk folder.' : '稿件已更新，請查收更新成功通知信；若未收到，請先檢查垃圾郵件匣。',
     paymentSuccess: isEnglish ? 'Payment information received. Please check the confirmation email. If it does not arrive, please check your spam or junk folder.' : '匯款資料已送出，請查收確認信；若未收到，請先檢查垃圾郵件匣。',
+    mailPending: isEnglish
+      ? 'Your data was saved, but the notification email could not be sent yet. Please contact the conference staff if it does not arrive later.'
+      : '資料已儲存，但系統暫時無法寄出通知信；若稍後仍未收到，請聯絡大會工作人員。',
     networkError: isEnglish ? 'Unable to connect to the submission service.' : '無法連線到投稿服務。',
     proofOnly: isEnglish ? 'Payment proof must be PDF, PNG, JPG, or JPEG.' : '匯款證明僅接受 PDF、PNG、JPG 或 JPEG。',
     oralClosed: isEnglish ? 'Oral abstract submission is closed. Poster submissions remain available.' : '口頭論文摘要投稿已截止，海報投稿仍可送出。',
@@ -37,6 +40,10 @@
     if (!target) return;
     target.textContent = message;
     target.className = 'form-status is-visible' + (type ? ' is-' + type : '');
+  }
+
+  function notificationStatusMessage(successMessage, result) {
+    return result && result.notification_sent === false ? text.mailPending : successMessage;
   }
 
   function setBusy(form, busy) {
@@ -346,7 +353,7 @@
         };
         const result = await callApi(payload);
         const submissionId = result.submission_id ? ' ' + result.submission_id : '';
-        showStatus(status, text.submitSuccess + submissionId, 'success');
+        showStatus(status, notificationStatusMessage(text.submitSuccess, result) + submissionId, 'success');
         form.reset();
         setPaperFieldsDisabled(form, false);
         syncStudentIdField(form);
@@ -461,7 +468,7 @@
         };
         const result = await callApi(payload);
         const versionText = result.version_number ? ' v' + result.version_number : '';
-        showStatus(status, text.updateSuccess + versionText, 'success');
+        showStatus(status, notificationStatusMessage(text.updateSuccess, result) + versionText, 'success');
         form.elements.abstract_pdf.value = '';
       } catch (error) {
         showStatus(status, error.message || text.networkError, 'error');
@@ -505,7 +512,7 @@
           };
           const result = await callApi(payload);
           const submissionId = result.submission_id ? ' ' + result.submission_id : '';
-          showStatus(status, text.paymentSuccess + submissionId, 'success');
+          showStatus(status, notificationStatusMessage(text.paymentSuccess, result) + submissionId, 'success');
           form.reset();
           syncInvoiceFields(form);
         } catch (error) {
