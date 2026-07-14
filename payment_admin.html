@@ -173,7 +173,13 @@
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify(payload)
         });
-        const data = await response.json();
+        const raw = await response.text();
+        let data;
+        try {
+          data = JSON.parse(raw);
+        } catch (error) {
+          throw new Error('工作人員服務回傳格式錯誤，請重新登入或聯絡系統管理員。');
+        }
         if (!data.ok) throw new Error((data.error && data.error.message) || '後端操作失敗。');
         return data;
       }
@@ -228,7 +234,7 @@
           student_id_url: item.student_id_url || '',
           review_status: item.review_status || '尚未審核',
           committed_review_status: item.review_status || '尚未審核',
-          payment_amount: normalizePaymentAmount(item.payment_amount) || fixedPaymentAmount(item),
+          payment_amount: normalizePaymentAmount(item.payment_amount) || '待後端確認',
           latest_pdf_url: item.latest_pdf_url || '',
           payment_status: normalizePaymentStatus(item.payment_status),
           committed_payment_status: normalizePaymentStatus(item.payment_status),
@@ -283,21 +289,6 @@
       }
       function normalizeRegistrationMode(value) {
         return /只報名技術論壇|forum only|technical forum only/i.test(String(value || '')) ? '只報名技術論壇' : '論文投稿';
-      }
-      function fixedPaymentAmount(item) {
-        const typeText = [item.registrant_identity, item.participant_type, item.presentation_type].join(' ');
-        const today = new Date();
-        const compact = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
-        const phase = compact <= 20260831 ? 'early' : (compact < 20261002 ? 'regular' : 'onsite');
-        const forum = { early: 2000, regular: 2500, onsite: 3000 };
-        if (normalizeRegistrationMode(item.registration_mode) === '只報名技術論壇') {
-          return 'NT$ ' + forum[phase].toLocaleString('en-US');
-        }
-        const base = /學生|student/i.test(typeText)
-          ? { early: 3500, regular: 3900, onsite: 4200 }
-          : { early: 4200, regular: 4700, onsite: 4900 };
-        const total = base[phase] + (normalizeTechnicalForumRegistration(item.technical_forum_registration) === '是' ? forum[phase] : 0);
-        return 'NT$ ' + total.toLocaleString('en-US');
       }
       function rowTimeValue(row) {
         const value = row.staff_updated_at || row.last_submission_update || '';

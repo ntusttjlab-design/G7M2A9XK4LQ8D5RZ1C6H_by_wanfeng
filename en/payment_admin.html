@@ -153,6 +153,7 @@
       let currentPage = 1;
       let pageMeta = { total: 0, total_pages: 1, stats: { total: 0, done: 0, pending: 0, attention: 0 } };
       let dirtyRecordIds = new Set();
+      let dirtyFieldsByRecordId = new Map();
       const pageSize = 20;
       const paymentAmountOptions = ['NT$ 2,000', 'NT$ 2,500', 'NT$ 3,000', 'NT$ 3,500', 'NT$ 3,900', 'NT$ 4,200', 'NT$ 4,700', 'NT$ 4,900', 'NT$ 5,500', 'NT$ 6,200', 'NT$ 6,400', 'NT$ 7,200', 'NT$ 7,900'];
       const participantTypeOptions = ['一般論文發表', '學生論文競賽', '海報發表'];
@@ -186,7 +187,13 @@
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify(payload)
         });
-        const data = await response.json();
+        const raw = await response.text();
+        let data;
+        try {
+          data = JSON.parse(raw);
+        } catch (error) {
+          throw new Error('The staff service returned an invalid response. Please sign in again or contact the system administrator.');
+        }
         if (!data.ok) throw new Error((data.error && data.error.message) || 'Backend operation failed.');
         return data;
       }
@@ -443,6 +450,7 @@
           };
           currentPage = result.page || currentPage;
           dirtyRecordIds = new Set();
+          dirtyFieldsByRecordId = new Map();
           renderRows();
           showDashboardStatus(sync ? `Sync complete. ${result.changed_count || 0} changed records updated.` : 'Staff sheet loaded, 20 records per page.', 'success');
         } catch (error) {
@@ -489,6 +497,7 @@
             stats: result.stats || { total: rows.length, done: 0, pending: 0, attention: 0 }
           };
           dirtyRecordIds = new Set();
+          dirtyFieldsByRecordId = new Map();
           activeSearch = '';
           activeParticipantFilter = 'all';
           participantFilter.value = 'all';
@@ -501,13 +510,13 @@
         }
       });
       document.getElementById('saveToBackend').addEventListener('click', async function () {
-        const updates = rows.filter((row) => dirtyRecordIds.has(row.record_id)).map((row) => ({
-          record_id: row.record_id,
-          review_status: row.review_status,
-          payment_status: row.payment_status,
-          transfer_last5: row.transfer_last5,
-          staff_note: row.staff_note
-        }));
+        const updates = rows.filter((row) => dirtyRecordIds.has(row.record_id)).map((row) => {
+          const update = { record_id: row.record_id };
+          (dirtyFieldsByRecordId.get(row.record_id) || []).forEach((field) => {
+            update[field] = row[field];
+          });
+          return update;
+        });
         if (!updates.length) {
           showDashboardStatus('No changes to export.', 'success');
           return;
@@ -531,6 +540,7 @@
             stats: result.stats || { total: rows.length, done: 0, pending: 0, attention: 0 }
           };
           dirtyRecordIds = new Set();
+          dirtyFieldsByRecordId = new Map();
           renderRows();
           showDashboardStatus('Information updated.', 'success');
         } catch (error) {
@@ -564,6 +574,10 @@
         if (!Number.isNaN(index) && field && rows[index]) {
           rows[index][field] = target.value;
           dirtyRecordIds.add(rows[index].record_id);
+          if (!dirtyFieldsByRecordId.has(rows[index].record_id)) {
+            dirtyFieldsByRecordId.set(rows[index].record_id, new Set());
+          }
+          dirtyFieldsByRecordId.get(rows[index].record_id).add(field);
           renderRows();
         }
       });
