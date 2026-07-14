@@ -368,7 +368,7 @@
       function renderTableHead() {
         const headers = activeStaffMode === 'review'
           ? ['姓名', '身分別', '最新 PDF', '審核', 'Email', '單位', '投稿主題', '投稿者備註', '工作人員備註', '報名編號']
-          : ['姓名', '報名模式', '報名者身分', '技術論壇', '學生證', 'Email', '應繳金額', '繳費日期', '繳費狀態', '轉帳末5碼', '統編資訊', '匯款證明', '投稿者備註', '工作人員備註', '報名編號'];
+          : ['姓名', '報名模式', '報名者身分', '技術論壇', '學生證', 'Email', '應繳金額', '繳費日期', '繳費狀態', '轉帳末5碼', '收據資訊', '匯款證明', '投稿者備註', '工作人員備註', '報名編號'];
         staffTableHead.innerHTML = '<tr>' + headers.map((header) => `<th>${header}</th>`).join('') + '</tr>';
       }
       function renderReviewRow(row, index) {
@@ -396,7 +396,7 @@
         const locked = row.committed_payment_status === '已繳費';
         const invoiceInfo = row.invoice_tax_id_required === '是'
           ? `${escapeHtml(row.invoice_title || '未提供')}<br><small>${escapeHtml(row.invoice_tax_id || '未提供')}</small>`
-          : '不需統編';
+          : '不需開立收據';
         return `
           <tr>
             <td>${row.name}</td>
