@@ -155,7 +155,8 @@
     if (normalizePresentationType(presentationType) === '海報發表 (Poster)') return false;
     const now = new Date();
     const compact = now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
-    return compact >= 20260808;
+    // Accept oral submissions through 2026/08/14 (Taiwan local date).
+    return compact >= 20260815;
   }
 
   function validatePdf(file, required) {
