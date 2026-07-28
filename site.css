@@ -159,6 +159,7 @@ h1 { margin-top:18px; font-size:clamp(2.8rem, 7vw, 5rem); line-height:0.94; font
 .sponsor-marquee { position:relative; max-width:100%; overflow:hidden; overscroll-behavior-x:contain; border-radius:24px; border:1px solid rgba(31,44,47,0.06); background:rgba(255,255,255,0.52); padding:18px 0; }
 .sponsor-track { display:flex; width:max-content; gap:18px; padding:0 18px; animation:sponsor-marquee 42s linear infinite; will-change:transform; }
 .sponsor-track.is-slower { animation-duration:52s; }
+.sponsor-track.partner-track { animation-duration:30s; }
 .sponsor-slot { min-width:330px; min-height:138px; border:1px dashed rgba(77,114,112,0.18); border-radius:28px; display:flex; align-items:center; justify-content:center; color:var(--primary-deep); background:rgba(255,255,255,0.76); font-weight:600; white-space:nowrap; font-size:1.08rem; }
 .sponsor-logo-slot { border-style:solid; border-color:rgba(77,114,112,0.14); background:rgba(255,255,255,0.92); padding:20px 26px; box-shadow:0 14px 32px rgba(27,63,66,0.07); }
 .sponsor-logo-slot img { display:block; width:100%; max-width:315px; max-height:108px; object-fit:contain; }
