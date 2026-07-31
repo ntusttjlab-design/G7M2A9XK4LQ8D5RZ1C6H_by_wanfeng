@@ -27,7 +27,7 @@
       : '資料已儲存，但系統暫時無法寄出通知信；若稍後仍未收到，請聯絡大會工作人員。',
     networkError: isEnglish ? 'Unable to connect to the submission service.' : '無法連線到投稿服務。',
     proofOnly: isEnglish ? 'Payment proof must be PDF, PNG, JPG, or JPEG.' : '匯款證明僅接受 PDF、PNG、JPG 或 JPEG。',
-    oralClosed: isEnglish ? 'Oral abstract submission is closed. Poster submissions remain available.' : '口頭論文摘要投稿已截止，海報投稿仍可送出。',
+    oralClosed: isEnglish ? 'Abstract submission is closed. Technical Forum-only registration remains available.' : '投稿摘要已截止；只報名技術論壇仍可使用。',
     badApiResponse: isEnglish
       ? 'The submission service returned an invalid response. Please contact the conference staff.'
       : '投稿服務回傳格式錯誤，請聯絡大會工作人員。',
@@ -151,11 +151,18 @@
     return textValue;
   }
 
-  function oralSubmissionClosed(presentationType) {
-    if (normalizePresentationType(presentationType) === '海報發表 (Poster)') return false;
-    const now = new Date();
-    const compact = now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
-    // Accept oral submissions through 2026/08/14 (Taiwan local date).
+  function paperSubmissionClosed() {
+    const dateParts = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'Asia/Taipei',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }).formatToParts(new Date()).reduce((result, part) => {
+      if (part.type !== 'literal') result[part.type] = part.value;
+      return result;
+    }, {});
+    const compact = Number(`${dateParts.year}${dateParts.month}${dateParts.day}`);
+    // Accept all paper submissions through 2026/08/14 (Taiwan local date).
     return compact >= 20260815;
   }
 
@@ -331,7 +338,7 @@
         const studentIdInput = form.elements.student_id_file;
         const studentIdFile = studentIdInput && studentIdInput.files ? studentIdInput.files[0] : null;
         validateStudentId(studentIdFile, registrantIdentity === '學生');
-        if (!forumOnly && oralSubmissionClosed(presentationType)) {
+        if (!forumOnly && paperSubmissionClosed()) {
           throw new Error(text.oralClosed);
         }
         const payload = {
