@@ -151,7 +151,6 @@ h1 { margin-top:18px; font-size:clamp(2.8rem, 7vw, 5rem); line-height:0.94; font
 .poster-head { margin-bottom:22px; }
 .poster-image-link { display:block; border-radius:26px; overflow:hidden; border:1px solid rgba(31,44,47,0.08); background:#fff; box-shadow:0 18px 48px rgba(31,44,47,0.12); }
 .poster-image-link img { display:block; width:100%; height:auto; }
-.poster-pdf { display:block; width:100%; aspect-ratio:1 / 1.414; border:0; background:#fff; }
 .poster-placeholder { width:min(620px, 100%); min-height:300px; border:1px dashed rgba(77,114,112,0.24); border-radius:26px; background:rgba(255,255,255,0.58); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:28px; }
 .poster-placeholder h2 { margin-top:14px; font-size:clamp(1.8rem, 4vw, 2.8rem); font-weight:700; }
 .poster-placeholder p { margin:12px 0 0; color:var(--muted); line-height:1.7; }
