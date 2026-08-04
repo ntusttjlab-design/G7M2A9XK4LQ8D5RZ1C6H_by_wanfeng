@@ -81,7 +81,7 @@
 <div class="form-grid">
 <div class="form-row" data-paper-only-field><label for="corresponding_author">Corresponding Author (Advisor)</label><input id="corresponding_author" name="corresponding_author" type="text" placeholder="Example: Prof. Chen"></div>
 <div class="form-row" data-paper-only-field><label for="corresponding_email">Corresponding Author Email</label><input id="corresponding_email" name="corresponding_email" type="email" inputmode="email" placeholder="Example: advisor@mail.ntust.edu.tw"></div></div>
-<div class="form-row" data-paper-only-field><label for="abstract_text">Abstract <span class="hint">Required; Chinese: within 500 characters, English: within 1,000 characters; system limit: 1,200 characters</span></label><textarea id="abstract_text" name="abstract_text" maxlength="1200" placeholder="Paste the abstract text here" required></textarea></div>
+<div class="form-row" data-paper-only-field><label for="abstract_text">Abstract <span class="hint">Required</span></label><textarea id="abstract_text" name="abstract_text" maxlength="6000" placeholder="Paste the abstract text here" required></textarea></div>
 <div class="form-row" data-paper-only-field><label for="keywords">Keywords <span class="hint">Required</span></label><input id="keywords" name="keywords" type="text" placeholder="Example: hydrogen energy, fuel cell, catalyst, water management" required></div>
 <div class="form-row file-upload-box" data-paper-only-field><label for="abstract_pdf">Upload Abstract PDF <span class="hint">Required, use the template on the left</span></label><input id="abstract_pdf" name="abstract_pdf" type="file" accept=".pdf,application/pdf" required></div>
 <div class="form-status" data-submit-status role="status" aria-live="polite"></div>
@@ -107,7 +107,7 @@
 <div class="form-grid">
 <div class="form-row"><label for="inline_update_corresponding_author">Corresponding Author (Advisor)</label><input id="inline_update_corresponding_author" name="corresponding_author" type="text"></div>
 <div class="form-row"><label for="inline_update_corresponding_email">Corresponding Author Email</label><input id="inline_update_corresponding_email" name="corresponding_email" type="email" inputmode="email"></div></div>
-<div class="form-row"><label for="inline_update_abstract">Abstract <span class="hint">Required; Chinese: within 500 characters, English: within 1,000 characters; system limit: 1,200 characters</span></label><textarea id="inline_update_abstract" name="abstract" maxlength="1200" required></textarea></div>
+<div class="form-row"><label for="inline_update_abstract">Abstract <span class="hint">Required</span></label><textarea id="inline_update_abstract" name="abstract" maxlength="6000" required></textarea></div>
 <div class="form-row file-upload-box"><label for="inline_update_pdf">Upload Revised Abstract PDF <span class="hint">Optional; keep empty to retain the current PDF</span></label><input id="inline_update_pdf" name="abstract_pdf" type="file" accept=".pdf,application/pdf"></div>
 <div class="form-status" data-update-status role="status" aria-live="polite"></div>
 <div class="button-row"><button class="button button-spotlight button-full" type="submit">Update Submission</button></div></form>
