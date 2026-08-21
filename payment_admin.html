@@ -181,8 +181,28 @@
         } catch (error) {
           throw new Error('工作人員服務回傳格式錯誤，請重新登入或聯絡系統管理員。');
         }
-        if (!data.ok) throw new Error((data.error && data.error.message) || '後端操作失敗。');
+        if (!data.ok) {
+          const error = new Error((data.error && data.error.message) || '後端操作失敗。');
+          error.code = (data.error && data.error.code) || '';
+          throw error;
+        }
         return data;
+      }
+      function returnToStaffLogin(message) {
+        staffToken = '';
+        rows = [];
+        pageMeta = { total: 0, total_pages: 1, stats: { total: 0, done: 0, pending: 0, attention: 0 } };
+        dirtyRecordIds = new Set();
+        dashboard.classList.add('is-hidden');
+        loginSection.classList.remove('is-hidden');
+        loginForm.reset();
+        renderRows();
+        showStatus(message || '登入工作階段已結束，請重新登入。', 'error');
+      }
+      function handleStaffSessionError(error) {
+        if (!error || (error.code !== 'STAFF_SESSION_EXPIRED' && error.code !== 'STAFF_AUTH_REQUIRED')) return false;
+        returnToStaffLogin('登入工作階段已結束，請重新登入。');
+        return true;
       }
       function enterDashboard(token) {
         staffToken = token || '';
@@ -474,6 +494,7 @@
           renderRows();
           showDashboardStatus(sync ? `同步完成，已更新 ${result.changed_count || 0} 筆變動資料。` : '已讀取工作人員表，每頁顯示 20 筆。', 'success');
         } catch (error) {
+          if (handleStaffSessionError(error)) return;
           rows = [];
           pageMeta = { total: 0, total_pages: 1, stats: { total: 0, done: 0, pending: 0, attention: 0 } };
           activeSearch = '';
@@ -525,6 +546,7 @@
           renderRows();
           showDashboardStatus(`重建完成，共整理 ${result.count || rows.length} 筆資料。`, 'success');
         } catch (error) {
+          if (handleStaffSessionError(error)) return;
           showDashboardStatus(error.message || '重建工作人員表失敗。', 'error');
         }
       });
@@ -570,6 +592,7 @@
           renderRows();
           showDashboardStatus('已更新資訊。', 'success');
         } catch (error) {
+          if (handleStaffSessionError(error)) return;
           showDashboardStatus(error.message || '後端尚未可用，目前僅保留在頁面展示資料。', 'error');
         }
       });

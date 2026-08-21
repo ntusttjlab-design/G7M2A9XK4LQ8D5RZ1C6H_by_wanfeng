@@ -181,8 +181,28 @@
         } catch (error) {
           throw new Error('The staff service returned an invalid response. Please sign in again or contact the system administrator.');
         }
-        if (!data.ok) throw new Error((data.error && data.error.message) || 'Backend operation failed.');
+        if (!data.ok) {
+          const error = new Error((data.error && data.error.message) || 'Backend operation failed.');
+          error.code = (data.error && data.error.code) || '';
+          throw error;
+        }
         return data;
+      }
+      function returnToStaffLogin(message) {
+        staffToken = '';
+        rows = [];
+        pageMeta = { total: 0, total_pages: 1, stats: { total: 0, done: 0, pending: 0, attention: 0 } };
+        dirtyRecordIds = new Set();
+        dashboard.classList.add('is-hidden');
+        loginSection.classList.remove('is-hidden');
+        loginForm.reset();
+        renderRows();
+        showStatus(message || 'Your staff session has expired. Please sign in again.', 'error');
+      }
+      function handleStaffSessionError(error) {
+        if (!error || (error.code !== 'STAFF_SESSION_EXPIRED' && error.code !== 'STAFF_AUTH_REQUIRED')) return false;
+        returnToStaffLogin('Your staff session has expired. Please sign in again.');
+        return true;
       }
       function enterDashboard(token) {
         staffToken = token || '';
@@ -447,6 +467,7 @@
           renderRows();
           showDashboardStatus(sync ? `Sync complete. ${result.changed_count || 0} changed records updated.` : 'Staff sheet loaded, 20 records per page.', 'success');
         } catch (error) {
+          if (handleStaffSessionError(error)) return;
           rows = [];
           pageMeta = { total: 0, total_pages: 1, stats: { total: 0, done: 0, pending: 0, attention: 0 } };
           activeSearch = '';
@@ -497,6 +518,7 @@
           renderRows();
           showDashboardStatus(`Rebuild complete. ${result.count || rows.length} records organized.`, 'success');
         } catch (error) {
+          if (handleStaffSessionError(error)) return;
           showDashboardStatus(error.message || 'Staff sheet rebuild failed.', 'error');
         }
       });
@@ -542,6 +564,7 @@
           renderRows();
           showDashboardStatus('Information updated.', 'success');
         } catch (error) {
+          if (handleStaffSessionError(error)) return;
           showDashboardStatus(error.message || 'Backend unavailable. Current changes remain in this demo view only.', 'error');
         }
       });
