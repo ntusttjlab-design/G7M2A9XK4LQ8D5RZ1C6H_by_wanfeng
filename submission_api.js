@@ -28,7 +28,8 @@
     networkError: isEnglish ? 'Unable to connect to the submission service.' : '無法連線到投稿服務。',
     proofOnly: isEnglish ? 'Payment proof must be PDF, PNG, JPG, or JPEG.' : '匯款證明僅接受 PDF、PNG、JPG 或 JPEG。',
     generalPaperClosed: isEnglish ? 'General paper submission closed at 11:59 PM on August 14, 2026. Technical Forum-only registration remains available.' : '一般論文投稿已於 2026/08/14 23:59 截止；只報名技術論壇仍可使用。',
-    extendedPaperClosed: isEnglish ? 'Student Paper Competition and poster submissions closed at 11:59 PM on August 28, 2026. Technical Forum-only registration remains available.' : '學生論文競賽與海報投稿已於 2026/08/28 23:59 截止；只報名技術論壇仍可使用。',
+    studentPaperClosed: isEnglish ? 'Student Paper Competition submission closed at 11:59 PM on August 28, 2026. Technical Forum-only registration remains available.' : '學生論文競賽投稿已於 2026/08/28 23:59 截止；只報名技術論壇仍可使用。',
+    posterClosed: isEnglish ? 'Poster submission is closed. Technical Forum-only registration remains available.' : '海報投稿已截止；只報名技術論壇仍可使用。',
     badApiResponse: isEnglish
       ? 'The submission service returned an invalid response. Please contact the conference staff.'
       : '投稿服務回傳格式錯誤，請聯絡大會工作人員。',
@@ -164,8 +165,11 @@
     }, {});
     const compact = Number(`${dateParts.year}${dateParts.month}${dateParts.day}`);
     const normalizedType = normalizePresentationType(presentationType);
-    // General papers close after 2026/08/14; student competition and posters close after 2026/08/28.
-    const lockDate = normalizedType === '一般論文發表 (Oral)' ? 20260815 : 20260829;
+    const lockDate = normalizedType === '一般論文發表 (Oral)'
+      ? 20260815
+      : normalizedType === '海報發表 (Poster)'
+        ? 20261001
+        : 20260829;
     return compact >= lockDate;
   }
 
@@ -345,7 +349,9 @@
           throw new Error(
             presentationType === '一般論文發表 (Oral)'
               ? text.generalPaperClosed
-              : text.extendedPaperClosed
+              : presentationType === '海報發表 (Poster)'
+                ? text.posterClosed
+                : text.studentPaperClosed
           );
         }
         const payload = {
