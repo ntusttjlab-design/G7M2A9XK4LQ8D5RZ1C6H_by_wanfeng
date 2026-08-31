@@ -27,9 +27,9 @@
       : '資料已儲存，但系統暫時無法寄出通知信；若稍後仍未收到，請聯絡大會工作人員。',
     networkError: isEnglish ? 'Unable to connect to the submission service.' : '無法連線到投稿服務。',
     proofOnly: isEnglish ? 'Payment proof must be PDF, PNG, JPG, or JPEG.' : '匯款證明僅接受 PDF、PNG、JPG 或 JPEG。',
-    generalPaperClosed: isEnglish ? 'General paper submission closed at 11:59 PM on August 14, 2026. Technical Forum-only registration remains available.' : '一般論文投稿已於 2026/08/14 23:59 截止；只報名技術論壇仍可使用。',
-    studentPaperClosed: isEnglish ? 'Student Paper Competition submission closed at 11:59 PM on August 28, 2026. Technical Forum-only registration remains available.' : '學生論文競賽投稿已於 2026/08/28 23:59 截止；只報名技術論壇仍可使用。',
-    posterClosed: isEnglish ? 'Poster submission is closed. Technical Forum-only registration remains available.' : '海報投稿已截止；只報名技術論壇仍可使用。',
+    generalPaperClosed: isEnglish ? 'General paper submission closed at 11:59 PM on August 14, 2026. Non-paper registration remains available.' : '一般論文投稿已於 2026/08/14 23:59 截止；不投稿報名仍可使用。',
+    studentPaperClosed: isEnglish ? 'Student Paper Competition submission closed at 11:59 PM on August 28, 2026. Non-paper registration remains available.' : '學生論文競賽投稿已於 2026/08/28 23:59 截止；不投稿報名仍可使用。',
+    posterClosed: isEnglish ? 'Poster submission is closed. Non-paper registration remains available.' : '海報投稿已截止；不投稿報名仍可使用。',
     badApiResponse: isEnglish
       ? 'The submission service returned an invalid response. Please contact the conference staff.'
       : '投稿服務回傳格式錯誤，請聯絡大會工作人員。',
@@ -92,7 +92,7 @@
 
     setPaperFieldsDisabled(form, nonPaper);
     if (forumAddon) {
-      forumAddon.checked = mode === '兩日報名（不投稿）' || mode === '只報名技術論壇' ? true : forumAddon.checked;
+      forumAddon.checked = mode === '兩日報名（不投稿）' || mode === '只報名技術論壇' ? true : mode === '只報名學術研討會（不投稿）' ? false : forumAddon.checked;
       forumAddon.disabled = nonPaper;
     }
     if (forumRow) forumRow.classList.toggle('is-hidden', nonPaper);
@@ -101,7 +101,9 @@
         ? (isEnglish ? 'Select a paper type below. You may also add Day 1 Technical Forum registration.' : '請選擇下方論文發表形式；可另外加選第一天技術論壇。')
         : mode === '只報名技術論壇'
           ? (isEnglish ? 'Only name, affiliation, email, and registrant type are required; paper submission fields will be disabled.' : '只需填寫姓名、單位、Email 與報名者身分；論文投稿相關欄位會停用。')
-          : (isEnglish ? 'Two-day registration includes the Technical Forum on Oct. 2 and the Academic Conference on Oct. 3; no paper materials are required.' : '兩日報名包含 10/2 技術論壇及 10/3 學術研討會；不需填寫或上傳論文資料。');
+          : mode === '只報名學術研討會（不投稿）'
+            ? (isEnglish ? 'Academic Conference registration covers Oct. 3 only; no paper materials or Technical Forum registration are required.' : '僅包含 10/3 學術研討會；不需填寫或上傳論文資料，亦不包含技術論壇。')
+            : (isEnglish ? 'Two-day registration includes the Technical Forum on Oct. 2 and the Academic Conference on Oct. 3; no paper materials are required.' : '兩日報名包含 10/2 技術論壇及 10/3 學術研討會；不需填寫或上傳論文資料。');
     }
   }
 
@@ -362,12 +364,13 @@
         const mode = registrationMode(form);
         const nonPaper = isNonPaperRegistration(form);
         const forumOnly = mode === '只報名技術論壇';
+        const academicConferenceOnly = mode === '只報名學術研討會（不投稿）';
         const twoDayRegistration = mode === '兩日報名（不投稿）';
         const file = form.elements.abstract_pdf && form.elements.abstract_pdf.files ? form.elements.abstract_pdf.files[0] : null;
         validatePdf(file, !nonPaper);
-        const presentationType = forumOnly ? '技術論壇報名' : twoDayRegistration ? '兩日報名（不投稿）' : normalizePresentationType(getValue(form, 'presentation_type'));
+        const presentationType = forumOnly ? '技術論壇報名' : academicConferenceOnly ? '學術研討會報名（不投稿）' : twoDayRegistration ? '兩日報名（不投稿）' : normalizePresentationType(getValue(form, 'presentation_type'));
         const registrantIdentity = getValue(form, 'registrant_identity');
-        const technicalForumRegistration = nonPaper || (form.elements.technical_forum_registration && form.elements.technical_forum_registration.checked) ? '是' : '否';
+        const technicalForumRegistration = forumOnly || twoDayRegistration || (form.elements.technical_forum_registration && form.elements.technical_forum_registration.checked) ? '是' : '否';
         const studentIdInput = form.elements.student_id_file;
         const studentIdFile = studentIdInput && studentIdInput.files ? studentIdInput.files[0] : null;
         validateStudentId(studentIdFile, registrantIdentity === '學生');
@@ -390,11 +393,11 @@
           corresponding_author: nonPaper ? '' : getValue(form, 'corresponding_author'),
           corresponding_email: nonPaper ? '' : getValue(form, 'corresponding_email'),
           abstract: nonPaper ? mode : getValue(form, 'abstract_text'),
-          keywords: nonPaper ? (forumOnly ? '技術論壇' : '兩日報名') : getValue(form, 'keywords'),
+          keywords: nonPaper ? (forumOnly ? '技術論壇' : academicConferenceOnly ? '學術研討會' : '兩日報名') : getValue(form, 'keywords'),
           presentation_type: presentationType,
           registrant_identity: registrantIdentity,
           technical_forum_registration: technicalForumRegistration,
-          topic_area: nonPaper ? (forumOnly ? '技術論壇' : '兩日報名') : normalizeTopicArea(getValue(form, 'track')),
+          topic_area: nonPaper ? (forumOnly ? '技術論壇' : academicConferenceOnly ? '學術研討會' : '兩日報名') : normalizeTopicArea(getValue(form, 'track')),
           pdf: await buildPdfPayload(file),
           student_id: await buildFilePayload(studentIdFile)
         };
