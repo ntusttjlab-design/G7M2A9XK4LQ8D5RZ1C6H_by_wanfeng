@@ -61,8 +61,13 @@
     return field ? field.value.trim() : '';
   }
 
-  function isForumOnly(form) {
-    return !!(form.elements.forum_only_registration && form.elements.forum_only_registration.checked);
+  function registrationMode(form) {
+    const selected = form.querySelector('[data-registration-mode]:checked');
+    return selected ? selected.value : '論文投稿';
+  }
+
+  function isNonPaperRegistration(form) {
+    return registrationMode(form) !== '論文投稿';
   }
 
   function setPaperFieldsDisabled(form, disabled) {
@@ -76,10 +81,27 @@
         field.required = disabled ? false : field.dataset.originalRequired === '1';
       });
     });
+  }
+
+  function syncRegistrationMode(form) {
+    const mode = registrationMode(form);
+    const nonPaper = mode !== '論文投稿';
     const forumAddon = form.elements.technical_forum_registration;
+    const forumRow = form.querySelector('[data-technical-forum-row]');
+    const note = form.querySelector('[data-registration-mode-note]');
+
+    setPaperFieldsDisabled(form, nonPaper);
     if (forumAddon) {
-      forumAddon.checked = disabled ? true : forumAddon.checked;
-      forumAddon.disabled = disabled;
+      forumAddon.checked = mode === '兩日報名（不投稿）' || mode === '只報名技術論壇' ? true : forumAddon.checked;
+      forumAddon.disabled = nonPaper;
+    }
+    if (forumRow) forumRow.classList.toggle('is-hidden', nonPaper);
+    if (note) {
+      note.textContent = mode === '論文投稿'
+        ? (isEnglish ? 'Select a paper type below. You may also add Day 1 Technical Forum registration.' : '請選擇下方論文發表形式；可另外加選第一天技術論壇。')
+        : mode === '只報名技術論壇'
+          ? (isEnglish ? 'Only name, affiliation, email, and registrant type are required; paper submission fields will be disabled.' : '只需填寫姓名、單位、Email 與報名者身分；論文投稿相關欄位會停用。')
+          : (isEnglish ? 'Two-day registration includes the Technical Forum on Oct. 2 and the Academic Conference on Oct. 3; no paper materials are required.' : '兩日報名包含 10/2 技術論壇及 10/3 學術研討會；不需填寫或上傳論文資料。');
     }
   }
 
@@ -110,14 +132,15 @@
     }
   }
 
-  function bindForumOnlyToggle(form) {
-    const toggle = form.querySelector('[data-forum-only-toggle]');
-    if (!toggle) return;
-    const update = function () {
-      setPaperFieldsDisabled(form, toggle.checked);
-    };
-    toggle.addEventListener('change', update);
-    update();
+  function bindRegistrationMode(form) {
+    const options = form.querySelectorAll('[data-registration-mode]');
+    if (!options.length) return;
+    options.forEach(function (option) {
+      option.addEventListener('change', function () {
+        syncRegistrationMode(form);
+      });
+    });
+    syncRegistrationMode(form);
   }
 
   function normalizePresentationType(value) {
@@ -328,7 +351,7 @@
     if (!forms.length) return;
 
     forms.forEach(function (form) {
-      bindForumOnlyToggle(form);
+      bindRegistrationMode(form);
       const status = form.querySelector('[data-submit-status]') || document.querySelector('[data-submit-status]');
       form.addEventListener('submit', async function (event) {
       event.preventDefault();
@@ -336,16 +359,19 @@
       showStatus(status, text.sending);
 
       try {
-        const forumOnly = isForumOnly(form);
+        const mode = registrationMode(form);
+        const nonPaper = isNonPaperRegistration(form);
+        const forumOnly = mode === '只報名技術論壇';
+        const twoDayRegistration = mode === '兩日報名（不投稿）';
         const file = form.elements.abstract_pdf && form.elements.abstract_pdf.files ? form.elements.abstract_pdf.files[0] : null;
-        validatePdf(file, !forumOnly);
-        const presentationType = forumOnly ? '技術論壇報名' : normalizePresentationType(getValue(form, 'presentation_type'));
+        validatePdf(file, !nonPaper);
+        const presentationType = forumOnly ? '技術論壇報名' : twoDayRegistration ? '兩日報名（不投稿）' : normalizePresentationType(getValue(form, 'presentation_type'));
         const registrantIdentity = getValue(form, 'registrant_identity');
-        const technicalForumRegistration = forumOnly || (form.elements.technical_forum_registration && form.elements.technical_forum_registration.checked) ? '是' : '否';
+        const technicalForumRegistration = nonPaper || (form.elements.technical_forum_registration && form.elements.technical_forum_registration.checked) ? '是' : '否';
         const studentIdInput = form.elements.student_id_file;
         const studentIdFile = studentIdInput && studentIdInput.files ? studentIdInput.files[0] : null;
         validateStudentId(studentIdFile, registrantIdentity === '學生');
-        if (!forumOnly && paperSubmissionClosed(presentationType)) {
+        if (!nonPaper && paperSubmissionClosed(presentationType)) {
           throw new Error(
             presentationType === '一般論文發表 (Oral)'
               ? text.generalPaperClosed
@@ -356,19 +382,19 @@
         }
         const payload = {
           action: 'submit',
-          registration_mode: forumOnly ? '只報名技術論壇' : '論文投稿',
-          title: forumOnly ? '只報名技術論壇' : getValue(form, 'paper_title'),
+          registration_mode: mode,
+          title: nonPaper ? mode : getValue(form, 'paper_title'),
           authors: getValue(form, 'authors'),
           affiliation: getValue(form, 'affiliation'),
           email: getValue(form, 'email'),
-          corresponding_author: forumOnly ? '' : getValue(form, 'corresponding_author'),
-          corresponding_email: forumOnly ? '' : getValue(form, 'corresponding_email'),
-          abstract: forumOnly ? '只報名技術論壇' : getValue(form, 'abstract_text'),
-          keywords: forumOnly ? '技術論壇' : getValue(form, 'keywords'),
+          corresponding_author: nonPaper ? '' : getValue(form, 'corresponding_author'),
+          corresponding_email: nonPaper ? '' : getValue(form, 'corresponding_email'),
+          abstract: nonPaper ? mode : getValue(form, 'abstract_text'),
+          keywords: nonPaper ? (forumOnly ? '技術論壇' : '兩日報名') : getValue(form, 'keywords'),
           presentation_type: presentationType,
           registrant_identity: registrantIdentity,
           technical_forum_registration: technicalForumRegistration,
-          topic_area: forumOnly ? '技術論壇' : normalizeTopicArea(getValue(form, 'track')),
+          topic_area: nonPaper ? (forumOnly ? '技術論壇' : '兩日報名') : normalizeTopicArea(getValue(form, 'track')),
           pdf: await buildPdfPayload(file),
           student_id: await buildFilePayload(studentIdFile)
         };
@@ -376,7 +402,7 @@
         const submissionId = result.submission_id ? ' ' + result.submission_id : '';
         showStatus(status, notificationStatusMessage(text.submitSuccess, result) + submissionId, 'success');
         form.reset();
-        setPaperFieldsDisabled(form, false);
+        syncRegistrationMode(form);
         syncStudentIdField(form);
       } catch (error) {
         showStatus(status, error.message || text.networkError, 'error');

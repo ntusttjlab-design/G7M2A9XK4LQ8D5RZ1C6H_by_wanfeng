@@ -120,12 +120,20 @@
         <article class="card">
           <form class="submit-form" data-hefc-submit-form enctype="multipart/form-data">
             <div class="form-row option-row forum-only-row">
-              <label for="forum_only_registration">報名模式</label>
+              <label>報名模式</label>
               <label class="checkbox-line">
-                <input id="forum_only_registration" name="forum_only_registration" type="checkbox" value="是" data-forum-only-toggle>
-                <span>只報名技術論壇</span>
+                <input name="registration_mode" type="radio" value="論文投稿" checked data-registration-mode>
+                <span>論文投稿</span>
               </label>
-              <p class="form-note">勾選後，只需填寫姓名、單位、Email 與報名者身分；論文投稿相關欄位會停用。</p>
+              <label class="checkbox-line">
+                <input name="registration_mode" type="radio" value="只報名技術論壇" data-registration-mode>
+                <span>只報名技術論壇（第一天）</span>
+              </label>
+              <label class="checkbox-line">
+                <input name="registration_mode" type="radio" value="兩日報名（不投稿）" data-registration-mode>
+                <span>兩日報名（不投稿）</span>
+              </label>
+              <p class="form-note" data-registration-mode-note>兩日報名包含 10/2 技術論壇及 10/3 學術研討會；不需填寫或上傳論文資料。</p>
             </div>
             <div class="form-grid">
               <div class="form-row" data-paper-only-field>
@@ -177,7 +185,7 @@
                   <option value="學生">學生</option>
                 </select>
               </div>
-              <div class="form-row option-row">
+              <div class="form-row option-row" data-technical-forum-row>
                 <label for="technical_forum_registration">技術論壇</label>
                 <label class="checkbox-line">
                   <input id="technical_forum_registration" name="technical_forum_registration" type="checkbox" value="是">
