@@ -20,6 +20,9 @@
     reportingPayment: isEnglish ? 'Submitting payment information. Please wait...' : '正在送出匯款資料，請稍候...',
     submitSuccess: isEnglish ? 'Submission received. Please check the confirmation email. If it does not arrive, please check your spam or junk folder.' : '投稿已送出，請查收投稿確認信；若未收到，請先檢查垃圾郵件匣。',
     verifySuccess: isEnglish ? 'Verification successful. Submission data has been loaded.' : '驗證成功，已載入投稿資料。',
+    revisionLocked: isEnglish
+      ? 'This submission has been approved. To keep the review result, acceptance data, and conference schedule consistent, manuscript revisions are no longer available. Please contact the conference staff if you have a special request.'
+      : '此稿件已審核通過。為維持審核結果、錄取資料與後續議程安排一致性，系統已停止修改稿件；如有特殊需求，請聯絡大會工作人員協助。',
     updateSuccess: isEnglish ? 'Submission updated. Please check the update confirmation email. If it does not arrive, please check your spam or junk folder.' : '稿件已更新，請查收更新成功通知信；若未收到，請先檢查垃圾郵件匣。',
     paymentSuccess: isEnglish ? 'Payment information received. Please check the confirmation email. If it does not arrive, please check your spam or junk folder.' : '匯款資料已送出，請查收確認信；若未收到，請先檢查垃圾郵件匣。',
     mailPending: isEnglish
@@ -274,7 +277,9 @@
       throw new Error(text.badApiResponse);
     }
     if (!data.ok) {
-      throw new Error((data.error && data.error.message) || text.networkError);
+      const apiError = new Error((data.error && data.error.message) || text.networkError);
+      apiError.code = data.error && data.error.code;
+      throw apiError;
     }
     return data;
   }
@@ -474,12 +479,13 @@
         updateForm.elements.abstract.value = item.abstract || '';
         updateForm.elements.keywords.value = item.keywords || '';
 
-        updateSection.classList.remove('is-hidden');
+        const revisionLocked = item.revision_locked === true || item.review_status === '審核通過';
+        updateSection.classList.toggle('is-hidden', revisionLocked);
         if (paymentPanel) {
           paymentPanel.classList.remove('is-hidden');
         }
-        showStatus(verifyStatus, text.verifySuccess, 'success');
-        updateSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        showStatus(verifyStatus, revisionLocked ? text.revisionLocked : text.verifySuccess, 'success');
+        (revisionLocked && paymentPanel ? paymentPanel : updateSection).scrollIntoView({ behavior: 'smooth', block: 'start' });
       } catch (error) {
         showStatus(verifyStatus, error.message || text.networkError, 'error');
       } finally {
@@ -521,7 +527,7 @@
         showStatus(status, notificationStatusMessage(text.updateSuccess, result) + versionText, 'success');
         form.elements.abstract_pdf.value = '';
       } catch (error) {
-        showStatus(status, error.message || text.networkError, 'error');
+        showStatus(status, error.code === 'SUBMISSION_UPDATE_LOCKED' ? text.revisionLocked : (error.message || text.networkError), 'error');
       } finally {
         setBusy(form, false);
       }
