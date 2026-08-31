@@ -352,7 +352,7 @@ h1 { margin-top:18px; font-size:clamp(2.8rem, 7vw, 5rem); line-height:0.94; font
 .form-row textarea { min-height:180px; resize:vertical; line-height:1.72; }
 .form-row input:focus, .form-row select:focus, .form-row textarea:focus { border-color:rgba(77,114,112,0.58); box-shadow:0 0 0 4px rgba(77,114,112,0.12); }
 .checkbox-line { display:flex; align-items:center; gap:10px; min-height:48px; padding:12px 14px; border:1px solid rgba(31,44,47,0.14); border-radius:13px; background:rgba(255,255,255,0.9); cursor:pointer; }
-.checkbox-line input[type="checkbox"] { width:18px; min-height:18px; height:18px; flex:0 0 auto; accent-color:#1a8392; }
+.checkbox-line input[type="checkbox"], .checkbox-line input[type="radio"] { width:18px; min-height:18px; height:18px; padding:0; flex:0 0 auto; accent-color:#1a8392; }
 .form-row.is-disabled { opacity:0.48; filter:grayscale(0.25); }
 .form-row.is-disabled input, .form-row.is-disabled select, .form-row.is-disabled textarea { background:rgba(236,242,244,0.88); cursor:not-allowed; }
 .copy-output { min-height:230px; white-space:pre-wrap; font-family:"SF Pro Text", "PingFang TC", "Noto Sans TC", sans-serif; }
