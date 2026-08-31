@@ -443,7 +443,7 @@
       const updateForm = panel.querySelector('[data-hefc-update-form]') || document.querySelector('[data-hefc-update-form]');
       const paymentForm = panel.querySelector('[data-hefc-payment-form]') || document.querySelector('[data-hefc-payment-form]');
       const updateSection = panel.querySelector('[data-update-section]') || document.querySelector('[data-update-section]');
-      const paymentPanel = section.querySelector('[data-submission-panel="payment"]');
+      const paymentPanel = panel.querySelector('[data-payment-section]') || section.querySelector('[data-submission-panel="payment"]');
       if (!updateForm || !updateSection) return;
       const verifyStatus = verifyForm.querySelector('[data-verify-status]') || panel.querySelector('[data-verify-status]') || document.querySelector('[data-verify-status]');
 
