@@ -196,7 +196,7 @@
     const lockDate = normalizedType === '一般論文發表 (Oral)'
       ? 20260815
       : normalizedType === '海報發表 (Poster)'
-        ? 20260831
+        ? 20260902
         : 20260829;
     return compact >= lockDate;
   }
