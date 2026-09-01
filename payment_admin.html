@@ -329,6 +329,7 @@
       function normalizeRegistrationMode(value) {
         const text = String(value || '');
         if (/只報名學術研討會|academic conference only|conference only/i.test(text)) return '只報名學術研討會（不投稿）';
+        if (/兩日報名|two-day registration|two day registration/i.test(text)) return '兩日報名（不投稿）';
         return /只報名技術論壇|forum only|technical forum only/i.test(text) ? '只報名技術論壇' : '論文投稿';
       }
       function rowTimeValue(row) {
