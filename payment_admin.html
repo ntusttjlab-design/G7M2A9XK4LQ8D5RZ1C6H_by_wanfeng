@@ -244,18 +244,22 @@
         }
       }
       function normalizeBackendRows(items) {
-        return (items || []).map((item) => ({
+        return (items || []).map((item) => {
+          const registrationMode = normalizeRegistrationMode(item.registration_mode || '');
+          const academicConferenceOnly = registrationMode === '只報名學術研討會（不投稿）';
+          const paymentAmount = normalizePaymentAmount(item.payment_amount);
+          return {
           record_id: item.record_id || '',
           name: item.name || '',
           email: item.email || '',
           participant_type: normalizeParticipantType(item.participant_type || '一般論文發表'),
-          registration_mode: normalizeRegistrationMode(item.registration_mode || ''),
+          registration_mode: registrationMode,
           registrant_identity: normalizeRegistrantIdentity(item.registrant_identity || ''),
           technical_forum_registration: normalizeTechnicalForumRegistration(item.technical_forum_registration || ''),
           student_id_url: item.student_id_url || '',
           review_status: item.review_status || '尚未審核',
           committed_review_status: item.review_status || '尚未審核',
-          payment_amount: normalizePaymentAmount(item.payment_amount) || '待後端確認',
+          payment_amount: paymentAmount || (academicConferenceOnly ? inferAcademicConferencePaymentAmount(item) : '待後端確認'),
           latest_pdf_url: item.latest_pdf_url || '',
           payment_status: normalizePaymentStatus(item.payment_status),
           committed_payment_status: normalizePaymentStatus(item.payment_status),
@@ -274,12 +278,26 @@
           topic_area: item.topic_area || '',
           staff_updated_at: item.staff_updated_at || '',
           last_submission_update: item.last_submission_update || item.updated_at || ''
-        }));
+        };
+        });
       }
       function normalizePaymentAmount(value) {
         const compact = String(value || '').replace(/[^\d]/g, '');
         const byNumber = { 2000: 'NT$ 2,000', 2500: 'NT$ 2,500', 3000: 'NT$ 3,000', 3500: 'NT$ 3,500', 3900: 'NT$ 3,900', 4200: 'NT$ 4,200', 4700: 'NT$ 4,700', 4900: 'NT$ 4,900', 5500: 'NT$ 5,500', 6200: 'NT$ 6,200', 6400: 'NT$ 6,400', 7200: 'NT$ 7,200', 7900: 'NT$ 7,900' };
         return byNumber[compact] || String(value || '');
+      }
+      function inferAcademicConferencePaymentAmount(item) {
+        const identity = normalizeRegistrantIdentity(item.registrant_identity || '');
+        if (!identity) return '金額資料異常，請重新整理';
+        const submittedAt = new Date(item.last_submission_update || item.updated_at || '');
+        if (Number.isNaN(submittedAt.getTime())) return '金額資料異常，請重新整理';
+        const compactDate = submittedAt.getFullYear() * 10000 + (submittedAt.getMonth() + 1) * 100 + submittedAt.getDate();
+        const amount = compactDate <= 20260831
+          ? (identity === '學生' ? 3500 : 4200)
+          : compactDate < 20261002
+            ? (identity === '學生' ? 3900 : 4700)
+            : (identity === '學生' ? 4200 : 4900);
+        return 'NT$ ' + String(amount).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
       }
       function escapeHtml(value) {
         return String(value || '').replace(/[&<>"']/g, function (character) {
@@ -424,7 +442,7 @@
                 ${paymentStatusOptions.map((item) => `<option${item === row.payment_status ? ' selected' : ''}>${item}</option>`).join('')}
               </select>
             </td>
-            <td><input data-row="${index}" data-field="transfer_last5" value="${row.transfer_last5}" placeholder="轉帳末5碼"></td>
+            <td><input data-row="${index}" data-field="transfer_last5" value="${row.transfer_last5}" placeholder="${row.registration_mode === '只報名學術研討會（不投稿）' ? '尚未回報' : '轉帳末5碼'}"></td>
             <td>${invoiceInfo}</td>
             <td>${row.payment_proof_url ? `<a class="button button-secondary" href="${row.payment_proof_url}" target="_blank" rel="noopener noreferrer">查看證明</a>` : '尚無'}</td>
             <td>${row.submitter_note || '無'}</td>
