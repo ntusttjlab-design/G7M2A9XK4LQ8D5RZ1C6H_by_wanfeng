@@ -4,6 +4,8 @@
   const isEnglish = document.documentElement.lang === 'en';
   const DEMO_EMAIL = 'demo@hefc2026.test';
   const DEMO_CODE = '12345';
+  // Frontend-only registration closure; Google Apps Script remains available for existing records.
+  const REGISTRATION_CLOSES_AT = Date.parse('2026-09-23T00:00:00+08:00');
 
   const text = {
     apiMissing: isEnglish
@@ -33,6 +35,12 @@
     generalPaperClosed: isEnglish ? 'General paper submission closed at 11:59 PM on August 14, 2026. Non-paper registration remains available.' : '一般論文投稿已於 2026/08/14 23:59 截止；不投稿報名仍可使用。',
     studentPaperClosed: isEnglish ? 'Student Paper Competition submission closed at 11:59 PM on August 28, 2026. Non-paper registration remains available.' : '學生論文競賽投稿已於 2026/08/28 23:59 截止；不投稿報名仍可使用。',
     posterClosed: isEnglish ? 'Poster submission is closed. Non-paper registration remains available.' : '海報投稿已截止；不投稿報名仍可使用。',
+    registrationClosingReminder: isEnglish
+      ? 'Online registration closes at 11:59 PM on September 22, 2026. Technical Forum only (Day 1) and Academic Conference only (no paper submission) participants are encouraged to register early. Late registrants may register on site.'
+      : '線上報名將於 2026/09/22（二）23:59 截止。僅報名技術論壇（第一天）或僅報名學術研討會（不投稿）者，敬請儘早完成報名；逾期請於活動當日現場報名。',
+    registrationClosed: isEnglish
+      ? 'Online registration is closed. Please register on site on the event day.'
+      : '線上報名已截止，請於活動當日辦理現場報名。',
     badApiResponse: isEnglish
       ? 'The submission service returned an invalid response. Please contact the conference staff.'
       : '投稿服務回傳格式錯誤，請聯絡大會工作人員。',
@@ -67,6 +75,19 @@
   function registrationMode(form) {
     const selected = form.querySelector('[data-registration-mode]:checked');
     return selected ? selected.value : '論文投稿';
+  }
+
+  function registrationClosed() {
+    return Date.now() >= REGISTRATION_CLOSES_AT;
+  }
+
+  function syncRegistrationClosure(form, status) {
+    if (!registrationClosed()) return false;
+    form.querySelectorAll('input, select, textarea, button[type="submit"]').forEach(function (field) {
+      field.disabled = true;
+    });
+    showStatus(status, text.registrationClosed, 'error');
+    return true;
   }
 
   function isNonPaperRegistration(form) {
@@ -360,8 +381,11 @@
     forms.forEach(function (form) {
       bindRegistrationMode(form);
       const status = form.querySelector('[data-submit-status]') || document.querySelector('[data-submit-status]');
+      if (!registrationClosed()) showStatus(status, text.registrationClosingReminder);
+      syncRegistrationClosure(form, status);
       form.addEventListener('submit', async function (event) {
       event.preventDefault();
+      if (syncRegistrationClosure(form, status)) return;
       setBusy(form, true);
       showStatus(status, text.sending);
 
