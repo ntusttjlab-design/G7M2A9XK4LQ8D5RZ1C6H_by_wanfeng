@@ -23,8 +23,8 @@
     submitSuccess: isEnglish ? 'Submission received. Please check the confirmation email. If it does not arrive, please check your spam or junk folder.' : '投稿已送出，請查收投稿確認信；若未收到，請先檢查垃圾郵件匣。',
     verifySuccess: isEnglish ? 'Verification successful. Submission data has been loaded.' : '驗證成功，已載入投稿資料。',
     revisionLocked: isEnglish
-      ? 'This submission has been approved. To keep the review result, acceptance data, and conference schedule consistent, manuscript revisions are no longer available. Please contact the conference staff if you have a special request.'
-      : '此稿件已審核通過。為維持審核結果、錄取資料與後續議程安排一致性，系統已停止修改稿件；如有特殊需求，請聯絡大會工作人員協助。',
+      ? 'Manuscript revisions are closed. To keep the printed materials, review results, acceptance data, and conference schedule consistent, further changes are unavailable. Please contact the conference staff if you have a special request.'
+      : '稿件修改功能已關閉。為維持送印資料、審核結果、錄取資料與後續議程安排一致性，系統不再接受稿件修改；如有特殊需求，請聯絡大會工作人員協助。',
     updateSuccess: isEnglish ? 'Submission updated. Please check the update confirmation email. If it does not arrive, please check your spam or junk folder.' : '稿件已更新，請查收更新成功通知信；若未收到，請先檢查垃圾郵件匣。',
     paymentSuccess: isEnglish ? 'Payment information received. Please check the confirmation email. If it does not arrive, please check your spam or junk folder.' : '匯款資料已送出，請查收確認信；若未收到，請先檢查垃圾郵件匣。',
     mailPending: isEnglish
@@ -503,8 +503,8 @@
         updateForm.elements.abstract.value = item.abstract || '';
         updateForm.elements.keywords.value = item.keywords || '';
 
-        const revisionLocked = item.revision_locked === true || item.review_status === '審核通過';
-        updateSection.classList.toggle('is-hidden', revisionLocked);
+        const revisionLocked = true;
+        updateSection.classList.add('is-hidden');
         if (paymentPanel) {
           paymentPanel.classList.remove('is-hidden');
         }
