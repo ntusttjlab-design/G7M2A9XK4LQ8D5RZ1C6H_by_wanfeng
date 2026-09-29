@@ -399,7 +399,7 @@ h1 { margin-top:18px; font-size:clamp(2.8rem, 7vw, 5rem); line-height:0.94; font
 .agenda-mode-switch {
   position:relative;
   display:grid;
-  grid-template-columns:repeat(4, minmax(0, 1fr));
+  grid-template-columns:repeat(5, minmax(0, 1fr));
   width:min(920px, 100%);
   min-height:46px;
   margin:0 0 24px;
@@ -415,7 +415,7 @@ h1 { margin-top:18px; font-size:clamp(2.8rem, 7vw, 5rem); line-height:0.94; font
   position:absolute;
   top:4px;
   left:4px;
-  width:calc(25% - 4px);
+  width:calc(20% - 1.6px);
   height:calc(100% - 8px);
   border-radius:999px;
   background:linear-gradient(180deg, #6f9692, #587d79);
@@ -430,6 +430,9 @@ h1 { margin-top:18px; font-size:clamp(2.8rem, 7vw, 5rem); line-height:0.94; font
 }
 .agenda-mode-switch[data-mode="day2-student"]::before {
   transform:translateX(300%);
+}
+.agenda-mode-switch[data-mode="day2-poster"]::before {
+  transform:translateX(400%);
 }
 .agenda-mode-switch__option {
   position:relative;
@@ -517,11 +520,11 @@ h1 { margin-top:18px; font-size:clamp(2.8rem, 7vw, 5rem); line-height:0.94; font
   color:var(--muted);
   line-height:1.55;
 }
-.agenda-track-card:nth-child(1) .agenda-session-list li:nth-child(1),
-.agenda-track-card:nth-child(1) .agenda-session-list li:nth-child(7),
-.agenda-track-card:nth-child(2) .agenda-session-list li:nth-child(1),
-.agenda-track-card:nth-child(2) .agenda-session-list li:nth-child(7),
-.agenda-track-card:nth-child(3) .agenda-session-list li:nth-child(1) {
+[data-agenda-panel="day2-oral"] .agenda-track-card:nth-child(1) .agenda-session-list li:nth-child(1),
+[data-agenda-panel="day2-oral"] .agenda-track-card:nth-child(1) .agenda-session-list li:nth-child(7),
+[data-agenda-panel="day2-oral"] .agenda-track-card:nth-child(2) .agenda-session-list li:nth-child(1),
+[data-agenda-panel="day2-oral"] .agenda-track-card:nth-child(2) .agenda-session-list li:nth-child(7),
+[data-agenda-panel="day2-oral"] .agenda-track-card:nth-child(3) .agenda-session-list li:nth-child(1) {
   background:linear-gradient(90deg, rgba(10,105,125,0.12), rgba(10,105,125,0.025));
   box-shadow:inset 4px 0 0 var(--primary);
 }
@@ -534,6 +537,23 @@ h1 { margin-top:18px; font-size:clamp(2.8rem, 7vw, 5rem); line-height:0.94; font
 .agenda-session-list li:not(:has(small)) span {
   font-weight:650;
 }
+.agenda-poster-list {
+  list-style:none;
+  margin:0;
+  padding:0;
+  border-top:1px solid rgba(31,44,47,0.09);
+}
+.agenda-poster-list li {
+  display:grid;
+  grid-template-columns:minmax(84px, 0.15fr) minmax(0, 1fr);
+  gap:14px;
+  padding:14px 22px;
+  border-top:1px solid rgba(31,44,47,0.07);
+  line-height:1.58;
+}
+.agenda-poster-list li:first-child { border-top:0; }
+.agenda-poster-list strong { color:var(--primary-deep); white-space:nowrap; }
+.agenda-poster-list small { display:block; margin-top:4px; color:var(--muted); line-height:1.55; }
 .speaker-page { padding-top:18px; }
 .speaker-list { display:grid; gap:22px; }
 .speaker-card {
@@ -579,6 +599,7 @@ h1 { margin-top:18px; font-size:clamp(2.8rem, 7vw, 5rem); line-height:0.94; font
     padding:14px 18px;
   }
   .agenda-session-list li:not(:has(small)) { grid-template-columns:1fr; }
+  .agenda-poster-list li { grid-template-columns:1fr; gap:3px; padding:14px 18px; }
 }
 .submission-mode-switch::before {
   content:"";
