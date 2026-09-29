@@ -66,8 +66,9 @@ h1, h2, h3 { margin:0; letter-spacing:-0.04em; }
 h1 { margin-top:18px; font-size:clamp(2.8rem, 7vw, 5rem); line-height:0.94; font-weight:700; }
 .hero-subtitle, .section-head p, .card p, .list li, .detail-list li, .topic-list li, .committee-note, .countdown-note { color:var(--muted); line-height:1.74; }
 .hero-subtitle { margin:14px 0 0; max-width:760px; font-size:clamp(1.04rem, 1.8vw, 1.24rem); }
-.hero-meta, .grid-2, .grid-3, .grid-4, .poster-grid, .committee-grid, .topic-grid { display:grid; gap:16px; }
+.hero-meta, .grid-1, .grid-2, .grid-3, .grid-4, .poster-grid, .committee-grid, .topic-grid { display:grid; gap:16px; }
 .hero-meta { grid-template-columns:repeat(3, minmax(0, 1fr)); margin-top:28px; }
+.grid-1 { grid-template-columns:minmax(0, 1fr); }
 .grid-2 { grid-template-columns:repeat(2, minmax(0, 1fr)); }
 .grid-3 { grid-template-columns:repeat(3, minmax(0, 1fr)); }
 .grid-4 { grid-template-columns:repeat(4, minmax(0, 1fr)); }
