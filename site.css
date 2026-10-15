@@ -485,6 +485,13 @@ h1 { margin-top:18px; font-size:clamp(2.8rem, 7vw, 5rem); line-height:0.94; font
   color:var(--text);
   font-size:clamp(1.2rem, 2vw, 1.42rem);
 }
+.agenda-resource-card { margin-bottom:16px; }
+.agenda-resource-card > p {
+  margin:0 22px;
+  color:var(--muted);
+  line-height:1.65;
+}
+.agenda-resource-card > .button-row { margin:20px 22px 22px; }
 .agenda-track-card .agenda-session-list {
   gap:0;
   margin:0;
@@ -594,6 +601,8 @@ h1 { margin-top:18px; font-size:clamp(2.8rem, 7vw, 5rem); line-height:0.94; font
 @media (max-width: 720px) {
   .agenda-track-card > .chip { margin:18px 18px 0; }
   .agenda-track-card > h3 { margin:9px 18px 16px; }
+  .agenda-resource-card > p { margin-left:18px; margin-right:18px; }
+  .agenda-resource-card > .button-row { margin:18px 18px 20px; }
   .agenda-session-list li {
     grid-template-columns:1fr;
     gap:3px;
@@ -1215,9 +1224,14 @@ body::after {
   white-space: nowrap;
   font-size: 0.94rem;
   font-weight: 700;
+  color: var(--primary-deep);
+  text-decoration: none;
   animation: hero-announcement-scroll 18s linear infinite;
   will-change: transform;
 }
+
+.hero-announcement__track:hover { text-decoration: underline; }
+.hero-announcement__track:focus-visible { outline: 3px solid rgba(20, 138, 153, 0.55); outline-offset: 3px; border-radius: 4px; }
 
 @keyframes hero-announcement-scroll {
   from { transform: translateX(0); }
